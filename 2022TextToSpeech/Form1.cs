@@ -25,19 +25,25 @@ namespace _2022TextToSpeech
             {               
                 this.label1.Text = openFileDialog1.FileName;
                 this.label1.Visible = true;
-            }           
+            }
+
+            string textfile = this.label1.Text;
+            string text = System.IO.File.ReadAllText(textfile);
+            if (textfile.Contains(".txt"))
+            {
+                Task task = SynthesizeAudioAsyncText(text, textfile.Replace(".txt", ".wav"));
+            }
+            else if (textfile.Contains(".xml"))
+            {
+                Task task = SynthesizeAudioAsyncXML(text, textfile.Replace(".xml", ".wav"));
+            }
+
+
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string textfile = this.label1.Text;
-            string text = System.IO.File.ReadAllText(textfile);
-            if (textfile.Contains(".txt")) 
-            {
-                Task task = SynthesizeAudioAsyncText(text, textfile.Replace(".txt", ".wav"));
-            } else if (textfile.Contains(".xml")) {
-                Task task = SynthesizeAudioAsyncXML(text, textfile.Replace(".xml", ".wav"));
-            }
+           
         }       
 
         private void button2_Click(object sender, EventArgs e)
@@ -51,10 +57,10 @@ namespace _2022TextToSpeech
             config.SpeechSynthesisLanguage = "el-GR";
             config.SpeechSynthesisVoiceName = "el-GR-AthinaNeural";
 
-            //using AudioConfig audioConfig = AudioConfig.FromWavFileOutput(soundfile);           
-            //using SpeechSynthesizer synthesizer = new SpeechSynthesizer(config, audioConfig);
+            using AudioConfig audioConfig = AudioConfig.FromWavFileOutput(soundfile);           
+            using SpeechSynthesizer synthesizer = new SpeechSynthesizer(config, audioConfig);
 
-            using SpeechSynthesizer synthesizer = new SpeechSynthesizer(config);
+            //using SpeechSynthesizer synthesizer = new SpeechSynthesizer(config);
 
             await synthesizer.SpeakTextAsync(txt);           
             MessageBox.Show("The text was read");
@@ -74,9 +80,5 @@ namespace _2022TextToSpeech
             await synthesizer.SpeakSsmlAsync(txt);
             MessageBox.Show("The xml was read");
         }
-
-
-
-
     }
 }
