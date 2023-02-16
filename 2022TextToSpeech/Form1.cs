@@ -8,8 +8,10 @@ namespace _2022TextToSpeech
 
     public partial class Form1 : Form
     {
-        private const string Key = "8ee4528192934fec97d9ac6b03685047";
-        private const string Location = "westeurope"; // Azure Speech Service Location
+        //private const string Key = "4b3dc697810e47fc845f076f446a62da";
+        //private const string Location = "westeurope"; // Azure Speech Service Location
+        //static string speechKey = Environment.GetEnvironmentVariable("4b3dc697810e47fc845f076f446a62da");
+        //static string speechRegion = Environment.GetEnvironmentVariable("westeurope");
         public Form1()
         {
             InitializeComponent();
@@ -33,6 +35,7 @@ namespace _2022TextToSpeech
         }
         private void button1_Click_1(object sender, EventArgs e)
         {
+         
             PlaySound();
         }
 
@@ -61,7 +64,7 @@ namespace _2022TextToSpeech
 
         static async Task SynthesizeAudioAsyncText(string txt, string soundfile, bool bSave)
         {
-            var config = SpeechConfig.FromSubscription("8ee4528192934fec97d9ac6b03685047", "westeurope");           
+            var config = SpeechConfig.FromSubscription("120f1e685b4244d8b1260b5bbc28f9ee", "westeurope");           
             //config.SpeechSynthesisLanguage = "el-GR";
             //config.SpeechSynthesisVoiceName = "el-GR-AthinaNeural";
             SpeechSynthesizer synthesizer;
@@ -82,7 +85,7 @@ namespace _2022TextToSpeech
 
         static async Task SynthesizeAudioAsyncXML(string txt, string soundfile, bool bSave)
         { 
-            var config = SpeechConfig.FromSubscription("8ee4528192934fec97d9ac6b03685047", "westeurope");
+            var config = SpeechConfig.FromSubscription("120f1e685b4244d8b1260b5bbc28f9ee", "westeurope");
             SpeechSynthesizer synthesizer;
 
             if (bSave)
@@ -92,10 +95,8 @@ namespace _2022TextToSpeech
             }
             else
             {
-
                 synthesizer = new SpeechSynthesizer(config);
-            }
-          
+            }          
             await synthesizer.SpeakSsmlAsync(txt);
             MessageBox.Show("The xml was read");
         }       
