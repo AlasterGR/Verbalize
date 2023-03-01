@@ -1,7 +1,9 @@
 namespace _2022TextToSpeech
 {
     using System;
+    using System.Drawing.Drawing2D;
     using System.IO;
+    using System.Resources;
     using System.Threading.Tasks;
     using Microsoft.CognitiveServices.Speech;
     using Microsoft.CognitiveServices.Speech.Audio;
@@ -44,17 +46,19 @@ namespace _2022TextToSpeech
             string textfile = this.label1.Text;
             string text = System.IO.File.ReadAllText(textfile);
 
-            bool bSave = this.checkBox1.Checked;
+            #region descontructing selected file's path, name and type info in order to build abstraction
+            string nameFile = Path.GetFileNameWithoutExtension(textfile);
+            string typeFile = Path.GetExtension(textfile);
+            string typeFileSaved = ".wav"; // need to add option for choosing file type and sound option            
+            string pathFileSelected = Path.GetDirectoryName(textfile); // I use Path.GetDirectoryName instead of FileInfo because it directly gets the exact path and doesn’t construct any large objects
+            string pathFileSaved = Path.Combine(pathFileSelected, "Recorded");
+            string fileSound = Path.Combine(pathFileSaved, nameFile + typeFileSaved);
+            #endregion
 
-            if (textfile.Contains(".txt"))
-            {
-               
-                Task task = SynthesizeAudioAsyncText(text, textfile.Replace(".txt", ".wav"), bSave);
-            }
-            else if (textfile.Contains(".xml"))
-            {
-                Task task = SynthesizeAudioAsyncXML(text, textfile.Replace(".xml", ".wav"), bSave);
-            }
+            bool bSave = this.checkBox1.Checked;            
+            if (typeFile.Equals(".txt") ) // should probably create a function to turn it into a proper xml file
+            { Task task = SynthesizeAudioAsyncText(text, fileSound, bSave); }
+            else if (typeFile.Equals(".xml")) { Task task = SynthesizeAudioAsyncXML(text, fileSound, bSave); }           
         }
 
         private void button2_Click(object sender, EventArgs e)

@@ -1,0 +1,9 @@
+<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">
+  <voice name="en-US-JennyNeural">
+    <prosody rate="-10%" pitch="-10%">
+      <mstts:express-as style="calm">
+        		It was the seat of the archon king, the official responsible for matters of religion and legislation. Among his responsibilities was to oversee the ancient festivals of the city. In 399 BC Socrates came to the Kingdom Lodge to testify against charges that he was corrupting the young people with his teaching and showing disrespect to the gods. The recognition of the building was made possible by Pausanias' description and two inscribed bases, dedications from royal rulers found on the steps of the building.  It has the form of a small gallery 18 m long with eight Doric columns on the front. It was built around 500 BC, but in the 5th century BC it took its final form with two protruding wings at the edges.
+      </mstts:express-as>      
+    </prosody>
+  </voice>
+</speak>
