@@ -1,0 +1,11 @@
+<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" lang="en-US">
+  <voice name="en-US-JennyNeural">
+    <prosody rate="-10%" pitch="-10%">
+      <express-as style="calm">Built in the second half of the 5th century BC, it was dedicated to Hephaestus and Athena Hephaestia, protectors of the metalworkers and craftsmen who had their workshops in the neighbourhood. The sculptural decoration of the Hephaestion was so rich that it almost rivaled that of the Parthenon in luxury. The exploits of two leading mythical figures are depicted in the eastern part of the temple, Hercules on the front and Theseus on the northeast and southeast sides. The scenes of the mythical king of the city gave rise to the erroneous name of the temple, "Theseion", which the wider area still bears today. Battle scenes adorn the friezes above the pronaos (the Athenians' struggle against the Pelasgians according to a recent study) and the rector (the battle of the Centaurs). In addition to the figures in the pediments, the sculptural decoration was complemented by two bronze cult statues, works by Alcamenes, which were inside the temple and are no longer extant.
+
+At the time when barbarian invaders from the north (the Eruli in 267 AD) razed the buildings of the Agora to the ground, the temple miraculously survived with only minor damage, while in Byzantine times (7th century) its conversion into a Christian church dedicated to St. George protected it from stoning and was one of the main reasons why it is preserved almost intact today.
+In the "dark" medieval times, the Hephaestion and other ancient buildings of Athens served as a stone diary of life in the city. On their marbles, residents and visitors engraved historical events, public and personal moments.
+In the early 19th century, many prominent European travellers who died in Attica and philhellenes who gave their lives for the Struggle for Independence were buried in the temple. In 1834, the ceremonial reception of King Otto took place here and then the church was used as the Central Archaeological Museum until the beginning of the excavations in the Ancient Agora in 1930.</express-as>
+    </prosody>
+  </voice>
+</speak>

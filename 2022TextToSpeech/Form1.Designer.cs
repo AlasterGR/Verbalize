@@ -35,6 +35,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.button4 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button2
@@ -107,11 +108,22 @@
             this.checkBox2.Text = "Εκφώνηση";
             this.checkBox2.UseVisualStyleBackColor = true;
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(959, 703);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(486, 69);
+            this.button4.TabIndex = 7;
+            this.button4.Text = "Convert .txt file to SSML .xml";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(20F, 48F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(3034, 1037);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.button1);
@@ -135,5 +147,6 @@
         private Button button1;
         private CheckBox checkBox1;
         private CheckBox checkBox2;
+        private Button button4;
     }
 }
