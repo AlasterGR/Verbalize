@@ -174,7 +174,7 @@ namespace _2022TextToSpeech
             XmlAttribute emo = SSMLDocument.CreateAttribute("xmlns:emo");
             emo.Value = "http://www.w3.org/2009/10/emotionml";
             speak.SetAttributeNode(emo);
-            XmlAttribute lang = SSMLDocument.CreateAttribute("ml:lang");
+            XmlAttribute lang = SSMLDocument.CreateAttribute("xml:lang");
             lang.Value = speechRegion;
             speak.SetAttributeNode(lang);
             XmlElement voice = SSMLDocument.CreateElement("voice");
@@ -184,6 +184,7 @@ namespace _2022TextToSpeech
             prosody.SetAttribute("pitch", (pitch*100).ToString() + "%");
             XmlElement express = SSMLDocument.CreateElement("mstts:express-as");
             express.SetAttribute("style", "calm");
+
             #endregion
             express.InnerText = text;
             // Append the voice style element to the prosody element
@@ -191,14 +192,13 @@ namespace _2022TextToSpeech
             // Append the prosody element to the voice element
             voice.AppendChild(prosody);
             // Append the voice element to the speak element
-            speak.AppendChild(voice);
+            speak.AppendChild(voice);            
+            // Add the <speak> element to the XML document
+            SSMLDocument.AppendChild(speak);
             // Add the namespace attribute to the root element - shouldn;t have to but seems proper - never use "namespace"
             XmlNamespaceManager ns = new XmlNamespaceManager(SSMLDocument.NameTable);
             ns.AddNamespace("ssml", "http://www.w3.org/2001/10/synthesis");
-            // Add the <speak> element to the XML document
-            SSMLDocument.AppendChild(speak);
-            // Save the XML document to a file
-           
+            // Save the XML document to a file           
             SSMLDocument.Save(Path.Combine(pathFileSelected, "output.xml"));
         }
 
