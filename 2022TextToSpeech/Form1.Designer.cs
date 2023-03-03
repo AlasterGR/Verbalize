@@ -40,6 +40,13 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
             this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
+            this.vScrollBar2 = new System.Windows.Forms.VScrollBar();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // button2
@@ -158,11 +165,77 @@
             this.vScrollBar1.Size = new System.Drawing.Size(153, 223);
             this.vScrollBar1.TabIndex = 11;
             // 
+            // vScrollBar2
+            // 
+            this.vScrollBar2.Location = new System.Drawing.Point(1806, 751);
+            this.vScrollBar2.Name = "vScrollBar2";
+            this.vScrollBar2.Size = new System.Drawing.Size(153, 223);
+            this.vScrollBar2.TabIndex = 12;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(1806, 666);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(98, 48);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "Pitch";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(1574, 666);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(91, 48);
+            this.label3.TabIndex = 14;
+            this.label3.Text = "Rate";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(1588, 339);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(148, 48);
+            this.label4.TabIndex = 15;
+            this.label4.Text = "Γλώσσα";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(1963, 339);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(185, 48);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "Αφηγητής";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(1594, 399);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(363, 56);
+            this.comboBox1.TabIndex = 17;
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(1963, 399);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(363, 56);
+            this.comboBox2.TabIndex = 18;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(20F, 48F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1866, 1287);
+            this.ClientSize = new System.Drawing.Size(2359, 1287);
+            this.Controls.Add(this.comboBox2);
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.vScrollBar2);
             this.Controls.Add(this.vScrollBar1);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
@@ -196,5 +269,12 @@
         private Button button5;
         private Button button6;
         private VScrollBar vScrollBar1;
+        private VScrollBar vScrollBar2;
+        private Label label2;
+        private Label label3;
+        private Label label4;
+        private Label label5;
+        private ComboBox comboBox1;
+        private ComboBox comboBox2;
     }
 }

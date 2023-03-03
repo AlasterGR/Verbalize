@@ -10,9 +10,16 @@ namespace _2022TextToSpeech
     using Microsoft.CognitiveServices.Speech;
     using Microsoft.CognitiveServices.Speech.Audio;
     using System.Xml; // For constructing our xml file 
+    using System.Xml.Linq; // For the queries towards MS in order to populate the languages and voices lists
     using System.Security.Cryptography.X509Certificates;
     using static System.Net.Mime.MediaTypeNames;
     using static System.Windows.Forms.LinkLabel;
+    using System.Net.Http; // for the supported languages of the voice
+    using System.Net.Http.Headers;  // for the supported languages of the voice
+    using System.Net.Security;
+    using Newtonsoft.Json; // for converting the Json files into XML ones. Possibly removable should we only load the XML file I am going to have produced
+    using System.Text.Json;// for converting the Json files into XML ones. Possibly removable should we only load the XML file I am going to have produced
+
 
     public partial class Form1 : Form
     {
@@ -20,7 +27,8 @@ namespace _2022TextToSpeech
         //private const string Location = "westeurope"; // Azure Speech Service Location
         //static string speechKey = Environment.GetEnvironmentVariable("4b3dc697810e47fc845f076f446a62da");
         //static string speechRegion = Environment.GetEnvironmentVariable("westeurope");
-        public static SpeechConfig config = SpeechConfig.FromSubscription("120f1e685b4244d8b1260b5bbc28f9ee", "westeurope");
+        public static string Location = "westeurope";
+        public static SpeechConfig config = SpeechConfig.FromSubscription("120f1e685b4244d8b1260b5bbc28f9ee", Location);
         public static string speechRegion = "en-US";
         public static string voice = "JennyNeural";
         public static string SpeechSynthesisVoiceName = speechRegion + "-" + voice;
@@ -36,11 +44,52 @@ namespace _2022TextToSpeech
             config.SpeechRecognitionLanguage = "en";
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
             this.label1.Visible = false;
             this.checkBox1.Checked = false;
             this.checkBox2.Checked = true;
+            #region Retrieve the list of voices from speech.microsoft.com
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "120f1e685b4244d8b1260b5bbc28f9ee");
+            string listVoicesLocationURL = "https://"+Location+".tts.speech.microsoft.com/cognitiveservices/voices/list";
+            string jsonString = await client.GetStringAsync(listVoicesLocationURL); // This is gon be a Json file
+            #endregion
+            #region Parsing the xmlString from Json format that we recieved it as, to XML
+            JsonDocument jsonDoc = JsonDocument.Parse(jsonString);
+            JsonElement jsonRoot = jsonDoc.RootElement;
+            XmlDocument xmlDoc = new XmlDocument();
+            XmlElement rootElem = xmlDoc.CreateElement("root");
+            xmlDoc.AppendChild(rootElem);
+            foreach (JsonElement elem in jsonRoot.EnumerateArray())
+            {
+                // create a new element with the same name as the JSON property
+                XmlElement xmlElem = xmlDoc.CreateElement(elem.ValueKind.ToString());
+                rootElem.AppendChild(xmlElem);
+
+                // set the element's value to the JSON value
+                xmlElem.InnerText = elem.ToString();
+            }
+            //string xmlString = xmlDoc.OuterXml;
+            #endregion
+            // Get all the Object nodes from the XML file
+            XmlNodeList objectNodes = xmlDoc.SelectNodes("//Object");
+            // Populate the first combo box with LocaleName-Locale values
+            foreach (XmlNode objectNode in objectNodes)
+            {
+                string localeName = objectNode.SelectSingleNode("LocaleName").InnerText;
+                string locale = objectNode.SelectSingleNode("Locale").InnerText;
+                comboBox1.Items.Add(localeName + "-" + locale);
+            }
+            // Populate the second combo box with LocalName (Gender) values
+            foreach (XmlNode objectNode in objectNodes)
+            {
+                string localName = objectNode.SelectSingleNode("LocalName").InnerText;
+                string gender = objectNode.SelectSingleNode("Gender").InnerText;
+                comboBox2.Items.Add(localName + " (" + gender + ")");
+            }
+
+            //comboBox1.DataSource = localeName;
         }
         private void button3_Click(object sender, EventArgs e)
         {
@@ -195,7 +244,6 @@ namespace _2022TextToSpeech
         {
             ReadText();
         }
-
 
         private async void ReadText()
         {
