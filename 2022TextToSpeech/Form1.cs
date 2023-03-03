@@ -23,8 +23,8 @@ namespace _2022TextToSpeech
         public static string speechRegion = "en-US";
         public static string voice = "JennyNeural";
         public static string SpeechSynthesisVoiceName = speechRegion + "-" + voice;
-        public static float pitch = -0.10f;
-        public static float rate = -0.10f;
+        public static float pitch = 0.00f;
+        public static float rate = 0.00f;
 
         public Form1()
         {
@@ -48,12 +48,15 @@ namespace _2022TextToSpeech
         private void button3_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {               
-                this.label1.Text = openFileDialog1.FileName;
+            {
+                string textfile = openFileDialog1.FileName;
+                this.label1.Text = textfile;
                 this.label1.Visible = true;
+                this.textBox1.Text = System.IO.File.ReadAllText(textfile);
+                //  Search further for advantages on using a rich text box instead. So far none found.
+                PlaySound();
             }
-            PlaySound();
-
+            
         }
         private void button1_Click_1(object sender, EventArgs e)
         {         
@@ -152,17 +155,18 @@ namespace _2022TextToSpeech
         }
 
         static void CreateXML(string text, string pathFileSelected)
-        {            
+        {
+            #region Creation of the XML document and and its root element
             XmlDocument SSMLDocument = new XmlDocument();
-            #region xml declaration is mandatory for XML 1.1
-            //XmlDeclaration xmlDeclaration = SSMLDocument.CreateXmlDeclaration("1.0", "UTF-8", null);
             XmlElement speak = SSMLDocument.CreateElement("speak");
-            //SSMLDocument.InsertBefore(xmlDeclaration, speak);
+            SSMLDocument.AppendChild(speak);
             #endregion
-            #region assigning the XML's strings and parameters and attributes on variables
-            /*                        
-             */            
-            XmlAttribute version = SSMLDocument.CreateAttribute("version");
+            #region XML declaration. Mandatory for XML 1.1 and SSML also requires this : https://www.w3.org/TR/speech-synthesis/#S2.1
+            XmlDeclaration xmlDeclaration = SSMLDocument.CreateXmlDeclaration("1.0", "UTF-8", null);
+            SSMLDocument.InsertBefore(xmlDeclaration, speak);
+            #endregion
+            #region Assigning the XML's elements and using variables for the attributes. Reference : https://www.w3.org/TR/speech-synthesis/#S3.1.1         
+            XmlAttribute version = SSMLDocument.CreateAttribute("version");  //  For some reason, version cannot be 1.1
             version.Value = "1.0";
             speak.SetAttributeNode(version);
             XmlAttribute xmlns = SSMLDocument.CreateAttribute("xmlns");
@@ -177,27 +181,24 @@ namespace _2022TextToSpeech
             XmlAttribute lang = SSMLDocument.CreateAttribute("xml:lang");
             lang.Value = speechRegion;
             speak.SetAttributeNode(lang);
+            XmlAttribute onlangfailure = SSMLDocument.CreateAttribute("onlangfailure");
+            onlangfailure.Value = "ignoretext ";
+            speak.SetAttributeNode(onlangfailure);            
             XmlElement voice = SSMLDocument.CreateElement("voice");
             voice.SetAttribute("name", SpeechSynthesisVoiceName);
             XmlElement prosody = SSMLDocument.CreateElement("prosody");
             prosody.SetAttribute("rate",  (rate*100).ToString() +"%");
-            prosody.SetAttribute("pitch", (pitch*100).ToString() + "%");
-            XmlElement express = SSMLDocument.CreateElement("mstts:express-as");
+            prosody.SetAttribute("pitch", (pitch*100).ToString() + "%"); //  Hz or % ?
+            XmlElement express = SSMLDocument.CreateElement("mstts", "express-as", "http://www.w3.org/2001/mstts");
             express.SetAttribute("style", "calm");
-
             #endregion
-            express.InnerText = text;
-            // Append the voice style element to the prosody element
+            #region Appending the XML elements to their parents
             prosody.AppendChild(express);
-            // Append the prosody element to the voice element
             voice.AppendChild(prosody);
-            // Append the voice element to the speak element
-            speak.AppendChild(voice);            
-            // Add the <speak> element to the XML document
-            SSMLDocument.AppendChild(speak);
-            // Add the namespace attribute to the root element - shouldn;t have to but seems proper - never use "namespace"
-            XmlNamespaceManager ns = new XmlNamespaceManager(SSMLDocument.NameTable);
-            ns.AddNamespace("ssml", "http://www.w3.org/2001/10/synthesis");
+            speak.AppendChild(voice);
+            #endregion
+            //  Entering the .txt file's text as the xml's main -inner- text
+            express.InnerText = text;
             // Save the XML document to a file           
             SSMLDocument.Save(Path.Combine(pathFileSelected, "output.xml"));
         }
@@ -211,6 +212,11 @@ namespace _2022TextToSpeech
                 string pathFileSelected = Path.GetDirectoryName(textfile);
                 CreateXML(text, pathFileSelected);
             }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
