@@ -52,8 +52,30 @@ namespace _2022TextToSpeech
                 string textfile = openFileDialog1.FileName;
                 this.label1.Text = textfile;
                 this.label1.Visible = true;
-                this.textBox1.Text = System.IO.File.ReadAllText(textfile);
+                string fileContents = File.ReadAllText(textfile);
+                this.textBox1.Text = fileContents;
                 //  Search further for advantages on using a rich text box instead. So far none found.
+                #region Parse the selected file's contents and save its speakable text to the textbox ~ it will acquire only the inner texts shoud the selcted file have an xml format.
+                try
+                {
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(fileContents);
+                    XmlNodeList nodes = doc.SelectNodes("//text()[normalize-space()]");
+                    if (nodes.Count > 0)
+                    {                        
+                        foreach (XmlNode node in nodes)
+                        {
+                            fileContents = node.InnerText;
+                        }
+                    }
+                    this.textBox1.Text = fileContents;
+                }
+                catch (XmlException ex)
+                {
+                    this.textBox1.Text = fileContents;
+                }
+                #endregion
+
                 PlaySound();
             }
             
