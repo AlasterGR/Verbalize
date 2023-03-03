@@ -12,6 +12,7 @@ namespace _2022TextToSpeech
     using System.Xml; // For constructing our xml file 
     using System.Security.Cryptography.X509Certificates;
     using static System.Net.Mime.MediaTypeNames;
+    using static System.Windows.Forms.LinkLabel;
 
     public partial class Form1 : Form
     {
@@ -25,16 +26,12 @@ namespace _2022TextToSpeech
         public static string SpeechSynthesisVoiceName = speechRegion + "-" + voice;
         public static float pitch = 0.00f;
         public static float rate = 0.00f;
+        public static float volume = 0.0f; //possibly won't work in this version
 
         public Form1()
         {
             InitializeComponent();
-            speechRegion = "en-US";
-            voice = "JennyNeural";
             SpeechSynthesisVoiceName = speechRegion + "-" + voice;
-            float pitch = -0.10f ;
-            float rate = -0.10f;
-            int volume = 1;
             config.SpeechSynthesisVoiceName = SpeechSynthesisVoiceName;
             config.SpeechRecognitionLanguage = "en";
         }
@@ -103,11 +100,6 @@ namespace _2022TextToSpeech
             bool bSpeak = this.checkBox1.Checked;
 
             Task task = SynthesizeAudioAsync(text, fileSound, bSave, typeFile, bSpeak);
-            /*
-            if (typeFile.Equals(".txt") ) // should probably create a function to turn it into a proper xml file
-            { Task task = SynthesizeAudioAsyncText(text, fileSound, bSave); }
-            else if (typeFile.Equals(".xml")) { Task task = SynthesizeAudioAsyncXML(text, fileSound, bSave); } 
-            */
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -115,44 +107,6 @@ namespace _2022TextToSpeech
             this.Close();
         }
 
-        static async Task SynthesizeAudioAsyncText(string txt, string soundfile, bool bSave)
-        {
-            var config = SpeechConfig.FromSubscription("120f1e685b4244d8b1260b5bbc28f9ee", "westeurope");           
-            //config.SpeechSynthesisLanguage = "el-GR";
-            //config.SpeechSynthesisVoiceName = "el-GR-AthinaNeural";
-            SpeechSynthesizer synthesizer;
-
-            if (bSave)
-            {
-                using AudioConfig audioConfig = AudioConfig.FromWavFileOutput(soundfile);
-                synthesizer = new SpeechSynthesizer(config, audioConfig);
-            }
-            else
-            {
-                synthesizer = new SpeechSynthesizer(config);
-            }
-
-            await synthesizer.SpeakTextAsync(txt);           
-            MessageBox.Show("The text was read");
-        }
-        static async Task SynthesizeAudioAsyncXML(string txt, string soundfile, bool bSave)
-        { 
-            var config = SpeechConfig.FromSubscription("120f1e685b4244d8b1260b5bbc28f9ee", "westeurope");
-            SpeechSynthesizer synthesizer;
-
-            if (bSave)
-            {
-                using AudioConfig audioConfig = AudioConfig.FromWavFileOutput(soundfile);
-                synthesizer = new SpeechSynthesizer(config, audioConfig);
-            }
-            else
-            {
-                synthesizer = new SpeechSynthesizer(config);
-            }          
-            await synthesizer.SpeakSsmlAsync(txt);
-            MessageBox.Show("The xml was read");
-        }
-        
         static async Task SynthesizeAudioAsync(string txt, string soundfile, bool bSave, string filetype, bool bSpeak)
         {
             SpeechSynthesizer synthesizer;
@@ -211,6 +165,7 @@ namespace _2022TextToSpeech
             XmlElement prosody = SSMLDocument.CreateElement("prosody");
             prosody.SetAttribute("rate",  (rate*100).ToString() +"%");
             prosody.SetAttribute("pitch", (pitch*100).ToString() + "%"); //  Hz or % ?
+            //prosody.SetAttribute("volume", (volume).ToString("+#.#;-#.#;-0") + "dB"); //Might not work on this version of SSML
             XmlElement express = SSMLDocument.CreateElement("mstts", "express-as", "http://www.w3.org/2001/mstts");
             express.SetAttribute("style", "calm");
             #endregion
@@ -238,7 +193,36 @@ namespace _2022TextToSpeech
 
         private void button5_Click(object sender, EventArgs e)
         {
+            ReadText();
+        }
 
+
+        private async void ReadText()
+        {
+            string textfile = this.label1.Text;            
+            string text = this.textBox1.Text;
+            SpeechSynthesizer synthesizer;
+            synthesizer = new SpeechSynthesizer(config);
+            await synthesizer.SpeakTextAsync(text);
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "Text|*.txt";
+            saveFileDialog1.Title = "Save the text box as a .txt File";
+            if(saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string pathFileSelected = saveFileDialog1.FileName;
+                if (saveFileDialog1.FileName != "")
+                {
+                    using (StreamWriter writer = new StreamWriter(pathFileSelected))
+                    {
+                        writer.Write(textBox1.Text);
+                    }
+
+                }                
+            }
         }
     }
 }

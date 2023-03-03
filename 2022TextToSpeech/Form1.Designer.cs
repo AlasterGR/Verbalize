@@ -38,11 +38,13 @@
             this.button4 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button5 = new System.Windows.Forms.Button();
+            this.button6 = new System.Windows.Forms.Button();
+            this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
             this.SuspendLayout();
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1558, 618);
+            this.button2.Location = new System.Drawing.Point(1574, 997);
             this.button2.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(274, 240);
@@ -58,7 +60,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(151, 224);
+            this.button3.Location = new System.Drawing.Point(54, 613);
             this.button3.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(274, 240);
@@ -70,7 +72,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(551, 126);
+            this.label1.Location = new System.Drawing.Point(398, 233);
             this.label1.Margin = new System.Windows.Forms.Padding(9, 0, 9, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(115, 48);
@@ -79,7 +81,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(151, 518);
+            this.button1.Location = new System.Drawing.Point(54, 907);
             this.button1.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(274, 240);
@@ -91,7 +93,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(153, 796);
+            this.checkBox1.Location = new System.Drawing.Point(56, 1185);
             this.checkBox1.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(272, 52);
@@ -102,7 +104,7 @@
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(551, 796);
+            this.checkBox2.Location = new System.Drawing.Point(398, 1185);
             this.checkBox2.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(239, 52);
@@ -112,7 +114,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(959, 799);
+            this.button4.Location = new System.Drawing.Point(712, 1168);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(486, 69);
             this.button4.TabIndex = 7;
@@ -122,28 +124,47 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(551, 224);
+            this.textBox1.Location = new System.Drawing.Point(398, 339);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(894, 534);
+            this.textBox1.Size = new System.Drawing.Size(1164, 808);
             this.textBox1.TabIndex = 8;
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(1550, 224);
+            this.button5.Location = new System.Drawing.Point(54, 339);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(225, 69);
+            this.button5.Size = new System.Drawing.Size(274, 69);
             this.button5.TabIndex = 9;
             this.button5.Text = "Εκφώνηση";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(54, 449);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(274, 113);
+            this.button6.TabIndex = 10;
+            this.button6.Text = "Αποθήκευση ως .txt";
+            this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // vScrollBar1
+            // 
+            this.vScrollBar1.Location = new System.Drawing.Point(1574, 751);
+            this.vScrollBar1.Name = "vScrollBar1";
+            this.vScrollBar1.Size = new System.Drawing.Size(153, 223);
+            this.vScrollBar1.TabIndex = 11;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(20F, 48F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1866, 889);
+            this.ClientSize = new System.Drawing.Size(1866, 1287);
+            this.Controls.Add(this.vScrollBar1);
+            this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.button4);
@@ -173,5 +194,7 @@
         private Button button4;
         private TextBox textBox1;
         private Button button5;
+        private Button button6;
+        private VScrollBar vScrollBar1;
     }
 }
