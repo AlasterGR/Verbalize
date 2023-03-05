@@ -19,6 +19,8 @@ namespace _2022TextToSpeech
     using System.Net.Security;
     using Newtonsoft.Json; // for converting the Json files into XML ones. Possibly removable should we only load the XML file I am going to have produced
     using System.Text.Json;// for converting the Json files into XML ones. Possibly removable should we only load the XML file I am going to have produced
+    using Properties;
+    using System.Collections.Generic;
 
 
     public partial class Form1 : Form
@@ -49,6 +51,7 @@ namespace _2022TextToSpeech
             this.label1.Visible = false;
             this.checkBox1.Checked = false;
             this.checkBox2.Checked = true;
+            /*
             #region Retrieve the list of voices from speech.microsoft.com
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "120f1e685b4244d8b1260b5bbc28f9ee");
@@ -72,6 +75,11 @@ namespace _2022TextToSpeech
             }
             //string xmlString = xmlDoc.OuterXml;
             #endregion
+            */
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml("S:\\VSRepos\\2022TextToSpeech\\2022TextToSpeech\\Resources\\MLSS WestEurope Speech Voices list.xml");
+            //xmlDoc.LoadXml();
+            #region Populating the two voice combo boxes
             // Get all the Object nodes from the XML file
             XmlNodeList objectNodes = xmlDoc.SelectNodes("//Object");
             // Populate the first combo box with LocaleName-Locale values
@@ -88,6 +96,7 @@ namespace _2022TextToSpeech
                 string gender = objectNode.SelectSingleNode("Gender").InnerText;
                 comboBox2.Items.Add(localName + " (" + gender + ")");
             }
+            #endregion
 
             //comboBox1.DataSource = localeName;
         }
