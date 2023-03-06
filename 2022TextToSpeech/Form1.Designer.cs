@@ -170,13 +170,13 @@
             // 
             vScrollBar2.Location = new Point(632, 235);
             vScrollBar2.Name = "vScrollBar2";
-            vScrollBar2.Size = new Size(153, 70);
+            vScrollBar2.Size = new Size(94, 70);
             vScrollBar2.TabIndex = 12;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(632, 208);
+            label2.Location = new Point(670, 201);
             label2.Margin = new Padding(1, 0, 1, 0);
             label2.Name = "label2";
             label2.Size = new Size(34, 15);
@@ -186,7 +186,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(551, 208);
+            label3.Location = new Point(551, 201);
             label3.Margin = new Padding(1, 0, 1, 0);
             label3.Name = "label3";
             label3.Size = new Size(30, 15);
@@ -196,7 +196,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(556, 106);
+            label4.Location = new Point(20, 464);
             label4.Margin = new Padding(1, 0, 1, 0);
             label4.Name = "label4";
             label4.Size = new Size(51, 15);
@@ -206,7 +206,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(687, 106);
+            label5.Location = new Point(20, 503);
             label5.Margin = new Padding(1, 0, 1, 0);
             label5.Name = "label5";
             label5.Size = new Size(63, 15);
@@ -216,24 +216,25 @@
             // comboBox1
             // 
             comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(558, 125);
+            comboBox1.Location = new Point(117, 464);
             comboBox1.Margin = new Padding(1);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(130, 23);
+            comboBox1.Size = new Size(390, 23);
             comboBox1.TabIndex = 17;
+            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
             // comboBox2
             // 
             comboBox2.FormattingEnabled = true;
-            comboBox2.Location = new Point(687, 125);
+            comboBox2.Location = new Point(117, 500);
             comboBox2.Margin = new Padding(1);
             comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(130, 23);
+            comboBox2.Size = new Size(116, 23);
             comboBox2.TabIndex = 18;
             // 
             // button7
             // 
-            button7.Location = new Point(897, 130);
+            button7.Location = new Point(19, 395);
             button7.Name = "button7";
             button7.Size = new Size(105, 23);
             button7.TabIndex = 19;
@@ -243,7 +244,7 @@
             // 
             // button8
             // 
-            button8.Location = new Point(897, 170);
+            button8.Location = new Point(139, 395);
             button8.Name = "button8";
             button8.Size = new Size(105, 23);
             button8.TabIndex = 20;
@@ -253,9 +254,9 @@
             // 
             // button9
             // 
-            button9.Location = new Point(897, 204);
+            button9.Location = new Point(520, 464);
             button9.Name = "button9";
-            button9.Size = new Size(105, 38);
+            button9.Size = new Size(105, 54);
             button9.TabIndex = 21;
             button9.Text = "Populate the combo boxes";
             button9.UseVisualStyleBackColor = true;
@@ -265,7 +266,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1056, 609);
+            ClientSize = new Size(740, 539);
             Controls.Add(button9);
             Controls.Add(button8);
             Controls.Add(button7);

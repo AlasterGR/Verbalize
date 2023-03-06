@@ -31,8 +31,8 @@ namespace _2022TextToSpeech
         //private const string Location = "westeurope"; // Azure Speech Service Location
         //static string speechKey = Environment.GetEnvironmentVariable("4b3dc697810e47fc845f076f446a62da");
         //static string speechRegion = Environment.GetEnvironmentVariable("westeurope");
-        public static string Location = "westeurope";
-        public static SpeechConfig config = SpeechConfig.FromSubscription("120f1e685b4244d8b1260b5bbc28f9ee", Location);
+        public static string ServerLocation = "westeurope";
+        public static SpeechConfig config = SpeechConfig.FromSubscription("120f1e685b4244d8b1260b5bbc28f9ee", ServerLocation);
         public static string speechRegion = "en-US";
         public static string voice = "JennyNeural";
         public static string SpeechSynthesisVoiceName = speechRegion + "-" + voice;
@@ -53,7 +53,7 @@ namespace _2022TextToSpeech
         {
             this.label1.Visible = false;
             this.checkBox1.Checked = false;
-            this.checkBox2.Checked = true;     
+            this.checkBox2.Checked = true;
         }
         private void button3_Click(object sender, EventArgs e)
         {
@@ -261,7 +261,7 @@ namespace _2022TextToSpeech
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "120f1e685b4244d8b1260b5bbc28f9ee");
-            string listVoicesLocationURL = "https://" + Location + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
+            string listVoicesLocationURL = "https://" + ServerLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
             //string jsonString = await client.GetStringAsync(listVoicesLocationURL); // This is gon be a Json file
             // save the file as a txt or JSON file within the resources folder            
             string fileName = "MLSS WestEurope Speech Voices list.json"; // Change this to the desired file name and extension
@@ -302,38 +302,26 @@ namespace _2022TextToSpeech
             XmlDocument xmlDoc = new XmlDocument();
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {                
-                string fileName = openFileDialog1.FileName;                
+            {
+                string fileName = openFileDialog1.FileName;
                 xmlDoc.Load(fileName); // LoadXML command produces error
             }
-            XmlNodeList objectNodes = xmlDoc.SelectNodes("//Voice");
-
-            /*
-             //xmlDoc.LoadXml("S:\\VSRepos\\2022TextToSpeech\\2022TextToSpeech\\Resources\\MLSS WestEurope Speech Voices list.xml");
-
-             xmlDoc.LoadXml(Path.Combine(folderResources, "MLSS WestEurope Speech Voices list.xml"));
-             //xmlDoc.Load(Properties.Resources.ResourceManager.GetStream("MLSS WestEurope Speech Voices list.xml"));
-
-             // Get all the Object nodes from the XML file
-             XmlNodeList objectNodes = xmlDoc.SelectNodes("//Object");
-             // Populate the first combo box with LocaleName-Locale values
-             foreach (XmlNode objectNode in objectNodes)
-             {
-                 string localeName = objectNode.SelectSingleNode("LocaleName").InnerText;
-                 string locale = objectNode.SelectSingleNode("Locale").InnerText;
-                 comboBox1.Items.Add(localeName + "-" + locale);
-             }
-             // Populate the second combo box with LocalName (Gender) values
-             foreach (XmlNode objectNode in objectNodes)
-             {
-                 string localName = objectNode.SelectSingleNode("LocalName").InnerText;
-                 string gender = objectNode.SelectSingleNode("Gender").InnerText;
-                 comboBox2.Items.Add(localName + " (" + gender + ")");
-             }
-             */
-            //comboBox1.DataSource = localeName;
-
+            XmlNodeList Voices = xmlDoc.SelectNodes("//Voice");
+            foreach (XmlNode objectNode in Voices)
+            {
+                string localeName = objectNode.SelectSingleNode("LocaleName").InnerText;
+                string locale = objectNode.SelectSingleNode("Locale").InnerText;
+                comboBox1.Items.Add(localeName + "-" + locale);
+                string localName = objectNode.SelectSingleNode("LocalName").InnerText;
+                string gender = objectNode.SelectSingleNode("Gender").InnerText;
+                comboBox2.Items.Add(localName + " (" + gender + ")");
+            }
         }
         #endregion
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
