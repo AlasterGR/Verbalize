@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\MLSS WestEurope Speech Voices list.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
 

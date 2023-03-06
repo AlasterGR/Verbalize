@@ -28,232 +28,270 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button2 = new System.Windows.Forms.Button();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.button3 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.button4 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
-            this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
-            this.vScrollBar2 = new System.Windows.Forms.VScrollBar();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.SuspendLayout();
+            button2 = new Button();
+            openFileDialog1 = new OpenFileDialog();
+            button3 = new Button();
+            label1 = new Label();
+            button1 = new Button();
+            checkBox1 = new CheckBox();
+            checkBox2 = new CheckBox();
+            button4 = new Button();
+            textBox1 = new TextBox();
+            button5 = new Button();
+            button6 = new Button();
+            vScrollBar1 = new VScrollBar();
+            vScrollBar2 = new VScrollBar();
+            label2 = new Label();
+            label3 = new Label();
+            label4 = new Label();
+            label5 = new Label();
+            comboBox1 = new ComboBox();
+            comboBox2 = new ComboBox();
+            button7 = new Button();
+            button8 = new Button();
+            button9 = new Button();
+            SuspendLayout();
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1574, 997);
-            this.button2.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(274, 240);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "Close";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            button2.Location = new Point(551, 312);
+            button2.Name = "button2";
+            button2.Size = new Size(96, 75);
+            button2.TabIndex = 1;
+            button2.Text = "Close";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.RestoreDirectory = true;
+            openFileDialog1.FileName = "openFileDialog1";
+            openFileDialog1.RestoreDirectory = true;
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(54, 613);
-            this.button3.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(274, 240);
-            this.button3.TabIndex = 2;
-            this.button3.Text = "FindFile";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            button3.Location = new Point(19, 192);
+            button3.Name = "button3";
+            button3.Size = new Size(96, 75);
+            button3.TabIndex = 2;
+            button3.Text = "FindFile";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(398, 233);
-            this.label1.Margin = new System.Windows.Forms.Padding(9, 0, 9, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(115, 48);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "label1";
+            label1.AutoSize = true;
+            label1.Location = new Point(139, 73);
+            label1.Name = "label1";
+            label1.Size = new Size(38, 15);
+            label1.TabIndex = 3;
+            label1.Text = "label1";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(54, 907);
-            this.button1.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(274, 240);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Replay";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            button1.Location = new Point(19, 283);
+            button1.Name = "button1";
+            button1.Size = new Size(96, 75);
+            button1.TabIndex = 4;
+            button1.Text = "Replay";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click_1;
             // 
             // checkBox1
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(56, 1185);
-            this.checkBox1.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(272, 52);
-            this.checkBox1.TabIndex = 5;
-            this.checkBox1.Text = "Αποθήκευση";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new Point(20, 370);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(95, 19);
+            checkBox1.TabIndex = 5;
+            checkBox1.Text = "Αποθήκευση";
+            checkBox1.UseVisualStyleBackColor = true;
             // 
             // checkBox2
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(398, 1185);
-            this.checkBox2.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(239, 52);
-            this.checkBox2.TabIndex = 6;
-            this.checkBox2.Text = "Εκφώνηση";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            checkBox2.AutoSize = true;
+            checkBox2.Location = new Point(139, 370);
+            checkBox2.Name = "checkBox2";
+            checkBox2.Size = new Size(85, 19);
+            checkBox2.TabIndex = 6;
+            checkBox2.Text = "Εκφώνηση";
+            checkBox2.UseVisualStyleBackColor = true;
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(712, 1168);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(486, 69);
-            this.button4.TabIndex = 7;
-            this.button4.Text = "Convert .txt file to SSML .xml";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            button4.Location = new Point(249, 365);
+            button4.Margin = new Padding(1);
+            button4.Name = "button4";
+            button4.Size = new Size(170, 22);
+            button4.TabIndex = 7;
+            button4.Text = "Convert .txt file to SSML .xml";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(398, 339);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(1164, 808);
-            this.textBox1.TabIndex = 8;
+            textBox1.Location = new Point(139, 106);
+            textBox1.Margin = new Padding(1);
+            textBox1.Multiline = true;
+            textBox1.Name = "textBox1";
+            textBox1.ScrollBars = ScrollBars.Both;
+            textBox1.Size = new Size(410, 255);
+            textBox1.TabIndex = 8;
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(54, 339);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(274, 69);
-            this.button5.TabIndex = 9;
-            this.button5.Text = "Εκφώνηση";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            button5.Location = new Point(19, 106);
+            button5.Margin = new Padding(1);
+            button5.Name = "button5";
+            button5.Size = new Size(96, 22);
+            button5.TabIndex = 9;
+            button5.Text = "Εκφώνηση";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(54, 449);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(274, 113);
-            this.button6.TabIndex = 10;
-            this.button6.Text = "Αποθήκευση ως .txt";
-            this.button6.UseVisualStyleBackColor = true;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            button6.Location = new Point(19, 140);
+            button6.Margin = new Padding(1);
+            button6.Name = "button6";
+            button6.Size = new Size(96, 35);
+            button6.TabIndex = 10;
+            button6.Text = "Αποθήκευση ως .txt";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
             // 
             // vScrollBar1
             // 
-            this.vScrollBar1.Location = new System.Drawing.Point(1574, 751);
-            this.vScrollBar1.Name = "vScrollBar1";
-            this.vScrollBar1.Size = new System.Drawing.Size(153, 223);
-            this.vScrollBar1.TabIndex = 11;
+            vScrollBar1.Location = new Point(551, 235);
+            vScrollBar1.Name = "vScrollBar1";
+            vScrollBar1.Size = new Size(153, 70);
+            vScrollBar1.TabIndex = 11;
             // 
             // vScrollBar2
             // 
-            this.vScrollBar2.Location = new System.Drawing.Point(1806, 751);
-            this.vScrollBar2.Name = "vScrollBar2";
-            this.vScrollBar2.Size = new System.Drawing.Size(153, 223);
-            this.vScrollBar2.TabIndex = 12;
+            vScrollBar2.Location = new Point(632, 235);
+            vScrollBar2.Name = "vScrollBar2";
+            vScrollBar2.Size = new Size(153, 70);
+            vScrollBar2.TabIndex = 12;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(1806, 666);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(98, 48);
-            this.label2.TabIndex = 13;
-            this.label2.Text = "Pitch";
+            label2.AutoSize = true;
+            label2.Location = new Point(632, 208);
+            label2.Margin = new Padding(1, 0, 1, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(34, 15);
+            label2.TabIndex = 13;
+            label2.Text = "Pitch";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(1574, 666);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(91, 48);
-            this.label3.TabIndex = 14;
-            this.label3.Text = "Rate";
+            label3.AutoSize = true;
+            label3.Location = new Point(551, 208);
+            label3.Margin = new Padding(1, 0, 1, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(30, 15);
+            label3.TabIndex = 14;
+            label3.Text = "Rate";
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(1588, 339);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(148, 48);
-            this.label4.TabIndex = 15;
-            this.label4.Text = "Γλώσσα";
+            label4.AutoSize = true;
+            label4.Location = new Point(556, 106);
+            label4.Margin = new Padding(1, 0, 1, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(51, 15);
+            label4.TabIndex = 15;
+            label4.Text = "Γλώσσα";
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(1963, 339);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(185, 48);
-            this.label5.TabIndex = 16;
-            this.label5.Text = "Αφηγητής";
+            label5.AutoSize = true;
+            label5.Location = new Point(687, 106);
+            label5.Margin = new Padding(1, 0, 1, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(63, 15);
+            label5.TabIndex = 16;
+            label5.Text = "Αφηγητής";
             // 
             // comboBox1
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(1594, 399);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(363, 56);
-            this.comboBox1.TabIndex = 17;
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(558, 125);
+            comboBox1.Margin = new Padding(1);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(130, 23);
+            comboBox1.TabIndex = 17;
             // 
             // comboBox2
             // 
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(1963, 399);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(363, 56);
-            this.comboBox2.TabIndex = 18;
+            comboBox2.FormattingEnabled = true;
+            comboBox2.Location = new Point(687, 125);
+            comboBox2.Margin = new Padding(1);
+            comboBox2.Name = "comboBox2";
+            comboBox2.Size = new Size(130, 23);
+            comboBox2.TabIndex = 18;
+            // 
+            // button7
+            // 
+            button7.Location = new Point(897, 130);
+            button7.Name = "button7";
+            button7.Size = new Size(105, 23);
+            button7.TabIndex = 19;
+            button7.Text = "JSon -> XML";
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += button7_Click;
+            // 
+            // button8
+            // 
+            button8.Location = new Point(897, 170);
+            button8.Name = "button8";
+            button8.Size = new Size(105, 23);
+            button8.TabIndex = 20;
+            button8.Text = "Retrieve Voices";
+            button8.UseVisualStyleBackColor = true;
+            button8.Click += button8_Click;
+            // 
+            // button9
+            // 
+            button9.Location = new Point(897, 204);
+            button9.Name = "button9";
+            button9.Size = new Size(105, 38);
+            button9.TabIndex = 21;
+            button9.Text = "Populate the combo boxes";
+            button9.UseVisualStyleBackColor = true;
+            button9.Click += button9_Click;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(20F, 48F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2359, 1287);
-            this.Controls.Add(this.comboBox2);
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.vScrollBar2);
-            this.Controls.Add(this.vScrollBar1);
-            this.Controls.Add(this.button6);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.checkBox2);
-            this.Controls.Add(this.checkBox1);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Margin = new System.Windows.Forms.Padding(9, 10, 9, 10);
-            this.Name = "Form1";
-            this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1056, 609);
+            Controls.Add(button9);
+            Controls.Add(button8);
+            Controls.Add(button7);
+            Controls.Add(comboBox2);
+            Controls.Add(comboBox1);
+            Controls.Add(label5);
+            Controls.Add(label4);
+            Controls.Add(label3);
+            Controls.Add(label2);
+            Controls.Add(vScrollBar2);
+            Controls.Add(vScrollBar1);
+            Controls.Add(button6);
+            Controls.Add(button5);
+            Controls.Add(textBox1);
+            Controls.Add(button4);
+            Controls.Add(checkBox2);
+            Controls.Add(checkBox1);
+            Controls.Add(button1);
+            Controls.Add(label1);
+            Controls.Add(button3);
+            Controls.Add(button2);
+            Name = "Form1";
+            Text = "Form1";
+            Load += Form1_Load;
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -276,5 +314,8 @@
         private Label label5;
         private ComboBox comboBox1;
         private ComboBox comboBox2;
+        private Button button7;
+        private Button button8;
+        private Button button9;
     }
 }

@@ -21,7 +21,9 @@ namespace _2022TextToSpeech
     using System.Text.Json;// for converting the Json files into XML ones. Possibly removable should we only load the XML file I am going to have produced
     using Properties;
     using System.Collections.Generic;
-
+    using System.Windows.Forms;
+    using System.Net.Http.Json;
+    using System.Text;
 
     public partial class Form1 : Form
     {
@@ -37,6 +39,7 @@ namespace _2022TextToSpeech
         public static float pitch = 0.00f;
         public static float rate = 0.00f;
         public static float volume = 0.0f; //possibly won't work in this version
+        public static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
 
         public Form1()
         {
@@ -50,55 +53,7 @@ namespace _2022TextToSpeech
         {
             this.label1.Visible = false;
             this.checkBox1.Checked = false;
-            this.checkBox2.Checked = true;
-            /*
-            #region Retrieve the list of voices from speech.microsoft.com
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "120f1e685b4244d8b1260b5bbc28f9ee");
-            string listVoicesLocationURL = "https://"+Location+".tts.speech.microsoft.com/cognitiveservices/voices/list";
-            string jsonString = await client.GetStringAsync(listVoicesLocationURL); // This is gon be a Json file
-            #endregion
-            #region Parsing the xmlString from Json format that we recieved it as, to XML
-            JsonDocument jsonDoc = JsonDocument.Parse(jsonString);
-            JsonElement jsonRoot = jsonDoc.RootElement;
-            XmlDocument xmlDoc = new XmlDocument();
-            XmlElement rootElem = xmlDoc.CreateElement("root");
-            xmlDoc.AppendChild(rootElem);
-            foreach (JsonElement elem in jsonRoot.EnumerateArray())
-            {
-                // create a new element with the same name as the JSON property
-                XmlElement xmlElem = xmlDoc.CreateElement(elem.ValueKind.ToString());
-                rootElem.AppendChild(xmlElem);
-
-                // set the element's value to the JSON value
-                xmlElem.InnerText = elem.ToString();
-            }
-            //string xmlString = xmlDoc.OuterXml;
-            #endregion
-            */
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml("S:\\VSRepos\\2022TextToSpeech\\2022TextToSpeech\\Resources\\MLSS WestEurope Speech Voices list.xml");
-            //xmlDoc.LoadXml();
-            #region Populating the two voice combo boxes
-            // Get all the Object nodes from the XML file
-            XmlNodeList objectNodes = xmlDoc.SelectNodes("//Object");
-            // Populate the first combo box with LocaleName-Locale values
-            foreach (XmlNode objectNode in objectNodes)
-            {
-                string localeName = objectNode.SelectSingleNode("LocaleName").InnerText;
-                string locale = objectNode.SelectSingleNode("Locale").InnerText;
-                comboBox1.Items.Add(localeName + "-" + locale);
-            }
-            // Populate the second combo box with LocalName (Gender) values
-            foreach (XmlNode objectNode in objectNodes)
-            {
-                string localName = objectNode.SelectSingleNode("LocalName").InnerText;
-                string gender = objectNode.SelectSingleNode("Gender").InnerText;
-                comboBox2.Items.Add(localName + " (" + gender + ")");
-            }
-            #endregion
-
-            //comboBox1.DataSource = localeName;
+            this.checkBox2.Checked = true;     
         }
         private void button3_Click(object sender, EventArgs e)
         {
@@ -117,7 +72,7 @@ namespace _2022TextToSpeech
                     doc.LoadXml(fileContents);
                     XmlNodeList nodes = doc.SelectNodes("//text()[normalize-space()]");
                     if (nodes.Count > 0)
-                    {                        
+                    {
                         foreach (XmlNode node in nodes)
                         {
                             fileContents = node.InnerText;
@@ -133,10 +88,10 @@ namespace _2022TextToSpeech
 
                 PlaySound();
             }
-            
+
         }
         private void button1_Click_1(object sender, EventArgs e)
-        {         
+        {
             PlaySound();
         }
 
@@ -168,7 +123,7 @@ namespace _2022TextToSpeech
         static async Task SynthesizeAudioAsync(string txt, string soundfile, bool bSave, string filetype, bool bSpeak)
         {
             SpeechSynthesizer synthesizer;
-            
+
             //if (bSpeak) { synthesizer = new SpeechSynthesizer(config); }  // Option of whether to speak the text
             if (bSave)
             {
@@ -217,12 +172,12 @@ namespace _2022TextToSpeech
             speak.SetAttributeNode(lang);
             XmlAttribute onlangfailure = SSMLDocument.CreateAttribute("onlangfailure");
             onlangfailure.Value = "ignoretext ";
-            speak.SetAttributeNode(onlangfailure);            
+            speak.SetAttributeNode(onlangfailure);
             XmlElement voice = SSMLDocument.CreateElement("voice");
             voice.SetAttribute("name", SpeechSynthesisVoiceName);
             XmlElement prosody = SSMLDocument.CreateElement("prosody");
-            prosody.SetAttribute("rate",  (rate*100).ToString() +"%");
-            prosody.SetAttribute("pitch", (pitch*100).ToString() + "%"); //  Hz or % ?
+            prosody.SetAttribute("rate", (rate * 100).ToString() + "%");
+            prosody.SetAttribute("pitch", (pitch * 100).ToString() + "%"); //  Hz or % ?
             //prosody.SetAttribute("volume", (volume).ToString("+#.#;-#.#;-0") + "dB"); //Might not work on this version of SSML
             XmlElement express = SSMLDocument.CreateElement("mstts", "express-as", "http://www.w3.org/2001/mstts");
             express.SetAttribute("style", "calm");
@@ -256,7 +211,7 @@ namespace _2022TextToSpeech
 
         private async void ReadText()
         {
-            string textfile = this.label1.Text;            
+            string textfile = this.label1.Text;
             string text = this.textBox1.Text;
             SpeechSynthesizer synthesizer;
             synthesizer = new SpeechSynthesizer(config);
@@ -268,7 +223,7 @@ namespace _2022TextToSpeech
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
             saveFileDialog1.Filter = "Text|*.txt";
             saveFileDialog1.Title = "Save the text box as a .txt File";
-            if(saveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 string pathFileSelected = saveFileDialog1.FileName;
                 if (saveFileDialog1.FileName != "")
@@ -278,8 +233,107 @@ namespace _2022TextToSpeech
                         writer.Write(textBox1.Text);
                     }
 
-                }                
+                }
             }
         }
+        #region Parsing the xmlString from Json format that we recieved it as, to XML      
+        private void button7_Click(object sender, EventArgs e)
+        {
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string fileName = openFileDialog1.FileName;
+                XmlDocument xmlDoc = (XmlDocument)JsonConvert.DeserializeXmlNode(fileName);
+                xmlDoc.Save(fileName + ".xml");
+            }
+        }
+        #endregion
+
+
+        #region Retrieve the list of voices from speech.microsoft.com
+        private void button8_Click(object sender, EventArgs e)
+        {
+            voicesRetrieve();
+
+        }
+
+        async void voicesRetrieve()
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "120f1e685b4244d8b1260b5bbc28f9ee");
+            string listVoicesLocationURL = "https://" + Location + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
+            //string jsonString = await client.GetStringAsync(listVoicesLocationURL); // This is gon be a Json file
+            // save the file as a txt or JSON file within the resources folder            
+            string fileName = "MLSS WestEurope Speech Voices list.json"; // Change this to the desired file name and extension
+            string locationFileResponse = Path.Combine(folderResources, fileName);
+            HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
+            if (response.IsSuccessStatusCode)
+            {
+                using (Stream responseStream = await response.Content.ReadAsStreamAsync())
+                {
+
+                    using (StreamReader reader = new StreamReader(responseStream))
+                    {
+                        string responseData = reader.ReadToEnd();
+                        //save it
+                        SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+                        saveFileDialog1.Title = "Save the response from MS MLSS server about languages.";
+                        if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            string pathFileSelected = saveFileDialog1.FileName;
+                            if (saveFileDialog1.FileName != "")
+                            {
+                                using (StreamWriter writer = new StreamWriter(pathFileSelected))
+                                {
+                                    File.WriteAllText(pathFileSelected, responseData);
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
+
+        #region Populating the two voice combo boxes
+        private void button9_Click(object sender, EventArgs e)
+        {
+            XmlDocument xmlDoc = new XmlDocument();
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {                
+                string fileName = openFileDialog1.FileName;                
+                xmlDoc.Load(fileName); // LoadXML command produces error
+            }
+            XmlNodeList objectNodes = xmlDoc.SelectNodes("//Voice");
+
+            /*
+             //xmlDoc.LoadXml("S:\\VSRepos\\2022TextToSpeech\\2022TextToSpeech\\Resources\\MLSS WestEurope Speech Voices list.xml");
+
+             xmlDoc.LoadXml(Path.Combine(folderResources, "MLSS WestEurope Speech Voices list.xml"));
+             //xmlDoc.Load(Properties.Resources.ResourceManager.GetStream("MLSS WestEurope Speech Voices list.xml"));
+
+             // Get all the Object nodes from the XML file
+             XmlNodeList objectNodes = xmlDoc.SelectNodes("//Object");
+             // Populate the first combo box with LocaleName-Locale values
+             foreach (XmlNode objectNode in objectNodes)
+             {
+                 string localeName = objectNode.SelectSingleNode("LocaleName").InnerText;
+                 string locale = objectNode.SelectSingleNode("Locale").InnerText;
+                 comboBox1.Items.Add(localeName + "-" + locale);
+             }
+             // Populate the second combo box with LocalName (Gender) values
+             foreach (XmlNode objectNode in objectNodes)
+             {
+                 string localName = objectNode.SelectSingleNode("LocalName").InnerText;
+                 string gender = objectNode.SelectSingleNode("Gender").InnerText;
+                 comboBox2.Items.Add(localName + " (" + gender + ")");
+             }
+             */
+            //comboBox1.DataSource = localeName;
+
+        }
+        #endregion
     }
 }
