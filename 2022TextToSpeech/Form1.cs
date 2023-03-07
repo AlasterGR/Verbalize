@@ -24,6 +24,7 @@ namespace _2022TextToSpeech
     using System.Windows.Forms;
     using System.Net.Http.Json;
     using System.Text;
+    using System.Linq; // for <group by> in the comboboxes
 
     public partial class Form1 : Form
     {
@@ -40,6 +41,12 @@ namespace _2022TextToSpeech
         public static float rate = 0.00f;
         public static float volume = 0.0f; //possibly won't work in this version
         public static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
+        public string selectedLocale;
+        public static XmlDocument VoicesXML = new XmlDocument();
+        public static string VoicesfileName = "MLSS WestEurope Speech Voices list.xml"; // Change this to the desired file name and extension
+        public static string locationFileResponse = Path.Combine(folderResources, VoicesfileName);
+        public static string shortName = "";
+
 
         public Form1()
         {
@@ -47,6 +54,8 @@ namespace _2022TextToSpeech
             SpeechSynthesisVoiceName = speechRegion + "-" + voice;
             config.SpeechSynthesisVoiceName = SpeechSynthesisVoiceName;
             config.SpeechRecognitionLanguage = "en";
+
+
         }
 
         private async void Form1_Load(object sender, EventArgs e)
@@ -54,7 +63,10 @@ namespace _2022TextToSpeech
             this.label1.Visible = false;
             this.checkBox1.Checked = false;
             this.checkBox2.Checked = true;
+            VoicesXML.Load(locationFileResponse);
+            VoicesLoad();
         }
+
         private void button3_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -264,8 +276,8 @@ namespace _2022TextToSpeech
             string listVoicesLocationURL = "https://" + ServerLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
             //string jsonString = await client.GetStringAsync(listVoicesLocationURL); // This is gon be a Json file
             // save the file as a txt or JSON file within the resources folder            
-            string fileName = "MLSS WestEurope Speech Voices list.json"; // Change this to the desired file name and extension
-            string locationFileResponse = Path.Combine(folderResources, fileName);
+            string VoicesfileName = "MLSS WestEurope Speech Voices list.json"; // Change this to the desired file name and extension
+            string locationFileResponse = Path.Combine(folderResources, VoicesfileName);
             HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
             if (response.IsSuccessStatusCode)
             {
@@ -299,28 +311,60 @@ namespace _2022TextToSpeech
         #region Populating the two voice combo boxes
         private void button9_Click(object sender, EventArgs e)
         {
-            XmlDocument xmlDoc = new XmlDocument();
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 string fileName = openFileDialog1.FileName;
-                xmlDoc.Load(fileName); // LoadXML command produces error
+                VoicesXML.Load(fileName); // Use Load because LoadXML command produces error
+                VoicesLoad();
             }
-            XmlNodeList Voices = xmlDoc.SelectNodes("//Voice");
-            foreach (XmlNode objectNode in Voices)
-            {
-                string localeName = objectNode.SelectSingleNode("LocaleName").InnerText;
-                string locale = objectNode.SelectSingleNode("Locale").InnerText;
-                comboBox1.Items.Add(localeName + "-" + locale);
-                string localName = objectNode.SelectSingleNode("LocalName").InnerText;
-                string gender = objectNode.SelectSingleNode("Gender").InnerText;
-                comboBox2.Items.Add(localName + " (" + gender + ")");
-            }
+
         }
         #endregion
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            List<string> LocalNames = new List<string>();
+            string selectedLocaleName = this.comboBox1.SelectedItem.ToString();
+            foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
+            {
+                
+                string LocaleName = node.SelectSingleNode("LocaleName").InnerText;
+                //MessageBox.Show("LocaleName from the xml is : " + LocaleName);
+                //MessageBox.Show("LocaleName from the selection is : " + selectedLocaleName);
+                if (LocaleName == selectedLocaleName)
+                {
+                    LocalNames.Add(node.SelectSingleNode("DisplayName").InnerText);
+                    this.label6.Text = node.SelectSingleNode("Locale").InnerText;
+                }
+            }
+            comboBox2.DataSource = LocalNames;
+            //this.label6.Text = VoicesXML.SelectSingleNode(comboBox1.SelectedText).InnerText;
+        }
+
+        private void VoicesLoad()
+        {            
+            /* // For testing purposes
+            int rowsCount = VoicesXML.DocumentElement.ChildNodes.Count;
+            int columnsCount = VoicesXML.DocumentElement.FirstChild.ChildNodes.Count;
+            MessageBox.Show("rows and columns = " + rowsCount + "x" + columnsCount);*/
+            List<string> uniqueLocales = new List<string>();  //  List that will contain only the unique values of Locale, for reference, to populate the combo box with unique elements only
+            foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice")) //Expression "//Voice" works as well
+            {
+                string locale = node.SelectSingleNode("Locale").InnerText;
+                //string ShortName = node.SelectSingleNode("ShortName").InnerText;
+                if (!uniqueLocales.Contains(locale))
+                {
+                    uniqueLocales.Add(locale);
+                    string localeName = node.SelectSingleNode("LocaleName").InnerText;
+                    comboBox1.Items.Add(localeName);
+                    label6.Text = node.SelectSingleNode("Locale").InnerText;
+                }
+                string localName = node.SelectSingleNode("LocalName").InnerText;
+                string gender = node.SelectSingleNode("Gender").InnerText;
+                comboBox1.SelectedIndex = 0;
+            }
+
 
         }
     }

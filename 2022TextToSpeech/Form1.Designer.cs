@@ -50,6 +50,7 @@
             button7 = new Button();
             button8 = new Button();
             button9 = new Button();
+            label6 = new Label();
             SuspendLayout();
             // 
             // button2
@@ -219,7 +220,7 @@
             comboBox1.Location = new Point(117, 464);
             comboBox1.Margin = new Padding(1);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(390, 23);
+            comboBox1.Size = new Size(197, 23);
             comboBox1.TabIndex = 17;
             comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
@@ -262,11 +263,21 @@
             button9.UseVisualStyleBackColor = true;
             button9.Click += button9_Click;
             // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(338, 464);
+            label6.Name = "label6";
+            label6.Size = new Size(41, 15);
+            label6.TabIndex = 22;
+            label6.Text = "Locale";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(740, 539);
+            Controls.Add(label6);
             Controls.Add(button9);
             Controls.Add(button8);
             Controls.Add(button7);
@@ -318,5 +329,6 @@
         private Button button7;
         private Button button8;
         private Button button9;
+        private Label label6;
     }
 }
