@@ -35,8 +35,8 @@ namespace _2022TextToSpeech
         public static string ServerLocation = "westeurope";
         public static SpeechConfig config = SpeechConfig.FromSubscription("120f1e685b4244d8b1260b5bbc28f9ee", ServerLocation);
         public static string speechRegion = "en-US";
-        public static string voice = "JennyNeural";
-        public static string SpeechSynthesisVoiceName = speechRegion + "-" + voice;
+        public static string speechVoice = "JennyNeural";
+        public static string speechSynthesisVoiceName = speechRegion + "-" + speechVoice;
         public static float pitch = 0.00f;
         public static float rate = 0.00f;
         public static float volume = 0.0f; //possibly won't work in this version
@@ -51,9 +51,9 @@ namespace _2022TextToSpeech
         public Form1()
         {
             InitializeComponent();
-            SpeechSynthesisVoiceName = speechRegion + "-" + voice;
-            config.SpeechSynthesisVoiceName = SpeechSynthesisVoiceName;
-            config.SpeechRecognitionLanguage = "en";
+            //speechSynthesisVoiceName = speechRegion + "-" + speechVoice;
+            //config.SpeechSynthesisVoiceName = speechSynthesisVoiceName;
+            //config.SpeechRecognitionLanguage = "en";
 
 
         }
@@ -65,6 +65,7 @@ namespace _2022TextToSpeech
             this.checkBox2.Checked = true;
             VoicesXML.Load(locationFileResponse);
             VoicesLoad();
+            config.SpeechSynthesisVoiceName = speechSynthesisVoiceName;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -186,7 +187,7 @@ namespace _2022TextToSpeech
             onlangfailure.Value = "ignoretext ";
             speak.SetAttributeNode(onlangfailure);
             XmlElement voice = SSMLDocument.CreateElement("voice");
-            voice.SetAttribute("name", SpeechSynthesisVoiceName);
+            voice.SetAttribute("name", speechSynthesisVoiceName);
             XmlElement prosody = SSMLDocument.CreateElement("prosody");
             prosody.SetAttribute("rate", (rate * 100).ToString() + "%");
             prosody.SetAttribute("pitch", (pitch * 100).ToString() + "%"); //  Hz or % ?
@@ -226,10 +227,11 @@ namespace _2022TextToSpeech
             string textfile = this.label1.Text;
             string text = this.textBox1.Text;
             SpeechSynthesizer synthesizer;
+            MessageBox.Show("speech config :" + config.SpeechSynthesisLanguage.ToString());
             synthesizer = new SpeechSynthesizer(config);
             await synthesizer.SpeakTextAsync(text);
         }
-
+        #region Saves the written text as a txt file
         private void button6_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
@@ -248,6 +250,7 @@ namespace _2022TextToSpeech
                 }
             }
         }
+        #endregion
         #region Parsing the xmlString from Json format that we recieved it as, to XML      
         private void button7_Click(object sender, EventArgs e)
         {
@@ -266,7 +269,6 @@ namespace _2022TextToSpeech
         private void button8_Click(object sender, EventArgs e)
         {
             voicesRetrieve();
-
         }
 
         async void voicesRetrieve()
@@ -324,26 +326,25 @@ namespace _2022TextToSpeech
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            List<string> LocalNames = new List<string>();
-            string selectedLocaleName = this.comboBox1.SelectedItem.ToString();
+            List<string> localNames = new List<string>();
+            string selectedLocaleName = this.comboBox1.SelectedItem.ToString();  // this.comboBox1.SelectedItem.ToString() is not a string that can be handled within the next if()
+                                                                                 //MessageBox.Show(selectedLocaleName);
+
             foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
             {
-                
-                string LocaleName = node.SelectSingleNode("LocaleName").InnerText;
-                //MessageBox.Show("LocaleName from the xml is : " + LocaleName);
-                //MessageBox.Show("LocaleName from the selection is : " + selectedLocaleName);
-                if (LocaleName == selectedLocaleName)
+                string localeName = node.SelectSingleNode("LocaleName").InnerText;
+                if (localeName == selectedLocaleName)
                 {
-                    LocalNames.Add(node.SelectSingleNode("DisplayName").InnerText);
+                    localNames.Add(node.SelectSingleNode("DisplayName").InnerText);
                     this.label6.Text = node.SelectSingleNode("Locale").InnerText;
                 }
             }
-            comboBox2.DataSource = LocalNames;
-            //this.label6.Text = VoicesXML.SelectSingleNode(comboBox1.SelectedText).InnerText;
+            comboBox2.DataSource = localNames;
+            comboBox2.SelectedIndex = 0;
         }
 
         private void VoicesLoad()
-        {            
+        {
             /* // For testing purposes
             int rowsCount = VoicesXML.DocumentElement.ChildNodes.Count;
             int columnsCount = VoicesXML.DocumentElement.FirstChild.ChildNodes.Count;
@@ -364,8 +365,20 @@ namespace _2022TextToSpeech
                 string gender = node.SelectSingleNode("Gender").InnerText;
                 comboBox1.SelectedIndex = 0;
             }
+        }
 
-
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedLocalName = this.comboBox2.SelectedItem.ToString();
+            foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
+            {
+                string localName = node.SelectSingleNode("LocalName").InnerText;
+                if (localName == selectedLocalName)
+                {
+                    speechSynthesisVoiceName = node.SelectSingleNode("ShortName").InnerText;  //  We store who our voice actor will be
+                    config.SpeechSynthesisVoiceName = speechSynthesisVoiceName;
+                }
+            }
         }
     }
 }
