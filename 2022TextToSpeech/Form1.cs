@@ -257,14 +257,13 @@ namespace _2022TextToSpeech
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 string JSONFile = openFileDialog1.FileName;
-                string rootName = "Voices";
-                string mainElementsName = "\"Voice\":";
+                /*
                 string textJSONFile = "{ " + mainElementsName + File.ReadAllText(JSONFile) + "}";
                 XmlDocument xmlDoc = JsonConvert.DeserializeXmlNode(textJSONFile, rootName);
-
                 //XmlDocument xmlDoc = JsonConvert.DeserializeXmlNode("{\"Voice\":" + File.ReadAllText(JSONFile) + "}", rootName);
                 xmlDoc.Save(JSONFile + ".xml");
-                //JSONtoXMLConvert(JSONFile, mainElementsName, rootName);
+                */
+                SSML_JSONtoXMLConvert(JSONFile);
             }
         }
         #endregion
@@ -360,29 +359,17 @@ namespace _2022TextToSpeech
         }
         #endregion
 
-        private void JSONtoXMLConvert(string JSONFile, string RootName)
+        private void SSML_JSONtoXMLConvert(string JSONFile)
         {
-            string rootName = RootName;  //  Change to whatever we need to have as root
-            //string text = File.ReadAllText(JSONFile);
-            /*
-            #region From www.newtonsoft.com/json/help/html/ConvertJsonToXml.htm
-            XNode node = JsonConvert.DeserializeXNode(JSONFile, rootName);
-            //XDeclaration _defaultDeclaration = new("1.0", null, null);
-            //var declaration = xmlDoc.Declaration ?? _defaultDeclaration;
-            //var xmlDoc = JsonConvert.DeserializeXNode(JSONFile)!;
-            // Console.WriteLine(node.ToString());
-            #endregion
-            */
-            #region JSon to XML from code-maze
-            XDeclaration _defaultDeclaration = new("1.0", null, null);
-            var docRootNode = JsonConvert.DeserializeXNode(JSONFile, rootName)!;
-
-            var declaration = docRootNode.Declaration ?? _defaultDeclaration;
-            XDocument doc = new XDocument(declaration, "The AI Voices from the SSML server", docRootNode) ;
-
-            doc.Save(JSONFile + ".xml");
-            //return $"{declaration}{Environment.NewLine}{rootNode}";
-            #endregion
+            string rootName = "Voices";  //  Change to whatever we need to have as root
+            string mainElementsName = "\"Voice\":";
+            string textJSONFile = "{ " + mainElementsName + File.ReadAllText(JSONFile) + "}";
+            XmlDocument xmlDoc = JsonConvert.DeserializeXmlNode(textJSONFile, rootName);
+            //Create an XML declaration and then add it to the xml document
+            XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", null);
+            xmlDoc.InsertBefore(xmldecl, xmlDoc.DocumentElement);
+            //  Save the file as an xml. Remove previous existing extention
+            xmlDoc.Save(JSONFile + ".xml");
         }
 
         private void VoicesLoad()
