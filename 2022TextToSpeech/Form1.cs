@@ -382,7 +382,7 @@ namespace _2022TextToSpeech
                 }
                 string localName = node.SelectSingleNode("LocalName").InnerText;
                 string gender = node.SelectSingleNode("Gender").InnerText;
-                comboBox1.SelectedIndex = 0;
+                comboBox1.SelectedIndex = 0; 
             }
         }
     }
