@@ -43,8 +43,8 @@ namespace _2022TextToSpeech
         public static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
         public string selectedLocale;
         public static XmlDocument VoicesXML = new XmlDocument();
-        public static string VoicesfileName = "SSML WestEurope Speech Voices list.xml"; // Change this to the desired file name and extension
-        public static string locationFileResponse = Path.Combine(folderResources, VoicesfileName);
+        public static string voicesSSMLFileName = "Voices.xml"; // Change this to the desired file name and extension
+        public static string locationFileResponse = Path.Combine(folderResources, voicesSSMLFileName);
         public static string shortName = "";
 
 
@@ -257,12 +257,6 @@ namespace _2022TextToSpeech
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 string JSONFile = openFileDialog1.FileName;
-                /*
-                string textJSONFile = "{ " + mainElementsName + File.ReadAllText(JSONFile) + "}";
-                XmlDocument xmlDoc = JsonConvert.DeserializeXmlNode(textJSONFile, rootName);
-                //XmlDocument xmlDoc = JsonConvert.DeserializeXmlNode("{\"Voice\":" + File.ReadAllText(JSONFile) + "}", rootName);
-                xmlDoc.Save(JSONFile + ".xml");
-                */
                 SSML_JSONtoXMLConvert(JSONFile);
             }
         }
@@ -361,7 +355,7 @@ namespace _2022TextToSpeech
 
         private void SSML_JSONtoXMLConvert(string JSONFile)
         {
-            string rootName = "Voices";  //  Change to whatever we need to have as root
+            string rootName = voicesSSMLFileName;  //  Change to whatever we need to have as root
             string mainElementsName = "\"Voice\":";
             string textJSONFile = "{ " + mainElementsName + File.ReadAllText(JSONFile) + "}";
             XmlDocument xmlDoc = JsonConvert.DeserializeXmlNode(textJSONFile, rootName);
@@ -369,15 +363,11 @@ namespace _2022TextToSpeech
             XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", null);
             xmlDoc.InsertBefore(xmldecl, xmlDoc.DocumentElement);
             //  Save the file as an xml. Remove previous existing extention
-            xmlDoc.Save(JSONFile + ".xml");
+            xmlDoc.Save( Path.Combine(Path.GetDirectoryName(JSONFile), rootName)  );
         }
 
         private void VoicesLoad()
-        {
-            /* // For testing purposes
-            int rowsCount = VoicesXML.DocumentElement.ChildNodes.Count;
-            int columnsCount = VoicesXML.DocumentElement.FirstChild.ChildNodes.Count;
-            MessageBox.Show("rows and columns = " + rowsCount + "x" + columnsCount);*/
+        {  /*This function loads the list of language elements from the SSML Voice file onto the Languages combo box*/
             List<string> uniqueLocales = new List<string>();  //  List that will contain only the unique values of Locale, for reference, to populate the combo box with unique elements only
             foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice")) //Expression "//Voice" works as well
             {
