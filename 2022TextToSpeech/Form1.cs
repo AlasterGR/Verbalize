@@ -43,7 +43,7 @@ namespace _2022TextToSpeech
         public static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
         public string selectedLocale;
         public static XmlDocument VoicesXML = new XmlDocument();
-        public static string VoicesfileName = "MLSS WestEurope Speech Voices list.xml"; // Change this to the desired file name and extension
+        public static string VoicesfileName = "SSML WestEurope Speech Voices list.xml"; // Change this to the desired file name and extension
         public static string locationFileResponse = Path.Combine(folderResources, VoicesfileName);
         public static string shortName = "";
 
@@ -156,7 +156,7 @@ namespace _2022TextToSpeech
             // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
         }
 
-        static void CreateXML(string text, string pathFileSelected)
+        static void CreateSSML(string text, string pathFileSelected)
         {
             #region Creation of the XML document and and its root element
             XmlDocument SSMLDocument = new XmlDocument();
@@ -213,7 +213,7 @@ namespace _2022TextToSpeech
                 string textfile = openFileDialog1.FileName;
                 string text = System.IO.File.ReadAllText(textfile);
                 string pathFileSelected = Path.GetDirectoryName(textfile);
-                CreateXML(text, pathFileSelected);
+                CreateSSML(text, pathFileSelected);
             }
         }
 
@@ -254,23 +254,26 @@ namespace _2022TextToSpeech
         #region Parsing the xmlString from Json format that we recieved it as, to XML      
         private void button7_Click(object sender, EventArgs e)
         {
-
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                string fileName = openFileDialog1.FileName;
-                XmlDocument xmlDoc = (XmlDocument)JsonConvert.DeserializeXmlNode(fileName);
-                xmlDoc.Save(fileName + ".xml");
+                string JSONFile = openFileDialog1.FileName;
+                string rootName = "Voices";
+                string mainElementsName = "\"Voice\":";
+                string textJSONFile = "{ " + mainElementsName + File.ReadAllText(JSONFile) + "}";
+                XmlDocument xmlDoc = JsonConvert.DeserializeXmlNode(textJSONFile, rootName);
+
+                //XmlDocument xmlDoc = JsonConvert.DeserializeXmlNode("{\"Voice\":" + File.ReadAllText(JSONFile) + "}", rootName);
+                xmlDoc.Save(JSONFile + ".xml");
+                //JSONtoXMLConvert(JSONFile, mainElementsName, rootName);
             }
         }
         #endregion
-
 
         #region Retrieve the list of voices from speech.microsoft.com
         private void button8_Click(object sender, EventArgs e)
         {
             voicesRetrieve();
         }
-
         async void voicesRetrieve()
         {
             var client = new HttpClient();
@@ -278,20 +281,19 @@ namespace _2022TextToSpeech
             string listVoicesLocationURL = "https://" + ServerLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
             //string jsonString = await client.GetStringAsync(listVoicesLocationURL); // This is gon be a Json file
             // save the file as a txt or JSON file within the resources folder            
-            string VoicesfileName = "MLSS WestEurope Speech Voices list.json"; // Change this to the desired file name and extension
-            string locationFileResponse = Path.Combine(folderResources, VoicesfileName);
+            //string voicesJSONFilename = "SSML WestEurope Speech Voices list.json"; // Change this to the desired file name and extension
+            //string locationFileResponse = Path.Combine(folderResources, voicesJSONFilename); // For the File.WriteAllText, if we want to store it automatically to Resources
             HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
             if (response.IsSuccessStatusCode)
             {
                 using (Stream responseStream = await response.Content.ReadAsStreamAsync())
                 {
-
                     using (StreamReader reader = new StreamReader(responseStream))
                     {
                         string responseData = reader.ReadToEnd();
                         //save it
                         SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-                        saveFileDialog1.Title = "Save the response from MS MLSS server about languages.";
+                        saveFileDialog1.Title = "Save the response from MS SSML server about languages.";
                         if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                         {
                             string pathFileSelected = saveFileDialog1.FileName;
@@ -301,7 +303,7 @@ namespace _2022TextToSpeech
                                 {
                                     File.WriteAllText(pathFileSelected, responseData);
                                 }
-
+                                //JSONtoXMLConvert(pathFileSelected);
                             }
                         }
                     }
@@ -310,7 +312,7 @@ namespace _2022TextToSpeech
         }
         #endregion
 
-        #region Populating the two voice combo boxes
+        #region button for Populating the two voice combo boxes
         private void button9_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
@@ -320,10 +322,9 @@ namespace _2022TextToSpeech
                 VoicesXML.Load(fileName); // Use Load because LoadXML command produces error
                 VoicesLoad();
             }
-
         }
         #endregion
-
+        #region Language combo box
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             List<string> localNames = new List<string>();
@@ -341,6 +342,47 @@ namespace _2022TextToSpeech
             }
             comboBox2.DataSource = localNames;
             comboBox2.SelectedIndex = 0;
+        }
+        #endregion
+        #region Voice actor combo box
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedLocalName = this.comboBox2.SelectedItem.ToString();
+            foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
+            {
+                string localName = node.SelectSingleNode("LocalName").InnerText;
+                if (localName == selectedLocalName)
+                {
+                    speechSynthesisVoiceName = node.SelectSingleNode("ShortName").InnerText;  //  We store who our voice actor will be
+                    config.SpeechSynthesisVoiceName = speechSynthesisVoiceName;
+                }
+            }
+        }
+        #endregion
+
+        private void JSONtoXMLConvert(string JSONFile, string RootName)
+        {
+            string rootName = RootName;  //  Change to whatever we need to have as root
+            //string text = File.ReadAllText(JSONFile);
+            /*
+            #region From www.newtonsoft.com/json/help/html/ConvertJsonToXml.htm
+            XNode node = JsonConvert.DeserializeXNode(JSONFile, rootName);
+            //XDeclaration _defaultDeclaration = new("1.0", null, null);
+            //var declaration = xmlDoc.Declaration ?? _defaultDeclaration;
+            //var xmlDoc = JsonConvert.DeserializeXNode(JSONFile)!;
+            // Console.WriteLine(node.ToString());
+            #endregion
+            */
+            #region JSon to XML from code-maze
+            XDeclaration _defaultDeclaration = new("1.0", null, null);
+            var docRootNode = JsonConvert.DeserializeXNode(JSONFile, rootName)!;
+
+            var declaration = docRootNode.Declaration ?? _defaultDeclaration;
+            XDocument doc = new XDocument(declaration, "The AI Voices from the SSML server", docRootNode) ;
+
+            doc.Save(JSONFile + ".xml");
+            //return $"{declaration}{Environment.NewLine}{rootNode}";
+            #endregion
         }
 
         private void VoicesLoad()
@@ -364,20 +406,6 @@ namespace _2022TextToSpeech
                 string localName = node.SelectSingleNode("LocalName").InnerText;
                 string gender = node.SelectSingleNode("Gender").InnerText;
                 comboBox1.SelectedIndex = 0;
-            }
-        }
-
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string selectedLocalName = this.comboBox2.SelectedItem.ToString();
-            foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
-            {
-                string localName = node.SelectSingleNode("LocalName").InnerText;
-                if (localName == selectedLocalName)
-                {
-                    speechSynthesisVoiceName = node.SelectSingleNode("ShortName").InnerText;  //  We store who our voice actor will be
-                    config.SpeechSynthesisVoiceName = speechSynthesisVoiceName;
-                }
             }
         }
     }
