@@ -402,7 +402,6 @@ namespace _2022TextToSpeech
             SpeechSynthesizer synthesizer;
             synthesizer = new SpeechSynthesizer(config);
             await synthesizer.SpeakSsmlAsync(text);
-
         }
     }
 }
