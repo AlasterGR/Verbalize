@@ -35,8 +35,9 @@ namespace _2022TextToSpeech
         //static string regionService = Environment.GetEnvironmentVariable("westeurope");
         public static string ServerLocation = "westeurope";
         public static SpeechConfig config = SpeechConfig.FromSubscription("120f1e685b4244d8b1260b5bbc28f9ee", ServerLocation);  //This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis
-        public static float pitch = 0.00f;
-        public static float rate = 0.00f;
+        public static int pitch = 0;
+        public static int rate = 0;
+        public static string style = "calm";
         public static float volume = 0.0f; //possibly won't work in this version
         public static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
         public string selectedLocale;
@@ -155,66 +156,6 @@ namespace _2022TextToSpeech
             // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
         }
 
-        static void CreateSSML(string text, string pathFileSelected)
-        {
-            #region Creation of the XML document and and its root element
-            XmlDocument SSMLDocument = new XmlDocument();
-            XmlElement speak = SSMLDocument.CreateElement("speak");
-            SSMLDocument.AppendChild(speak);
-            #endregion
-            #region XML declaration. Mandatory for XML 1.1 and SSML also requires this : https://www.w3.org/TR/speech-synthesis/#S2.1
-            XmlDeclaration xmlDeclaration = SSMLDocument.CreateXmlDeclaration("1.0", "UTF-8", null);
-            SSMLDocument.InsertBefore(xmlDeclaration, speak);
-            #endregion
-            #region Assigning the XML's elements and using variables for the attributes. Reference : https://www.w3.org/TR/speech-synthesis/#S3.1.1         
-            XmlAttribute version = SSMLDocument.CreateAttribute("version");  //  For some reason, version cannot be 1.1
-            version.Value = "1.0";
-            speak.SetAttributeNode(version);
-            XmlAttribute xmlns = SSMLDocument.CreateAttribute("xmlns");
-            xmlns.Value = "http://www.w3.org/2001/10/synthesis";
-            speak.SetAttributeNode(xmlns);
-            XmlAttribute mstts = SSMLDocument.CreateAttribute("xmlns:mstts");
-            mstts.Value = "http://www.w3.org/2001/mstts";
-            speak.SetAttributeNode(mstts);
-            XmlAttribute emo = SSMLDocument.CreateAttribute("xmlns:emo");
-            emo.Value = "http://www.w3.org/2009/10/emotionml";
-            speak.SetAttributeNode(emo);
-            XmlAttribute lang = SSMLDocument.CreateAttribute("xml:lang");
-            lang.Value = config.SpeechSynthesisLanguage;
-            speak.SetAttributeNode(lang);
-            XmlAttribute onlangfailure = SSMLDocument.CreateAttribute("onlangfailure");
-            onlangfailure.Value = "ignoretext ";
-            speak.SetAttributeNode(onlangfailure);
-            XmlElement voice = SSMLDocument.CreateElement("voice");
-            voice.SetAttribute("name", config.SpeechSynthesisVoiceName);
-            XmlElement prosody = SSMLDocument.CreateElement("prosody");
-            prosody.SetAttribute("rate", (rate * 100).ToString() + "%");
-            prosody.SetAttribute("pitch", (pitch * 100).ToString() + "%"); //  Hz or % ?
-            //prosody.SetAttribute("volume", (volume).ToString("+#.#;-#.#;-0") + "dB"); //Might not work on this version of SSML
-            XmlElement express = SSMLDocument.CreateElement("mstts", "express-as", "http://www.w3.org/2001/mstts");
-            express.SetAttribute("style", "calm");
-            #endregion
-            #region Appending the XML elements to their parents
-            prosody.AppendChild(express);
-            voice.AppendChild(prosody);
-            speak.AppendChild(voice);
-            #endregion
-            //  Entering the .txt file's text as the xml's main -inner- text
-            express.InnerText = text;
-            // Save the XML document to a file           
-            SSMLDocument.Save(Path.Combine(pathFileSelected, "output.xml"));
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                string textfile = openFileDialog1.FileName;
-                string text = System.IO.File.ReadAllText(textfile);
-                string pathFileSelected = Path.GetDirectoryName(textfile);
-                CreateSSML(text, pathFileSelected);
-            }
-        }
 
         private void button5_Click(object sender, EventArgs e)
         {
@@ -244,7 +185,6 @@ namespace _2022TextToSpeech
                     {
                         writer.Write(textBox1.Text);
                     }
-
                 }
             }
         }
@@ -290,35 +230,34 @@ namespace _2022TextToSpeech
         #region Language combo box
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            List<string> localNames = new List<string>();
+            List<string> displayNames = new List<string>();
             string selectedLocaleName = this.comboBox1.SelectedItem.ToString();  // this.comboBox1.SelectedItem.ToString() is not a string that can be handled within the next if()
-            //MessageBox.Show(selectedLocaleName);
 
             foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
             {
                 string localeName = node.SelectSingleNode("LocaleName").InnerText;
                 if (localeName == selectedLocaleName)
                 {
-                    localNames.Add(node.SelectSingleNode("DisplayName").InnerText);
+                    displayNames.Add(node.SelectSingleNode("DisplayName").InnerText);
                     this.label6.Text = node.SelectSingleNode("Locale").InnerText;
                     config.SpeechSynthesisLanguage = node.SelectSingleNode("Locale").InnerText;
                 }
             }
-            comboBox2.DataSource = localNames;
+            comboBox2.DataSource = displayNames;
             comboBox2.SelectedIndex = 0;
         }
         #endregion
         #region Voice actor combo box
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedLocalName = this.comboBox2.SelectedItem.ToString();
+            string selectedDisplayName = this.comboBox2.SelectedItem.ToString();
             foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
             {
                 string localName = node.SelectSingleNode("DisplayName").InnerText;
-                if (localName == selectedLocalName)
+                if (localName == selectedDisplayName)
                 {
                     config.SpeechSynthesisVoiceName = node.SelectSingleNode("ShortName").InnerText;  //  We store who our voice actor will be
-
+                    this.label7.Text = " - " + node.SelectSingleNode("LocalName").InnerText + " (" + node.SelectSingleNode("Gender").InnerText + ")";
                 }
             }
         }
@@ -349,7 +288,6 @@ namespace _2022TextToSpeech
                     string localeName = node.SelectSingleNode("LocaleName").InnerText;
                     comboBox1.Items.Add(localeName);
                     label6.Text = node.SelectSingleNode("Locale").InnerText;
-
                 }
                 string localName = node.SelectSingleNode("LocalName").InnerText;
                 string gender = node.SelectSingleNode("Gender").InnerText;
@@ -357,5 +295,114 @@ namespace _2022TextToSpeech
             }
         }
         #endregion
+
+        private void vScrollBar2_ValueChanged(object sender, EventArgs e)
+        {
+            pitch = this.vScrollBar2.Value;
+            this.label2.Text = "Pitch = " + pitch.ToString();
+        }
+
+        private void vScrollBar1_ValueChanged(object sender, EventArgs e)
+        {
+            rate = this.vScrollBar1.Value;
+            this.label3.Text = "Rate = " + rate.ToString();
+        }
+
+
+        private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {            
+            style = this.comboBox3.SelectedItem.ToString();
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "XML|*.xml";
+            saveFileDialog1.Title = "Save the text box as a .xml file compliant to the SSML type.";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if (saveFileDialog1.FileName != "")
+                {
+                    string pathFileSelected = saveFileDialog1.FileName;
+                    string text = this.textBox1.Text;
+                    XmlDocument SSMLDocument = CreateSSML(text);
+                    // Save the XML document to a file         
+                    SSMLDocument.Save(pathFileSelected);
+                }
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string text = System.IO.File.ReadAllText(openFileDialog1.FileName);
+                string xmlFile = Path.GetFileNameWithoutExtension(openFileDialog1.FileName) + ".xml";
+                string pathFileSelected = Path.Combine(Path.GetDirectoryName(openFileDialog1.FileName), xmlFile);
+                XmlDocument SSMLDocument = CreateSSML(text);
+                // Save the XML document to a file         
+                SSMLDocument.Save(pathFileSelected);
+            }
+        }
+        static XmlDocument CreateSSML(string text)
+        {
+            #region Creation of the XML document and and its root element
+            XmlDocument SSMLDocument = new XmlDocument();
+            XmlElement speak = SSMLDocument.CreateElement("speak");
+            SSMLDocument.AppendChild(speak);
+            #endregion
+            #region XML declaration. Mandatory for XML 1.1 and SSML also requires this : https://www.w3.org/TR/speech-synthesis/#S2.1
+            XmlDeclaration xmlDeclaration = SSMLDocument.CreateXmlDeclaration("1.0", "UTF-8", null);
+            SSMLDocument.InsertBefore(xmlDeclaration, speak);
+            #endregion
+            #region Assigning the XML's elements and using variables for the attributes. Reference : https://www.w3.org/TR/speech-synthesis/#S3.1.1         
+            XmlAttribute version = SSMLDocument.CreateAttribute("version");  //  For some reason, version cannot be 1.1
+            version.Value = "1.0";
+            speak.SetAttributeNode(version);
+            XmlAttribute xmlns = SSMLDocument.CreateAttribute("xmlns");
+            xmlns.Value = "http://www.w3.org/2001/10/synthesis";
+            speak.SetAttributeNode(xmlns);
+            XmlAttribute mstts = SSMLDocument.CreateAttribute("xmlns:mstts");
+            mstts.Value = "http://www.w3.org/2001/mstts";
+            speak.SetAttributeNode(mstts);
+            XmlAttribute emo = SSMLDocument.CreateAttribute("xmlns:emo");
+            emo.Value = "http://www.w3.org/2009/10/emotionml";
+            speak.SetAttributeNode(emo);
+            XmlAttribute lang = SSMLDocument.CreateAttribute("xml:lang");
+            lang.Value = config.SpeechSynthesisLanguage;
+            speak.SetAttributeNode(lang);
+            XmlAttribute onlangfailure = SSMLDocument.CreateAttribute("onlangfailure");
+            onlangfailure.Value = "ignoretext ";
+            speak.SetAttributeNode(onlangfailure);
+            XmlElement voice = SSMLDocument.CreateElement("voice");
+            voice.SetAttribute("name", config.SpeechSynthesisVoiceName);
+            XmlElement prosody = SSMLDocument.CreateElement("prosody");
+            prosody.SetAttribute("rate", rate.ToString() + "%");
+            prosody.SetAttribute("pitch", pitch.ToString() + "Hz"); //  Hz or % ?
+            //prosody.SetAttribute("volume", (volume).ToString("+#.#;-#.#;-0") + "dB"); //Might not work on this version of SSML
+            XmlElement express = SSMLDocument.CreateElement("mstts", "express-as", "http://www.w3.org/2001/mstts");
+            express.SetAttribute("style", style);
+            #endregion
+            #region Appending the XML elements to their parents
+            prosody.AppendChild(express);
+            voice.AppendChild(prosody);
+            speak.AppendChild(voice);
+            #endregion
+            //  Entering the .txt file's text as the xml's main -inner- text
+            express.InnerText = text;
+            return SSMLDocument;
+        }
+
+        private async void button10_Click(object sender, EventArgs e)
+        {
+            string text = this.textBox1.Text;
+            XmlDocument SSMLDocument = CreateSSML(text);
+            text = SSMLDocument.OuterXml;
+            MessageBox.Show(text);
+            SpeechSynthesizer synthesizer;
+            synthesizer = new SpeechSynthesizer(config);
+            await synthesizer.SpeakSsmlAsync(text);
+
+        }
     }
 }

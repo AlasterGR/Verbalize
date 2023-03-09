@@ -51,6 +51,10 @@
             button9 = new Button();
             label6 = new Label();
             label7 = new Label();
+            button7 = new Button();
+            comboBox3 = new ComboBox();
+            label8 = new Label();
+            button10 = new Button();
             SuspendLayout();
             // 
             // button2
@@ -71,10 +75,10 @@
             // 
             // button3
             // 
-            button3.Location = new Point(34, 407);
+            button3.Location = new Point(34, 701);
             button3.Margin = new Padding(9, 10, 9, 10);
             button3.Name = "button3";
-            button3.Size = new Size(274, 240);
+            button3.Size = new Size(274, 111);
             button3.TabIndex = 2;
             button3.Text = "FindFile";
             button3.UseVisualStyleBackColor = true;
@@ -92,10 +96,10 @@
             // 
             // button1
             // 
-            button1.Location = new Point(34, 699);
+            button1.Location = new Point(34, 832);
             button1.Margin = new Padding(9, 10, 9, 10);
             button1.Name = "button1";
-            button1.Size = new Size(274, 240);
+            button1.Size = new Size(274, 107);
             button1.TabIndex = 4;
             button1.Text = "Replay";
             button1.UseVisualStyleBackColor = true;
@@ -146,15 +150,15 @@
             // 
             button5.Location = new Point(36, 155);
             button5.Name = "button5";
-            button5.Size = new Size(274, 70);
+            button5.Size = new Size(274, 176);
             button5.TabIndex = 9;
-            button5.Text = "Εκφώνηση";
+            button5.Text = "Εκφώνηση απλού κειμένου";
             button5.UseVisualStyleBackColor = true;
             button5.Click += button5_Click;
             // 
             // button6
             // 
-            button6.Location = new Point(34, 241);
+            button6.Location = new Point(34, 576);
             button6.Name = "button6";
             button6.Size = new Size(274, 112);
             button6.TabIndex = 10;
@@ -164,22 +168,31 @@
             // 
             // vScrollBar1
             // 
-            vScrollBar1.Location = new Point(1393, 603);
+            vScrollBar1.LargeChange = 0;
+            vScrollBar1.Location = new Point(1393, 183);
+            vScrollBar1.Maximum = 200;
             vScrollBar1.Name = "vScrollBar1";
-            vScrollBar1.Size = new Size(153, 336);
+            vScrollBar1.Size = new Size(91, 756);
+            vScrollBar1.SmallChange = 0;
             vScrollBar1.TabIndex = 11;
+            vScrollBar1.Value = 20;
+            vScrollBar1.ValueChanged += vScrollBar1_ValueChanged;
             // 
             // vScrollBar2
             // 
-            vScrollBar2.Location = new Point(1574, 603);
+            vScrollBar2.LargeChange = 0;
+            vScrollBar2.Location = new Point(1574, 183);
+            vScrollBar2.Maximum = 1000;
             vScrollBar2.Name = "vScrollBar2";
-            vScrollBar2.Size = new Size(94, 336);
+            vScrollBar2.Size = new Size(98, 756);
+            vScrollBar2.SmallChange = 0;
             vScrollBar2.TabIndex = 12;
+            vScrollBar2.ValueChanged += vScrollBar2_ValueChanged;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(1574, 555);
+            label2.Location = new Point(1574, 135);
             label2.Name = "label2";
             label2.Size = new Size(98, 48);
             label2.TabIndex = 13;
@@ -188,7 +201,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(1394, 555);
+            label3.Location = new Point(1393, 135);
             label3.Name = "label3";
             label3.Size = new Size(91, 48);
             label3.TabIndex = 14;
@@ -226,7 +239,7 @@
             comboBox2.FormattingEnabled = true;
             comboBox2.Location = new Point(228, 1187);
             comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(324, 56);
+            comboBox2.Size = new Size(264, 56);
             comboBox2.TabIndex = 18;
             comboBox2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
             // 
@@ -256,7 +269,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(691, 1187);
+            label6.Location = new Point(228, 1129);
             label6.Margin = new Padding(9, 0, 9, 0);
             label6.Name = "label6";
             label6.Size = new Size(203, 48);
@@ -266,18 +279,62 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(564, 1190);
+            label7.Location = new Point(504, 1195);
             label7.Margin = new Padding(9, 0, 9, 0);
             label7.Name = "label7";
-            label7.Size = new Size(149, 48);
+            label7.Size = new Size(349, 48);
             label7.TabIndex = 23;
-            label7.Text = "Locale : ";
+            label7.Text = "Local name (Gender)";
+            // 
+            // button7
+            // 
+            button7.Location = new Point(1236, 959);
+            button7.Name = "button7";
+            button7.Size = new Size(486, 70);
+            button7.TabIndex = 24;
+            button7.Text = "Save textbox text to SSML .xml";
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += button7_Click;
+            // 
+            // comboBox3
+            // 
+            comboBox3.FormattingEnabled = true;
+            comboBox3.Items.AddRange(new object[] { "advertisement_upbeat", "affectionate", "angry", "assistant", "calm", "chat", "cheerful", "customerservice", "depressed", "disgruntled", "documentary-narration", "embarrassed", "empathetic", "envious", "excited", "fearful", "friendly", "gentle", "hopeful", "lyrical", "narration-professional", "narration-relaxed", "newscast", "newscast-casual", "newscast-formal", "poetry-reading", "sad", "serious", "shouting", "sports_commentary", "sports_commentary_excited", "whispering", "terrified", "unfriendly" });
+            comboBox3.Location = new Point(1393, 27);
+            comboBox3.Name = "comboBox3";
+            comboBox3.Size = new Size(363, 56);
+            comboBox3.TabIndex = 25;
+            comboBox3.SelectedIndexChanged += comboBox3_SelectedIndexChanged;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(1286, 35);
+            label8.Margin = new Padding(9, 0, 9, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(95, 48);
+            label8.TabIndex = 26;
+            label8.Text = "Style";
+            // 
+            // button10
+            // 
+            button10.Location = new Point(37, 337);
+            button10.Name = "button10";
+            button10.Size = new Size(273, 120);
+            button10.TabIndex = 27;
+            button10.Text = "Εκφώνηση SSML κειμένου";
+            button10.UseVisualStyleBackColor = true;
+            button10.Click += button10_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(20F, 48F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1837, 1400);
+            Controls.Add(button10);
+            Controls.Add(label8);
+            Controls.Add(comboBox3);
+            Controls.Add(button7);
             Controls.Add(label7);
             Controls.Add(label6);
             Controls.Add(button9);
@@ -332,5 +389,9 @@
         private Button button9;
         private Label label6;
         private Label label7;
+        private Button button7;
+        private ComboBox comboBox3;
+        private Label label8;
+        private Button button10;
     }
 }
