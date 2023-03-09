@@ -25,18 +25,16 @@ namespace _2022TextToSpeech
     using System.Net.Http.Json;
     using System.Text;
     using System.Linq; // for <group by> in the comboboxes
+    using System.Runtime.CompilerServices;
 
     public partial class Form1 : Form
     {
         //private const string Key = "4b3dc697810e47fc845f076f446a62da";
         //private const string Location = "westeurope"; // Azure Speech Service Location
         //static string speechKey = Environment.GetEnvironmentVariable("4b3dc697810e47fc845f076f446a62da");
-        //static string speechRegion = Environment.GetEnvironmentVariable("westeurope");
+        //static string regionService = Environment.GetEnvironmentVariable("westeurope");
         public static string ServerLocation = "westeurope";
-        public static SpeechConfig config = SpeechConfig.FromSubscription("120f1e685b4244d8b1260b5bbc28f9ee", ServerLocation);
-        public static string speechRegion = "en-US";
-        public static string speechVoice = "JennyNeural";
-        public static string speechSynthesisVoiceName = speechRegion + "-" + speechVoice;
+        public static SpeechConfig config = SpeechConfig.FromSubscription("120f1e685b4244d8b1260b5bbc28f9ee", ServerLocation);  //This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis
         public static float pitch = 0.00f;
         public static float rate = 0.00f;
         public static float volume = 0.0f; //possibly won't work in this version
@@ -49,15 +47,9 @@ namespace _2022TextToSpeech
         public static string locationFileResponseBackup = Path.Combine(folderResources, voicesSSMLFileNameBackup);
         public static string shortName = "";
 
-
         public Form1()
         {
             InitializeComponent();
-            //speechSynthesisVoiceName = speechRegion + "-" + speechVoice;
-            //config.SpeechSynthesisVoiceName = speechSynthesisVoiceName;
-            //config.SpeechRecognitionLanguage = "en";
-
-
         }
 
         private async void Form1_Load(object sender, EventArgs e)
@@ -73,9 +65,7 @@ namespace _2022TextToSpeech
             {
                 VoicesXML.Load(locationFileResponseBackup);
             }
-
             VoicesLoad();
-            config.SpeechSynthesisVoiceName = speechSynthesisVoiceName;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -162,7 +152,6 @@ namespace _2022TextToSpeech
             else if (filetype.Equals(".xml"))
             { await synthesizer.SpeakSsmlAsync(txt); }
             MessageBox.Show("The file was read");
-
             // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
         }
 
@@ -191,13 +180,13 @@ namespace _2022TextToSpeech
             emo.Value = "http://www.w3.org/2009/10/emotionml";
             speak.SetAttributeNode(emo);
             XmlAttribute lang = SSMLDocument.CreateAttribute("xml:lang");
-            lang.Value = speechRegion;
+            lang.Value = config.SpeechSynthesisLanguage;
             speak.SetAttributeNode(lang);
             XmlAttribute onlangfailure = SSMLDocument.CreateAttribute("onlangfailure");
             onlangfailure.Value = "ignoretext ";
             speak.SetAttributeNode(onlangfailure);
             XmlElement voice = SSMLDocument.CreateElement("voice");
-            voice.SetAttribute("name", speechSynthesisVoiceName);
+            voice.SetAttribute("name", config.SpeechSynthesisVoiceName);
             XmlElement prosody = SSMLDocument.CreateElement("prosody");
             prosody.SetAttribute("rate", (rate * 100).ToString() + "%");
             prosody.SetAttribute("pitch", (pitch * 100).ToString() + "%"); //  Hz or % ?
@@ -237,7 +226,6 @@ namespace _2022TextToSpeech
             string textfile = this.label1.Text;
             string text = this.textBox1.Text;
             SpeechSynthesizer synthesizer;
-            MessageBox.Show("speech config :" + config.SpeechSynthesisLanguage.ToString());
             synthesizer = new SpeechSynthesizer(config);
             await synthesizer.SpeakTextAsync(text);
         }
@@ -287,7 +275,6 @@ namespace _2022TextToSpeech
             }
         }
         #endregion
-
         #region button for Populating the two voice combo boxes - Will later be done to select automaticaly from Resources\voice
         private void button9_Click(object sender, EventArgs e)
         {
@@ -305,7 +292,7 @@ namespace _2022TextToSpeech
         {
             List<string> localNames = new List<string>();
             string selectedLocaleName = this.comboBox1.SelectedItem.ToString();  // this.comboBox1.SelectedItem.ToString() is not a string that can be handled within the next if()
-                                                                                 //MessageBox.Show(selectedLocaleName);
+            //MessageBox.Show(selectedLocaleName);
 
             foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
             {
@@ -314,6 +301,7 @@ namespace _2022TextToSpeech
                 {
                     localNames.Add(node.SelectSingleNode("DisplayName").InnerText);
                     this.label6.Text = node.SelectSingleNode("Locale").InnerText;
+                    config.SpeechSynthesisLanguage = node.SelectSingleNode("Locale").InnerText;
                 }
             }
             comboBox2.DataSource = localNames;
@@ -326,11 +314,11 @@ namespace _2022TextToSpeech
             string selectedLocalName = this.comboBox2.SelectedItem.ToString();
             foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
             {
-                string localName = node.SelectSingleNode("LocalName").InnerText;
+                string localName = node.SelectSingleNode("DisplayName").InnerText;
                 if (localName == selectedLocalName)
                 {
-                    speechSynthesisVoiceName = node.SelectSingleNode("ShortName").InnerText;  //  We store who our voice actor will be
-                    config.SpeechSynthesisVoiceName = speechSynthesisVoiceName;
+                    config.SpeechSynthesisVoiceName = node.SelectSingleNode("ShortName").InnerText;  //  We store who our voice actor will be
+
                 }
             }
         }
@@ -361,6 +349,7 @@ namespace _2022TextToSpeech
                     string localeName = node.SelectSingleNode("LocaleName").InnerText;
                     comboBox1.Items.Add(localeName);
                     label6.Text = node.SelectSingleNode("Locale").InnerText;
+
                 }
                 string localName = node.SelectSingleNode("LocalName").InnerText;
                 string gender = node.SelectSingleNode("Gender").InnerText;
