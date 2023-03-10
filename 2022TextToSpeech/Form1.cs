@@ -27,6 +27,7 @@ namespace _2022TextToSpeech
     using System.Linq; // for <group by> in the comboboxes
     using System.Runtime.CompilerServices;
     using System.Configuration;
+    using System.Net;
 
     public partial class Form1 : Form
     {
@@ -55,7 +56,7 @@ namespace _2022TextToSpeech
             InitializeComponent();
         }
 
-        private async void Form1_Load(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
             this.label1.Visible = false;
             this.checkBox1.Checked = false;
@@ -66,7 +67,15 @@ namespace _2022TextToSpeech
             }
             catch (Exception)
             {
-                VoicesXML.Load(locationFileResponseBackup);
+                try
+                {
+                    VoicesXML.Load(locationFileResponseBackup);
+                }
+                catch                 
+                {
+                    System.IO.Directory.CreateDirectory(folderResources);
+                    VoicesRetrieve();
+                }
             }
             VoicesLoad();
             this.comboBox3.SelectedText = "calm";
@@ -192,15 +201,15 @@ namespace _2022TextToSpeech
         #region Retrieve the list of voices from speech.microsoft.com and reload the voices into the boxes
         private void button8_Click(object sender, EventArgs e)
         {
-            voicesRetrieve();
+            VoicesRetrieve();
             VoicesLoad();
         }
-        async void voicesRetrieve()
+        async void VoicesRetrieve()
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "120f1e685b4244d8b1260b5bbc28f9ee");
             string listVoicesLocationURL = "https://" + ServerLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
-            HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
+            HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);            
             if (response.IsSuccessStatusCode)
             {
                 using (Stream responseStream = await response.Content.ReadAsStreamAsync())
@@ -209,9 +218,11 @@ namespace _2022TextToSpeech
                     {
                         string responseData = reader.ReadToEnd();
                         SSML_JSONtoXMLConvert(responseData);
+                        
                     }
-                }
+                }               
             }
+            
         }
         #endregion
         #region button for Populating the two voice combo boxes - Will later be done to select automaticaly from Resources\voice
@@ -275,22 +286,28 @@ namespace _2022TextToSpeech
             xmlDoc.Save(Path.Combine(folderResources, rootName));
         }
         #region This function loads the list of language elements from the SSML Voice file onto the Languages combo box
+
         private void VoicesLoad()
         {
-            List<string> uniqueLocales = new List<string>();  //  List that will contain only the unique values of Locale, for reference, to populate the combo box with unique elements only
-            foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice")) //Expression "//Voice" works as well
-            {
-                string locale = node.SelectSingleNode("Locale").InnerText;
-                if (!uniqueLocales.Contains(locale))
+
+            
+            if (VoicesXML != null) 
+            { 
+                List<string> uniqueLocales = new List<string>();  //  List that will contain only the unique values of Locale, for reference, to populate the combo box with unique elements only
+                foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice")) //Expression "//Voice" works as well
                 {
-                    uniqueLocales.Add(locale);
-                    string localeName = node.SelectSingleNode("LocaleName").InnerText;
-                    comboBox1.Items.Add(localeName);
-                    label6.Text = node.SelectSingleNode("Locale").InnerText;
+                    string locale = node.SelectSingleNode("Locale").InnerText;
+                    if (!uniqueLocales.Contains(locale))
+                    {
+                        uniqueLocales.Add(locale);
+                        string localeName = node.SelectSingleNode("LocaleName").InnerText;
+                        comboBox1.Items.Add(localeName);
+                        label6.Text = node.SelectSingleNode("Locale").InnerText;
+                    }
+                    string localName = node.SelectSingleNode("LocalName").InnerText;
+                    string gender = node.SelectSingleNode("Gender").InnerText;
+                    comboBox1.SelectedIndex = 0;
                 }
-                string localName = node.SelectSingleNode("LocalName").InnerText;
-                string gender = node.SelectSingleNode("Gender").InnerText;
-                comboBox1.SelectedIndex = 0;
             }
         }
         #endregion

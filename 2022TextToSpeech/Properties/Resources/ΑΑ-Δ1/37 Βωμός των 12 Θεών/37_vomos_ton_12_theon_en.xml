@@ -1,0 +1,9 @@
+<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">
+  <voice name="en-US-JennyNeural">
+    <prosody rate="-10%" pitch="-10%">
+      <mstts:express-as style="calm">
+        					The history of the monument is mentioned by Thucydides. It was founded by the grandson of the tyrant Pisistratus in 522 BC. It was one of the few monuments built in the open central area of the Agora. The altar was literally the heart of the city, the point from which all road measurements started. For example, a road marker found in Piraeus informs us that the distance from Athens was 48 stadia (i.e. about 8.6 km). This means that this distance was measured from the Altar of the Twelve Gods located in the Agora. This altar was also used as a refuge for supplicants, i.e. those who begged for help from the gods or sought asylum.
+      </mstts:express-as>      
+    </prosody>
+  </voice>
+</speak>

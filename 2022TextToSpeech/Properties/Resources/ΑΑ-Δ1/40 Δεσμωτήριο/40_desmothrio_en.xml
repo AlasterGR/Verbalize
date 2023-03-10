@@ -1,0 +1,9 @@
+<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">
+  <voice name="en-US-JennyNeural">
+    <prosody rate="-10%" pitch="-10%">
+      <mstts:express-as style="calm">
+        	It is a building of rectangular plan with a central entrance leading to a corridor. Small rooms, the cells, open up to the right and left of the corridor and stop on the south side where a large courtyard opens up. In an adjacent cistern many medicinal vials were found, perhaps used for the hemlock given to those condemned to death. A statuette of Socrates, who was killed here with hemlock in 399 BC, was also found in the ruins of the building. The building dates back to the 5th century BC.
+      </mstts:express-as>      
+    </prosody>
+  </voice>
+</speak>

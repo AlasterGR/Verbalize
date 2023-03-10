@@ -1,0 +1,9 @@
+<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">
+  <voice name="en-US-JennyNeural">
+    <prosody rate="-10%" pitch="-10%">
+      <mstts:express-as style="calm">
+        	Its precinct has a side length of about 30 meters and is preserved in poor condition. On its walls were posted the results of court decisions. It dates back to the beginning of the 5th century BC. It continued to be used in the following century for the storage and distribution of grain.
+      </mstts:express-as>      
+    </prosody>
+  </voice>
+</speak>

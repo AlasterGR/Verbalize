@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" xml:lang="en-ZA" onlangfailure="ignoretext ">
+  <voice name="en-ZA-LeahNeural">
+    <prosody rate="65%" pitch="0Hz">
+      <mstts:express-as style="calm">Testing this</mstts:express-as>
+    </prosody>
+  </voice>
+</speak>

@@ -1,0 +1,9 @@
+<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">
+  <voice name="en-US-JennyNeural">
+    <prosody rate="-10%" pitch="-10%">
+      <mstts:express-as style="calm">
+        			In the southeastern part of the Agora, south of the Stoa of Attalos, are the remains of the complex with the unusual form. Its core consisted of a spacious square room with a marble floor, to the west of which opened a large open-air enclosed courtyard. Surrounding the two rooms were three irregular galleries housing shops at the rear. It was built at the end of the 1st century AD by Titus Flavius Panteinos, son of the head of a philosophical school, and dedicated it to Athena the Chief, the Emperor Trajan and the Athenians. An inscription indicated the regulations of the library: "No book may be removed after we have taken an oath. (The library) will remain open from the first to the sixth hour." A cultural and educational institution, the Library reflects Athens' position as an important educational centre of the Roman Empire. The library was destroyed in 267 AD by the Eruli, and part of it was incorporated in the 5th century into a large peristyle building.
+      </mstts:express-as>      
+    </prosody>
+  </voice>
+</speak>
