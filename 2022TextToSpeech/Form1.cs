@@ -43,7 +43,7 @@ namespace _2022TextToSpeech
         public static float volume = 0.0f; //possibly won't work in this version
         public static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
         public string selectedLocale;
-        public static XmlDocument VoicesXML = new XmlDocument();
+        public static XmlDocument VoicesXML = new XmlDocument();  //  A file that needs to be used throughout the entire app. Might put it within the VoicesLoad() nethod if possible
         public static string voicesSSMLFileName = "Voices"; // Change this to the desired file name and extension
         public static string locationFileResponse = Path.Combine(folderResources, voicesSSMLFileName);
         public static string voicesSSMLFileNameBackup = "Voices_[orig].xml"; // Change this to the desired file name and extension
@@ -54,31 +54,19 @@ namespace _2022TextToSpeech
         public Form1()
         {
             InitializeComponent();
+            #region Load the voices file that lists the various speech voices
+            InitializeVoices();            
+            #endregion
         }
-
+        
         private void Form1_Load(object sender, EventArgs e)
         {
             this.label1.Visible = false;
             this.checkBox1.Checked = false;
             this.checkBox2.Checked = true;
-            try
-            {
-                VoicesXML.Load(locationFileResponse);
-            }
-            catch (Exception)
-            {
-                try
-                {
-                    VoicesXML.Load(locationFileResponseBackup);
-                }
-                catch                 
-                {
-                    System.IO.Directory.CreateDirectory(folderResources);
-                    VoicesRetrieve();
-                }
-            }
-            VoicesLoad();
-            this.comboBox3.SelectedText = "calm";
+            VoicesLoad();  //  Load the voices onto the combo boxes
+            this.comboBox3.SelectedText = "calm";  //  Have the "calm" voice style preselected as default
+            
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -197,14 +185,34 @@ namespace _2022TextToSpeech
             #endregion
         }
 
+        async void InitializeVoices()
+        {
+            try
+            {
+                VoicesXML.Load(locationFileResponse);
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    VoicesXML.Load(locationFileResponseBackup);
+                }
+                catch
+                {
+                    System.IO.Directory.CreateDirectory(folderResources);
+                    await VoicesRetrieve();
+                }
+            }
+            
+        }
 
         #region Retrieve the list of voices from speech.microsoft.com and reload the voices into the boxes
-        private void button8_Click(object sender, EventArgs e)
+        private async void button8_Click(object sender, EventArgs e)
         {
-            VoicesRetrieve();
+            await VoicesRetrieve() ;
             VoicesLoad();
         }
-        async void VoicesRetrieve()
+        async Task VoicesRetrieve()  // need to make it wait until it is finished
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "120f1e685b4244d8b1260b5bbc28f9ee");
@@ -217,24 +225,49 @@ namespace _2022TextToSpeech
                     using (StreamReader reader = new StreamReader(responseStream))
                     {
                         string responseData = reader.ReadToEnd();
-                        SSML_JSONtoXMLConvert(responseData);
-                        
+                        SSML_JSONtoXMLConvert(responseData);                        
                     }
                 }               
-            }
-            
+            }            
         }
         #endregion
-        #region button for Populating the two voice combo boxes - Will later be done to select automaticaly from Resources\voice
+
+        #region This function loads the list of language elements from the SSML Voice file onto the Languages combo box
+        private void VoicesLoad()
+        {
+            if (VoicesXML != null)
+            {
+                List<string> uniqueLocales = new List<string>();  //  List that will contain only the unique values of Locale, for reference, to populate the combo box with unique elements only
+                foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice")) //Expression "//Voice" works as well
+                {
+                    string locale = node.SelectSingleNode("Locale").InnerText;
+                    if (!uniqueLocales.Contains(locale))
+                    {
+                        uniqueLocales.Add(locale);
+                        string localeName = node.SelectSingleNode("LocaleName").InnerText;
+                        comboBox1.Items.Add(localeName);
+                        label6.Text = node.SelectSingleNode("Locale").InnerText;
+                    }
+                    string localName = node.SelectSingleNode("LocalName").InnerText;
+                    string gender = node.SelectSingleNode("Gender").InnerText;
+                    comboBox1.SelectedIndex = 0;
+                }
+            }
+
+        }
+        #endregion
+        #region button for Populating the two voice combo boxes from Resources\voice
         private void button9_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog1 = new OpenFileDialog();
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            try
             {
-                string fileName = openFileDialog1.FileName;
-                VoicesXML.Load(fileName); // Use Load because LoadXML command produces error
-                VoicesLoad();
+                VoicesXML.Load(Path.Combine(locationFileResponse)); // Use Load because LoadXML command produces error
             }
+            catch (Exception ex)
+            {
+                VoicesRetrieve();
+            }
+            VoicesLoad();
         }
         #endregion
         #region Language combo box
@@ -282,35 +315,10 @@ namespace _2022TextToSpeech
             /*  Create an XML declaration and then add it to the xml document  */
             XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", null);
             xmlDoc.InsertBefore(xmldecl, xmlDoc.DocumentElement);
-            /*  Save the file as an xml. Remove previous existing extention  */
+            /*  Save the xml file but with no extention */
             xmlDoc.Save(Path.Combine(folderResources, rootName));
         }
-        #region This function loads the list of language elements from the SSML Voice file onto the Languages combo box
 
-        private void VoicesLoad()
-        {
-
-            
-            if (VoicesXML != null) 
-            { 
-                List<string> uniqueLocales = new List<string>();  //  List that will contain only the unique values of Locale, for reference, to populate the combo box with unique elements only
-                foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice")) //Expression "//Voice" works as well
-                {
-                    string locale = node.SelectSingleNode("Locale").InnerText;
-                    if (!uniqueLocales.Contains(locale))
-                    {
-                        uniqueLocales.Add(locale);
-                        string localeName = node.SelectSingleNode("LocaleName").InnerText;
-                        comboBox1.Items.Add(localeName);
-                        label6.Text = node.SelectSingleNode("Locale").InnerText;
-                    }
-                    string localName = node.SelectSingleNode("LocalName").InnerText;
-                    string gender = node.SelectSingleNode("Gender").InnerText;
-                    comboBox1.SelectedIndex = 0;
-                }
-            }
-        }
-        #endregion
 
         private void vScrollBar2_ValueChanged(object sender, EventArgs e)
         {
