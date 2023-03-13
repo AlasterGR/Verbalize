@@ -30,6 +30,7 @@ namespace _2022TextToSpeech
     using System.Net;
     using static System.Runtime.InteropServices.JavaScript.JSType;
     using System.ComponentModel;
+    using System.Globalization;
 
     public partial class Form1 : Form
     {
@@ -440,11 +441,11 @@ namespace _2022TextToSpeech
             }            
             this.comboBox1.SelectedItem = localeName ;
             this.comboBox2.SelectedItem = DisplayName;
-            XmlNode prosodyNode = SSMLDocument.SelectSingleNode("//prosody", nsMgr);
+            XmlNode prosodyNode = SSMLDocument.SelectSingleNode("//speak:prosody", nsMgr);
             MessageBox.Show(prosodyNode.OuterXml);
             string rate = prosodyNode.Attributes["rate"].Value.ToString();
             
-            this.vScrollBar1.Value = Int32.Parse(SSMLDocument.SelectSingleNode("//speak:voice:prosody", nsMgr).Attributes["rate"].Value);
+            this.vScrollBar1.Value = Int32.Parse(SSMLDocument.SelectSingleNode("//speak:prosody", nsMgr).Attributes["rate"].Value.TrimEnd('%'), NumberStyles.AllowLeadingSign);
 
         }
         //  Speak the selected text from the textbox
