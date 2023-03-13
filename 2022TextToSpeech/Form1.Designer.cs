@@ -34,10 +34,8 @@
             button1 = new Button();
             checkBox1 = new CheckBox();
             checkBox2 = new CheckBox();
-            button4 = new Button();
             textBox1 = new TextBox();
             button5 = new Button();
-            button6 = new Button();
             vScrollBar1 = new VScrollBar();
             vScrollBar2 = new VScrollBar();
             label2 = new Label();
@@ -53,10 +51,11 @@
             button7 = new Button();
             comboBox3 = new ComboBox();
             label8 = new Label();
-            button10 = new Button();
+            buttn_SpeakSSML = new Button();
             button2 = new Button();
             button11 = new Button();
             button12 = new Button();
+            label9 = new Label();
             SuspendLayout();
             // 
             // openFileDialog1
@@ -113,17 +112,6 @@
             checkBox2.Text = "Εκφώνηση";
             checkBox2.UseVisualStyleBackColor = true;
             // 
-            // button4
-            // 
-            button4.Location = new Point(11, 447);
-            button4.Margin = new Padding(1);
-            button4.Name = "button4";
-            button4.Size = new Size(96, 40);
-            button4.TabIndex = 7;
-            button4.Text = "Convert .txt file to SSML .xml";
-            button4.UseVisualStyleBackColor = true;
-            button4.Click += button4_Click;
-            // 
             // textBox1
             // 
             textBox1.HideSelection = false;
@@ -145,17 +133,6 @@
             button5.Text = "Εκφώνηση απλού κειμένου";
             button5.UseVisualStyleBackColor = true;
             button5.Click += button5_Click;
-            // 
-            // button6
-            // 
-            button6.Location = new Point(12, 180);
-            button6.Margin = new Padding(1);
-            button6.Name = "button6";
-            button6.Size = new Size(97, 52);
-            button6.TabIndex = 10;
-            button6.Text = "Αποθήκευση ως .txt";
-            button6.UseVisualStyleBackColor = true;
-            button6.Click += button6_Click;
             // 
             // vScrollBar1
             // 
@@ -310,16 +287,16 @@
             label8.TabIndex = 26;
             label8.Text = "Style";
             // 
-            // button10
+            // buttn_SpeakSSML
             // 
-            button10.Location = new Point(13, 105);
-            button10.Margin = new Padding(1);
-            button10.Name = "button10";
-            button10.Size = new Size(96, 38);
-            button10.TabIndex = 27;
-            button10.Text = "Εκφώνηση SSML κειμένου";
-            button10.UseVisualStyleBackColor = true;
-            button10.Click += button10_Click;
+            buttn_SpeakSSML.Location = new Point(13, 105);
+            buttn_SpeakSSML.Margin = new Padding(1);
+            buttn_SpeakSSML.Name = "buttn_SpeakSSML";
+            buttn_SpeakSSML.Size = new Size(96, 38);
+            buttn_SpeakSSML.TabIndex = 27;
+            buttn_SpeakSSML.Text = "Εκφώνηση SSML κειμένου";
+            buttn_SpeakSSML.UseVisualStyleBackColor = true;
+            buttn_SpeakSSML.Click += button10_Click;
             // 
             // button2
             // 
@@ -352,15 +329,25 @@
             button12.UseVisualStyleBackColor = true;
             button12.Click += button12_Click;
             // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(729, 131);
+            label9.Name = "label9";
+            label9.Size = new Size(38, 15);
+            label9.TabIndex = 31;
+            label9.Text = "label9";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 599);
+            Controls.Add(label9);
             Controls.Add(button12);
             Controls.Add(button11);
             Controls.Add(button2);
-            Controls.Add(button10);
+            Controls.Add(buttn_SpeakSSML);
             Controls.Add(label8);
             Controls.Add(comboBox3);
             Controls.Add(button7);
@@ -376,10 +363,8 @@
             Controls.Add(label2);
             Controls.Add(vScrollBar2);
             Controls.Add(vScrollBar1);
-            Controls.Add(button6);
             Controls.Add(button5);
             Controls.Add(textBox1);
-            Controls.Add(button4);
             Controls.Add(checkBox2);
             Controls.Add(checkBox1);
             Controls.Add(button1);
@@ -399,10 +384,8 @@
         private Button button1;
         private CheckBox checkBox1;
         private CheckBox checkBox2;
-        private Button button4;
         private TextBox textBox1;
         private Button button5;
-        private Button button6;
         private VScrollBar vScrollBar1;
         private VScrollBar vScrollBar2;
         private Label label2;
@@ -418,9 +401,10 @@
         private Button button7;
         private ComboBox comboBox3;
         private Label label8;
-        private Button button10;
+        private Button buttn_SpeakSSML;
         private Button button2;
         private Button button11;
         private Button button12;
+        private Label label9;
     }
 }

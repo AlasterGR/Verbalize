@@ -28,6 +28,8 @@ namespace _2022TextToSpeech
     using System.Runtime.CompilerServices;
     using System.Configuration;
     using System.Net;
+    using static System.Runtime.InteropServices.JavaScript.JSType;
+    using System.ComponentModel;
 
     public partial class Form1 : Form
     {
@@ -50,15 +52,16 @@ namespace _2022TextToSpeech
         public static string locationFileResponseBackup = Path.Combine(folderResources, voicesSSMLFileNameBackup);
         public static string shortName = "";
         public static string locationLoadedFile = string.Empty;
+        Task<SpeechSynthesisResult> sound1;
 
         public Form1()
         {
             InitializeComponent();
             #region Load the voices file that lists the various speech voices
-            InitializeVoices();            
+            InitializeVoices();
             #endregion
         }
-        
+
         private void Form1_Load(object sender, EventArgs e)
         {
             this.label1.Visible = false;
@@ -66,7 +69,7 @@ namespace _2022TextToSpeech
             this.checkBox2.Checked = true;
             VoicesLoad();  //  Load the voices onto the combo boxes
             this.comboBox3.SelectedText = "calm";  //  Have the "calm" voice style preselected as default
-            
+
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -93,7 +96,6 @@ namespace _2022TextToSpeech
                         }
                     }
                     this.textBox1.Text = fileContents;
-                    
                 }
                 catch (XmlException ex)
                 {
@@ -106,7 +108,6 @@ namespace _2022TextToSpeech
         {
             PlaySound();
         }
-
         private void PlaySound()
         {
             string text = System.IO.File.ReadAllText(locationLoadedFile);
@@ -125,12 +126,9 @@ namespace _2022TextToSpeech
 
             Task task = SynthesizeAudioAsync(text, fileSound, bSave, typeFile, bSpeak);
         }
-
-
         static async Task SynthesizeAudioAsync(string txt, string soundfile, bool bSave, string filetype, bool bSpeak)
         {
             SpeechSynthesizer synthesizer;
-
             //if (bSpeak) { synthesizer = new SpeechSynthesizer(config); }  // Option of whether to speak the text
             if (bSave)
             {
@@ -150,41 +148,6 @@ namespace _2022TextToSpeech
         }
 
 
-        private void button5_Click(object sender, EventArgs e)
-        {
-            ReadText();
-        }
-
-        private async void ReadText()
-        {
-            string textfile = this.label1.Text;
-            string text = this.textBox1.Text;
-            SpeechSynthesizer synthesizer;
-            synthesizer = new SpeechSynthesizer(config);
-            await synthesizer.SpeakTextAsync(text);
-        }
-
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            #region Saves the written text as a txt file
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.Filter = "Text|*.txt";
-            saveFileDialog1.Title = "Save the text box as a .txt File";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                string pathFileSelected = saveFileDialog1.FileName;
-                if (saveFileDialog1.FileName != "")
-                {
-                    using (StreamWriter writer = new StreamWriter(pathFileSelected))
-                    {
-                        writer.Write(textBox1.Text);
-                    }
-                }
-            }
-            #endregion
-        }
-
         async void InitializeVoices()
         {
             try
@@ -203,13 +166,13 @@ namespace _2022TextToSpeech
                     await VoicesRetrieve();
                 }
             }
-            
+
         }
 
         #region Retrieve the list of voices from speech.microsoft.com and reload the voices into the boxes
         private async void button8_Click(object sender, EventArgs e)
         {
-            await VoicesRetrieve() ;
+            await VoicesRetrieve();
             VoicesLoad();
         }
         async Task VoicesRetrieve()  // need to make it wait until it is finished
@@ -217,7 +180,7 @@ namespace _2022TextToSpeech
             var client = new HttpClient();
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "120f1e685b4244d8b1260b5bbc28f9ee");
             string listVoicesLocationURL = "https://" + ServerLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
-            HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);            
+            HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
             if (response.IsSuccessStatusCode)
             {
                 using (Stream responseStream = await response.Content.ReadAsStreamAsync())
@@ -225,10 +188,10 @@ namespace _2022TextToSpeech
                     using (StreamReader reader = new StreamReader(responseStream))
                     {
                         string responseData = reader.ReadToEnd();
-                        SSML_JSONtoXMLConvert(responseData);                        
+                        SSML_JSONtoXMLConvert(responseData);
                     }
-                }               
-            }            
+                }
+            }
         }
         #endregion
 
@@ -256,6 +219,7 @@ namespace _2022TextToSpeech
 
         }
         #endregion
+
         #region button for Populating the two voice combo boxes from Resources\voice
         private void button9_Click(object sender, EventArgs e)
         {
@@ -355,19 +319,6 @@ namespace _2022TextToSpeech
                 }
             }
         }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                string text = System.IO.File.ReadAllText(openFileDialog1.FileName);
-                string xmlFile = Path.GetFileNameWithoutExtension(openFileDialog1.FileName) + ".xml";
-                string pathFileSelected = Path.Combine(Path.GetDirectoryName(openFileDialog1.FileName), xmlFile);
-                XmlDocument SSMLDocument = CreateSSML(text);
-                // Save the XML document to a file         
-                SSMLDocument.Save(pathFileSelected);
-            }
-        }
         static XmlDocument CreateSSML(string text)
         {
             #region Creation of the XML document and and its root element
@@ -427,6 +378,20 @@ namespace _2022TextToSpeech
             synthesizer = new SpeechSynthesizer(config);
             await synthesizer.SpeakSsmlAsync(SSMLDocument.OuterXml);
         }
+        private void button5_Click(object sender, EventArgs e)
+        {
+            ReadText();
+        }
+        private async void ReadText()
+        {
+            string textfile = this.label1.Text;
+            string text = this.textBox1.Text;
+            SpeechSynthesizer synthesizer;
+            synthesizer = new SpeechSynthesizer(config);
+            await synthesizer.SpeakTextAsync(text);
+        }
+
+
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -445,36 +410,93 @@ namespace _2022TextToSpeech
 
         }
 
-        //  Load all the selcted file's properties onto the ui
+        //  Load all the selected file's properties onto the ui
         private void button11_Click(object sender, EventArgs e)
         {
             XmlDocument SSMLDocument = new XmlDocument();
             SSMLDocument.Load(locationLoadedFile);
-            this.label6.Text = SSMLDocument.DocumentElement.GetAttribute("xml:lang");//  Set the Speech Language to whatever is first on the xml file, which is the general one of the entire file
-            config.SpeechSynthesisLanguage = SSMLDocument.DocumentElement.GetAttribute("xml:lang");
-            //XmlNode node = SSMLDocument.SelectSingleNode("voice");
-            //string voiceName = node.InnerText;
-            //config.SpeechSynthesisLanguage = SSMLDocument.SelectSingleNode("Locale").InnerText;  
-            //config.SpeechSynthesisVoiceName = SSMLDocument.DocumentElement.GetAttribute("xml:lang");
+            XmlNamespaceManager nsMgr = new XmlNamespaceManager(SSMLDocument.NameTable);
+            nsMgr.AddNamespace("speak", "http://www.w3.org/2001/10/synthesis");
+            XmlNode voiceNode = SSMLDocument.SelectSingleNode("//speak:voice", nsMgr);
+            string nameValue = voiceNode.Attributes["name"].Value;// Select the <voice> element and get its "name" attribute value
+            this.label9.Text = nameValue;
+            config.SpeechSynthesisVoiceName = nameValue;  // Need to extract name value from < voice name = "en-US-JennyNeural" >
 
+            XmlNode speakNode = SSMLDocument.SelectSingleNode("//speak:speak", nsMgr);
+            string langValue = speakNode.Attributes["xml:lang"].Value;
+            this.label6.Text = langValue;//  Set the Speech Language to whatever is first on the xml file, which is the general one of the entire file
+            config.SpeechSynthesisLanguage = langValue;
 
-            //XDocument SSMLDocument = new XDocument();
-            // config.SpeechSynthesisVoiceName = SSMLDocument.
-            //node = SSMLDocument.SelectSingleNode("xml:lang");
-            //config.SpeechSynthesisLanguage = node.InnerText;
-            //this.comboBox1.SelectedText = ;
-            //this.vScrollBar1.Value = Int32.Parse(SSMLDocument.DocumentElement.GetAttribute("rate"));
+            string localeName = "" ;
+            string DisplayName = "";
+            foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
+            {
+                
+                if (node.SelectSingleNode("ShortName").InnerText == nameValue)
+                {                    
+                    localeName = node.SelectSingleNode("LocaleName").InnerText;
+                    DisplayName = node.SelectSingleNode("DisplayName").InnerText;
+                }
+            }            
+            this.comboBox1.SelectedItem = localeName ;
+            this.comboBox2.SelectedItem = DisplayName;
+            XmlNode prosodyNode = SSMLDocument.SelectSingleNode("//prosody", nsMgr);
+            MessageBox.Show(prosodyNode.OuterXml);
+            string rate = prosodyNode.Attributes["rate"].Value.ToString();
+            
+            this.vScrollBar1.Value = Int32.Parse(SSMLDocument.SelectSingleNode("//speak:voice:prosody", nsMgr).Attributes["rate"].Value);
 
         }
         //  Speak the selected text from the textbox
         private async void button12_Click(object sender, EventArgs e)
         {
             if (this.textBox1.SelectedText != "")
-            {                
+            {
+                //if (sound1 != null) { sound1.stat; }
+                
                 string text = CreateSSML(this.textBox1.SelectedText).OuterXml;  //  We take textBox1's selected text, create a proper SSML xml file, convert it to text and will feed it to the synthesizer
                 SpeechSynthesizer synthesizer = new SpeechSynthesizer(config);  //  Initialize out speech synthesizer
-                await synthesizer.SpeakSsmlAsync(text);  //  Speak the text
+                //await synthesizer.SpeakSsmlAsync(text);  //  Speak the text
+                sound1 = synthesizer.SpeakSsmlAsync(text);
+                //sound1.
+                
             }
         }
+
+
+        /* Quite Possibly unneeded - it's a button to transform a .txt file into a proper ssml .xml but we now load it first and save it afterwards
+        private void button4_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string text = System.IO.File.ReadAllText(openFileDialog1.FileName);
+                string xmlFile = Path.GetFileNameWithoutExtension(openFileDialog1.FileName) + ".xml";
+                string pathFileSelected = Path.Combine(Path.GetDirectoryName(openFileDialog1.FileName), xmlFile);
+                XmlDocument SSMLDocument = CreateSSML(text);
+                // Save the XML document to a file         
+                SSMLDocument.Save(pathFileSelected);
+            }
+        }*/
+        /*
+        private void button6_Click(object sender, EventArgs e)
+        {
+            #region Saves the written text as a txt file
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "Text|*.txt";
+            saveFileDialog1.Title = "Save the text box as a .txt File";
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string pathFileSelected = saveFileDialog1.FileName;
+                if (saveFileDialog1.FileName != "")
+                {
+                    using (StreamWriter writer = new StreamWriter(pathFileSelected))
+                    {
+                        writer.Write(textBox1.Text);
+                    }
+                }
+            }
+            #endregion
+           
+        }*/
     }
 }
