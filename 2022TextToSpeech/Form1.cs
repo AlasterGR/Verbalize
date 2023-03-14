@@ -40,10 +40,13 @@ namespace _2022TextToSpeech
         //static string regionService = Environment.GetEnvironmentVariable("westeurope");
         public static string ServerLocation = "westeurope";
         public static SpeechConfig config = SpeechConfig.FromSubscription("120f1e685b4244d8b1260b5bbc28f9ee", ServerLocation);  //This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis
-        public static int pitch = 0;
-        public static int rate = 0;
+        #region The Prosody and assorted elements of speech
+        // As per : https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice. The https://www.w3.org/TR/speech-synthesis11/ is irrelevant so far.
+        public static int pitch = 0;  //  Pitch is expressed in 3 ways. Here, for now, we are using just the absolute value from the range [-200, +200]
+        public static int rate = 0;  // Rate is expressed in 2 ways, an absolute value (string) and a relative (as a number) one. For now, we will use it only as a number (-50% - +50%), I will incoroprate it as a string later
         public static string style = "calm";
         public static float volume = 0.0f; //possibly won't work in this version
+        #endregion
         public static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
         public string selectedLocale;
         public static XmlDocument VoicesXML = new XmlDocument();  //  A file that needs to be used throughout the entire app. Might put it within the VoicesLoad() nethod if possible
@@ -286,13 +289,13 @@ namespace _2022TextToSpeech
 
 
         private void vScrollBar2_ValueChanged(object sender, EventArgs e)
-        {
+        {  // This handles integers only
             pitch = this.vScrollBar2.Value;
             this.label2.Text = "Pitch = " + pitch.ToString();
         }
 
         private void vScrollBar1_ValueChanged(object sender, EventArgs e)
-        {
+        {  // This handles integers only 
             rate = this.vScrollBar1.Value;
             this.label3.Text = "Rate = " + rate.ToString();
         }
@@ -428,25 +431,27 @@ namespace _2022TextToSpeech
             this.label6.Text = langValue;//  Set the Speech Language to whatever is first on the xml file, which is the general one of the entire file
             config.SpeechSynthesisLanguage = langValue;
 
-            string localeName = "" ;
+            string localeName = "";
             string DisplayName = "";
             foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
             {
-                
+
                 if (node.SelectSingleNode("ShortName").InnerText == nameValue)
-                {                    
+                {
                     localeName = node.SelectSingleNode("LocaleName").InnerText;
                     DisplayName = node.SelectSingleNode("DisplayName").InnerText;
                 }
-            }            
-            this.comboBox1.SelectedItem = localeName ;
+            }
+            this.comboBox1.SelectedItem = localeName;
             this.comboBox2.SelectedItem = DisplayName;
+            //  acquire the rate from the xml
             XmlNode prosodyNode = SSMLDocument.SelectSingleNode("//speak:prosody", nsMgr);
-            MessageBox.Show(prosodyNode.OuterXml);
-            string rate = prosodyNode.Attributes["rate"].Value.ToString();
-            
-            this.vScrollBar1.Value = Int32.Parse(SSMLDocument.SelectSingleNode("//speak:prosody", nsMgr).Attributes["rate"].Value.TrimEnd('%'), NumberStyles.AllowLeadingSign);
-
+            string rate = prosodyNode.Attributes["rate"].Value.ToString().TrimEnd('%');
+            this.vScrollBar1.Value = Int32.Parse(rate, NumberStyles.AllowLeadingSign);  //  make a save clause to keep any value between [-50, +50], trasnforming out-of-bounds values to bounds
+            //  acquire the pitch from the xml            
+            string pitch = prosodyNode.Attributes["pitch"].Value.ToString();
+            pitch = pitch.Replace("Hz", "");
+            this.vScrollBar2.Value = Int32.Parse(pitch, NumberStyles.AllowLeadingSign);  //  make a save clause to keep any value between [-50, +50], trasnforming out-of-bounds values to bounds
         }
         //  Speak the selected text from the textbox
         private async void button12_Click(object sender, EventArgs e)
@@ -454,14 +459,19 @@ namespace _2022TextToSpeech
             if (this.textBox1.SelectedText != "")
             {
                 //if (sound1 != null) { sound1.stat; }
-                
+
                 string text = CreateSSML(this.textBox1.SelectedText).OuterXml;  //  We take textBox1's selected text, create a proper SSML xml file, convert it to text and will feed it to the synthesizer
                 SpeechSynthesizer synthesizer = new SpeechSynthesizer(config);  //  Initialize out speech synthesizer
                 //await synthesizer.SpeakSsmlAsync(text);  //  Speak the text
                 sound1 = synthesizer.SpeakSsmlAsync(text);
                 //sound1.
-                
+
             }
+        }
+
+        private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+
         }
 
 

@@ -136,24 +136,24 @@
             // 
             // vScrollBar1
             // 
-            vScrollBar1.LargeChange = 0;
+            vScrollBar1.LargeChange = 5;
             vScrollBar1.Location = new Point(512, 258);
-            vScrollBar1.Maximum = 200;
+            vScrollBar1.Maximum = 50;
+            vScrollBar1.Minimum = -50;
             vScrollBar1.Name = "vScrollBar1";
             vScrollBar1.Size = new Size(42, 236);
-            vScrollBar1.SmallChange = 0;
             vScrollBar1.TabIndex = 11;
-            vScrollBar1.Value = 20;
+            vScrollBar1.Scroll += vScrollBar1_Scroll;
             vScrollBar1.ValueChanged += vScrollBar1_ValueChanged;
             // 
             // vScrollBar2
             // 
-            vScrollBar2.LargeChange = 0;
             vScrollBar2.Location = new Point(575, 258);
-            vScrollBar2.Maximum = 1000;
+            vScrollBar2.Maximum = 200;
+            vScrollBar2.Minimum = -200;
             vScrollBar2.Name = "vScrollBar2";
             vScrollBar2.Size = new Size(52, 236);
-            vScrollBar2.SmallChange = 0;
+            vScrollBar2.SmallChange = 5;
             vScrollBar2.TabIndex = 12;
             vScrollBar2.ValueChanged += vScrollBar2_ValueChanged;
             // 
