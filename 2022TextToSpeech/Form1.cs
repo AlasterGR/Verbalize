@@ -46,7 +46,7 @@ namespace _2022TextToSpeech
         public static int pitch = 0;  //  Pitch is expressed in 3 ways. Here, for now, we are using just the absolute value from the range [-200, +200]
         public static int rate = 0;  // Rate is expressed in 2 ways, an absolute value (string) and a relative (as a number) one. For now, we will use it only as a number (-50% - +50%), I will incoroprate it as a string later
         public static string style = "calm";
-        public static float volume = 0.0f; //possibly won't work in this version
+        public static float volume = 0.0f; //possibly won't work in this version 
         #endregion
         public static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
         public string selectedLocale;
