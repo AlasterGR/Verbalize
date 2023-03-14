@@ -84,7 +84,6 @@ namespace _2022TextToSpeech
                 this.label1.Text = Path.GetFileNameWithoutExtension(locationLoadedFile); // Show the loaded file's name
                 this.label1.Visible = true;
                 string fileContents = string.Empty;
-                //this.textBox1.Text = fileContents;
                 //  Search further for advantages on using a rich text box instead. So far none found.
                 #region Parse the selected file's contents and save its speakable text to the textbox ~ it will acquire only the inner texts, should the selected file have an xml format.
                 XmlDocument SSMLDocument = new XmlDocument();
@@ -392,20 +391,28 @@ namespace _2022TextToSpeech
 
         private void loadXMLtoApp(XmlDocument SSMLDocument) // Load all the markup of the XML onto the u.i.
         {
+            #region Initialize every mark to its default values
+            string styleSSML = "calm";
+            string volumeSSML = "100";
+            string pitchSSML = "0";
+            string rateSSML = "0";
+            string nameValue = "en-US-JennyNeural";
+            string langValue = "en-US";
+
+            string localeName = "English (United States)";
+            string DisplayName = "Jenny";
+            #endregion
+            #region Parse the loaded document and acquire the desired values. Add try-catch...
             XmlNamespaceManager nsMgr = new XmlNamespaceManager(SSMLDocument.NameTable);
             nsMgr.AddNamespace("speak", "http://www.w3.org/2001/10/synthesis");
-            XmlNode voiceNode = SSMLDocument.SelectSingleNode("//speak:voice", nsMgr);
-            string nameValue = voiceNode.Attributes["name"].Value;// Select the <voice> element and get its "name" attribute value
-            this.label9.Text = nameValue;
-            config.SpeechSynthesisVoiceName = nameValue;  // Need to extract name value from < voice name = "en-US-JennyNeural" >
 
+            // Find the general default language of the entire document
             XmlNode speakNode = SSMLDocument.SelectSingleNode("//speak:speak", nsMgr);
-            string langValue = speakNode.Attributes["xml:lang"].Value;
-            this.label6.Text = langValue;//  Set the Speech Language to whatever is first on the xml file, which is the general one of the entire file
-            config.SpeechSynthesisLanguage = langValue;
-
-            string localeName = "";
-            string DisplayName = "";
+            langValue = speakNode.Attributes["xml:lang"].Value;
+            // Find the general default Voice of the entire document...
+            XmlNode voiceNode = SSMLDocument.SelectSingleNode("//speak:voice", nsMgr);
+            nameValue = voiceNode.Attributes["name"].Value;// Select the <voice> element and get its "name" attribute value. Need to extract name value from < voice name = "en-US-JennyNeural" >
+            // ... and its the Locale name and Display name
             foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
             {
                 if (node.SelectSingleNode("ShortName").InnerText == nameValue)
@@ -414,28 +421,61 @@ namespace _2022TextToSpeech
                     DisplayName = node.SelectSingleNode("DisplayName").InnerText;
                 }
             }
+            // Acquire the various attributes from Prosody such as... 
+            XmlNode prosodyNode = SSMLDocument.SelectSingleNode("//speak:prosody", nsMgr);
+            //  ... the voice style
+            styleSSML = prosodyNode.FirstChild.Attributes["style"]?.Value ?? "calm"; // if it cannot find the attribute, it returns the default "calm" string
+            if (comboBox3.FindStringExact(styleSSML) == -1) { styleSSML = "calm"; }// if the style is not an option withinn the combo box, it sets it to the default "calm" string
+
+            //  ... the rate
+            try 
+            {
+                rateSSML = prosodyNode.Attributes["rate"].Value;
+                rateSSML = Regex.Replace(rateSSML, "[^0-9-+]", "");
+                rate = Int32.Parse(rateSSML, NumberStyles.AllowLeadingSign);
+                if (rate > 50) { rate = 50; }  // replace with more abstract bounds
+                else if (rate < -50) { rate = -50; }
+            }
+            catch { rateSSML = "0"; rate = 0; }
+
+            //  ... the pitch 
+            try
+            {
+                pitchSSML = prosodyNode.Attributes["pitch"].Value;
+                pitchSSML = Regex.Replace(pitchSSML, "[^0-9-+]", "");
+                pitch = Int32.Parse(pitchSSML, NumberStyles.AllowLeadingSign);
+                if (pitch > 200) { pitch = 200; }  // replace with more abstract bounds
+                else if (pitch < -200) { pitch = -200; }
+            }
+            catch { pitchSSML = "0"; pitch = 0; }
+
+            //  ... the volume
+            try
+            {
+                volumeSSML = prosodyNode.Attributes["volume"].Value;
+                volumeSSML = Regex.Replace(volumeSSML, "[^0-9-+]", "");  // remove any extra unit from the string, keeping solely the number
+                volume = Int32.Parse(volumeSSML, NumberStyles.AllowLeadingSign);
+                if (volume > 100) { volume = 100; }  // replace with more abstract bounds
+                else if (volume < 0) { volume = 0; }
+            }
+            catch { volumeSSML = "80"; volume = 80; }
+            MessageBox.Show(volume.ToString());
+            #endregion
+            #region set the u.i. and config elements to the parsed values (which will be the default ones fow whatever has failed)
+            this.label9.Text = nameValue;
+            config.SpeechSynthesisVoiceName = nameValue;
+
+            this.label6.Text = langValue;
+            config.SpeechSynthesisLanguage = langValue; //  Set the Speech Language to whatever is first on the xml file, which is the general one of the entire file
+
             this.comboBox1.SelectedItem = localeName;
             this.comboBox2.SelectedItem = DisplayName;
-            //  acquire the rate from the xml
-            XmlNode prosodyNode = SSMLDocument.SelectSingleNode("//speak:prosody", nsMgr);
-            string rateSSML = prosodyNode.Attributes["rate"]?.Value ?? "0";
-            rateSSML = Regex.Replace(rateSSML, "[^0-9-+]", "");  // remove any extra unit from the string, keeping solely the number
-            rate = Int32.Parse(rateSSML, NumberStyles.AllowLeadingSign);
-            this.vScrollBar1.Value = rate;  //  make a save clause to keep any value between [-50, +50], trasnforming out-of-bounds values to bounds
-            //  acquire the pitch from the xml
-            string pitchSSML = prosodyNode.Attributes["pitch"]?.Value ?? "0";
-            pitchSSML = Regex.Replace(pitchSSML, "[^0-9-+]", "");  // remove any extra unit from the string, keeping solely the number
-            pitch = Int32.Parse(pitchSSML, NumberStyles.AllowLeadingSign);
-            this.vScrollBar2.Value = pitch;  //  make a save clause to keep any value between bounds, trasnforming out-of-bounds values to bounds
-            //  acquire the volume from the xml            
-            string volumeSSML = prosodyNode.Attributes["volume"]?.Value ?? "100";  //  if the loaded text has not a volume attribute to load its value, we simply set the value to 100
-            volumeSSML = Regex.Replace(volumeSSML, "[^0-9-+]", "");  // remove any extra unit from the string, keeping solely the number
-            volume = Int32.Parse(volumeSSML, NumberStyles.AllowLeadingSign);
-            this.hScrollBar1.Value = volume;  //  make a save clause to keep any value between [0, +100], trasnforming out-of-bounds values to bounds
-            //  acquire the voice style from the xml
-            string styleSSML = prosodyNode.FirstChild.Attributes["style"]?.Value ?? "calm"; ; // if it cannot find the attribute, it returns the default "calm" string
-            if (comboBox3.FindStringExact(styleSSML) == -1) { styleSSML = "calm"; }// if the style is not an option withinn the combo box, it sets it to the default "calm" string
+
             this.comboBox3.SelectedItem = styleSSML;
+            this.vScrollBar1.Value = rate;  //  make a save clause to keep any value between [-50, +50], trasnforming out-of-bounds values to bounds
+            this.vScrollBar2.Value = pitch;  //  make a save clause to keep any value between bounds, trasnforming out-of-bounds values to bounds
+            this.hScrollBar1.Value = volume;  //  make a save clause to keep any value between [0, +100], trasnforming out-of-bounds values to bounds
+            #endregion
         }
 
         #region deprecated code to be deleted once everything sorts out
