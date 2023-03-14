@@ -31,6 +31,7 @@ namespace _2022TextToSpeech
     using static System.Runtime.InteropServices.JavaScript.JSType;
     using System.ComponentModel;
     using System.Globalization;
+    using System.Text.RegularExpressions;
 
     public partial class Form1 : Form
     {
@@ -445,12 +446,13 @@ namespace _2022TextToSpeech
             this.comboBox1.SelectedItem = localeName;
             this.comboBox2.SelectedItem = DisplayName;
             //  acquire the rate from the xml
-            XmlNode prosodyNode = SSMLDocument.SelectSingleNode("//speak:prosody", nsMgr);
-            string rate = prosodyNode.Attributes["rate"].Value.ToString().TrimEnd('%');
+            XmlNode prosodyNode = SSMLDocument.SelectSingleNode("//speak:prosody", nsMgr);            
+            string rate = prosodyNode.Attributes["rate"].Value;
+            rate = Regex.Replace(rate, "[^0-9-+]", "");  // remove any extra unit from the string, kleeping solely the number
             this.vScrollBar1.Value = Int32.Parse(rate, NumberStyles.AllowLeadingSign);  //  make a save clause to keep any value between [-50, +50], trasnforming out-of-bounds values to bounds
             //  acquire the pitch from the xml            
-            string pitch = prosodyNode.Attributes["pitch"].Value.ToString();
-            pitch = pitch.Replace("Hz", "");
+            string pitch = prosodyNode.Attributes["pitch"].Value;           
+            pitch = Regex.Replace(pitch, "[^0-9-+]", "");  // remove any extra unit from the string, kleeping solely the number
             this.vScrollBar2.Value = Int32.Parse(pitch, NumberStyles.AllowLeadingSign);  //  make a save clause to keep any value between [-50, +50], trasnforming out-of-bounds values to bounds
         }
         //  Speak the selected text from the textbox
