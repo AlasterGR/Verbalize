@@ -73,7 +73,8 @@ namespace _2022TextToSpeech
             this.label1.Visible = false;
             this.checkBox2.Checked = true;
             VoicesLoad();  //  Load the voices onto the combo boxes
-            
+            VoicesRetrieve();
+
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -428,9 +429,9 @@ namespace _2022TextToSpeech
             if (comboBox3.FindStringExact(styleSSML) == -1) { styleSSML = "calm"; }// if the style is not an option withinn the combo box, it sets it to the default "calm" string
 
             //  ... the rate
-            try 
+            try
             {
-                rateSSML = prosodyNode.Attributes["rate"].Value;
+                if (prosodyNode.Attributes["rate"] != null) { rateSSML = prosodyNode.Attributes["rate"].Value; } // For some reason, this cannot be handled by this generic try-catch                
                 rateSSML = Regex.Replace(rateSSML, "[^0-9-+]", "");
                 rate = Int32.Parse(rateSSML, NumberStyles.AllowLeadingSign);
                 if (rate > 50) { rate = 50; }  // replace with more abstract bounds
@@ -441,7 +442,7 @@ namespace _2022TextToSpeech
             //  ... the pitch 
             try
             {
-                pitchSSML = prosodyNode.Attributes["pitch"].Value;
+                if (prosodyNode.Attributes["pitch"] != null) { pitchSSML = prosodyNode.Attributes["pitch"].Value; } // For some reason, this cannot be handled by this generic try-catch                
                 pitchSSML = Regex.Replace(pitchSSML, "[^0-9-+]", "");
                 pitch = Int32.Parse(pitchSSML, NumberStyles.AllowLeadingSign);
                 if (pitch > 200) { pitch = 200; }  // replace with more abstract bounds
@@ -452,20 +453,17 @@ namespace _2022TextToSpeech
             //  ... the volume
             try
             {
-                volumeSSML = prosodyNode.Attributes["volume"].Value;
+                if (prosodyNode.Attributes["volume"] != null) { volumeSSML = prosodyNode.Attributes["volume"].Value; } // For some reason, this cannot be handled by this generic try-catch
                 volumeSSML = Regex.Replace(volumeSSML, "[^0-9-+]", "");  // remove any extra unit from the string, keeping solely the number
                 volume = Int32.Parse(volumeSSML, NumberStyles.AllowLeadingSign);
                 if (volume > 100) { volume = 100; }  // replace with more abstract bounds
                 else if (volume < 0) { volume = 0; }
             }
-            catch { volumeSSML = "80"; volume = 80; }
-            MessageBox.Show(volume.ToString());
+            catch (Exception ex) when (ex is NullReferenceException || ex is FormatException) { volumeSSML = "80"; volume = 80; }
             #endregion
             #region set the u.i. and config elements to the parsed values (which will be the default ones fow whatever has failed)
-            this.label9.Text = nameValue;
-            config.SpeechSynthesisVoiceName = nameValue;
 
-            this.label6.Text = langValue;
+            config.SpeechSynthesisVoiceName = nameValue;
             config.SpeechSynthesisLanguage = langValue; //  Set the Speech Language to whatever is first on the xml file, which is the general one of the entire file
 
             this.comboBox1.SelectedItem = localeName;
@@ -558,5 +556,24 @@ namespace _2022TextToSpeech
         }
         */
         #endregion
+
+        private void label1_TextChanged(object sender, EventArgs e) // Keep out save as button available only if we are making a new document
+        {
+            if (label1.Text != string.Empty) { this.button7.Enabled = false; this.button2.Enabled = true; }
+            else { this.button7.Enabled = true; this.button2.Enabled = false; }
+        }
+
+        private void label1_DoubleClick(object sender, EventArgs e)
+        {
+            this.label1.Text = string.Empty;
+            this.label1.Visible = false;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            this.label1.Text = string.Empty;
+            this.label1.Visible = false;
+        }
     }
 }

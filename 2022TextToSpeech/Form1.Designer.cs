@@ -50,10 +50,10 @@
             label8 = new Label();
             button2 = new Button();
             button12 = new Button();
-            label9 = new Label();
             hScrollBar1 = new HScrollBar();
             label10 = new Label();
             label11 = new Label();
+            button1 = new Button();
             SuspendLayout();
             // 
             // openFileDialog1
@@ -63,7 +63,7 @@
             // 
             // button3
             // 
-            button3.Location = new Point(123, 9);
+            button3.Location = new Point(10, 9);
             button3.Name = "button3";
             button3.Size = new Size(126, 35);
             button3.TabIndex = 2;
@@ -74,16 +74,18 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(255, 19);
+            label1.Location = new Point(253, 19);
             label1.Name = "label1";
-            label1.Size = new Size(38, 15);
+            label1.Size = new Size(115, 15);
             label1.TabIndex = 3;
-            label1.Text = "label1";
+            label1.Text = "Selected File address";
+            label1.TextChanged += label1_TextChanged;
+            label1.DoubleClick += label1_DoubleClick;
             // 
             // checkBox2
             // 
             checkBox2.AutoSize = true;
-            checkBox2.Location = new Point(12, 260);
+            checkBox2.Location = new Point(10, 239);
             checkBox2.Name = "checkBox2";
             checkBox2.Size = new Size(107, 19);
             checkBox2.TabIndex = 6;
@@ -93,7 +95,7 @@
             // textBox1
             // 
             textBox1.HideSelection = false;
-            textBox1.Location = new Point(123, 48);
+            textBox1.Location = new Point(140, 48);
             textBox1.Margin = new Padding(1);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
@@ -104,7 +106,7 @@
             // vScrollBar1
             // 
             vScrollBar1.LargeChange = 5;
-            vScrollBar1.Location = new Point(512, 258);
+            vScrollBar1.Location = new Point(529, 258);
             vScrollBar1.Maximum = 50;
             vScrollBar1.Minimum = -50;
             vScrollBar1.Name = "vScrollBar1";
@@ -114,7 +116,7 @@
             // 
             // vScrollBar2
             // 
-            vScrollBar2.Location = new Point(575, 258);
+            vScrollBar2.Location = new Point(592, 258);
             vScrollBar2.Maximum = 200;
             vScrollBar2.Minimum = -200;
             vScrollBar2.Name = "vScrollBar2";
@@ -125,7 +127,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(575, 243);
+            label2.Location = new Point(592, 243);
             label2.Margin = new Padding(1, 0, 1, 0);
             label2.Name = "label2";
             label2.Size = new Size(34, 15);
@@ -135,7 +137,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(512, 243);
+            label3.Location = new Point(529, 243);
             label3.Margin = new Padding(1, 0, 1, 0);
             label3.Name = "label3";
             label3.Size = new Size(30, 15);
@@ -145,7 +147,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(474, 48);
+            label4.Location = new Point(491, 48);
             label4.Margin = new Padding(1, 0, 1, 0);
             label4.Name = "label4";
             label4.Size = new Size(51, 15);
@@ -155,7 +157,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(474, 96);
+            label5.Location = new Point(491, 96);
             label5.Margin = new Padding(1, 0, 1, 0);
             label5.Name = "label5";
             label5.Size = new Size(63, 15);
@@ -165,7 +167,7 @@
             // comboBox1
             // 
             comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(541, 48);
+            comboBox1.Location = new Point(558, 48);
             comboBox1.Margin = new Padding(1);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(243, 23);
@@ -175,7 +177,7 @@
             // comboBox2
             // 
             comboBox2.FormattingEnabled = true;
-            comboBox2.Location = new Point(541, 94);
+            comboBox2.Location = new Point(558, 94);
             comboBox2.Margin = new Padding(1);
             comboBox2.Name = "comboBox2";
             comboBox2.Size = new Size(95, 23);
@@ -205,7 +207,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(640, 111);
+            label6.Location = new Point(657, 111);
             label6.Name = "label6";
             label6.Size = new Size(68, 15);
             label6.TabIndex = 22;
@@ -214,7 +216,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(637, 96);
+            label7.Location = new Point(654, 96);
             label7.Name = "label7";
             label7.Size = new Size(117, 15);
             label7.TabIndex = 23;
@@ -223,7 +225,7 @@
             // 
             // button7
             // 
-            button7.Location = new Point(123, 509);
+            button7.Location = new Point(140, 509);
             button7.Margin = new Padding(1);
             button7.Name = "button7";
             button7.Size = new Size(170, 22);
@@ -236,7 +238,7 @@
             // 
             comboBox3.FormattingEnabled = true;
             comboBox3.Items.AddRange(new object[] { "advertisement_upbeat", "affectionate", "angry", "assistant", "calm", "chat", "cheerful", "customerservice", "depressed", "disgruntled", "documentary-narration", "embarrassed", "empathetic", "envious", "excited", "fearful", "friendly", "gentle", "hopeful", "lyrical", "narration-professional", "narration-relaxed", "newscast", "newscast-casual", "newscast-formal", "poetry-reading", "sad", "serious", "shouting", "sports_commentary", "sports_commentary_excited", "whispering", "terrified", "unfriendly" });
-            comboBox3.Location = new Point(512, 209);
+            comboBox3.Location = new Point(529, 209);
             comboBox3.Margin = new Padding(1);
             comboBox3.Name = "comboBox3";
             comboBox3.Size = new Size(130, 23);
@@ -246,7 +248,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(474, 212);
+            label8.Location = new Point(491, 212);
             label8.Name = "label8";
             label8.Size = new Size(32, 15);
             label8.TabIndex = 26;
@@ -254,7 +256,7 @@
             // 
             // button2
             // 
-            button2.Location = new Point(295, 509);
+            button2.Location = new Point(312, 509);
             button2.Margin = new Padding(1);
             button2.Name = "button2";
             button2.Size = new Size(170, 22);
@@ -265,7 +267,7 @@
             // 
             // button12
             // 
-            button12.Location = new Point(479, 144);
+            button12.Location = new Point(496, 144);
             button12.Name = "button12";
             button12.Size = new Size(200, 23);
             button12.TabIndex = 30;
@@ -273,18 +275,9 @@
             button12.UseVisualStyleBackColor = true;
             button12.Click += button12_Click;
             // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new Point(729, 131);
-            label9.Name = "label9";
-            label9.Size = new Size(38, 15);
-            label9.TabIndex = 31;
-            label9.Text = "label9";
-            // 
             // hScrollBar1
             // 
-            hScrollBar1.Location = new Point(554, 540);
+            hScrollBar1.Location = new Point(571, 540);
             hScrollBar1.Name = "hScrollBar1";
             hScrollBar1.Size = new Size(179, 30);
             hScrollBar1.TabIndex = 32;
@@ -294,7 +287,7 @@
             // 
             label10.AutoSize = true;
             label10.Font = new Font("Calibri", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            label10.Location = new Point(474, 547);
+            label10.Location = new Point(491, 547);
             label10.Name = "label10";
             label10.Size = new Size(77, 23);
             label10.TabIndex = 33;
@@ -304,21 +297,31 @@
             // 
             label11.AutoSize = true;
             label11.Font = new Font("Calibri", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            label11.Location = new Point(736, 547);
+            label11.Location = new Point(753, 547);
             label11.Name = "label11";
-            label11.Size = new Size(66, 23);
+            label11.Size = new Size(67, 23);
             label11.TabIndex = 34;
-            label11.Text = "label11";
+            label11.Text = "volume";
+            // 
+            // button1
+            // 
+            button1.Location = new Point(10, 92);
+            button1.Name = "button1";
+            button1.Size = new Size(97, 23);
+            button1.TabIndex = 35;
+            button1.Text = "Εκκαθάριση";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(842, 599);
+            Controls.Add(button1);
             Controls.Add(label11);
             Controls.Add(label10);
             Controls.Add(hScrollBar1);
-            Controls.Add(label9);
             Controls.Add(button12);
             Controls.Add(button2);
             Controls.Add(label8);
@@ -370,9 +373,9 @@
         private Label label8;
         private Button button2;
         private Button button12;
-        private Label label9;
         private HScrollBar hScrollBar1;
         private Label label10;
         private Label label11;
+        private Button button1;
     }
 }

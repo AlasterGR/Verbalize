@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" xml:lang="af-ZA" onlangfailure="ignoretext ">
+  <voice name="af-ZA-AdriNeural">
+    <prosody rate="0%" pitch="0Hz" volume="100">
+      <mstts:express-as style="calm">
+      </mstts:express-as>
+    </prosody>
+  </voice>
+</speak>
