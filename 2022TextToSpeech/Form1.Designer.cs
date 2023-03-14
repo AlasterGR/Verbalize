@@ -31,11 +31,8 @@
             openFileDialog1 = new OpenFileDialog();
             button3 = new Button();
             label1 = new Label();
-            button1 = new Button();
-            checkBox1 = new CheckBox();
             checkBox2 = new CheckBox();
             textBox1 = new TextBox();
-            button5 = new Button();
             vScrollBar1 = new VScrollBar();
             vScrollBar2 = new VScrollBar();
             label2 = new Label();
@@ -51,11 +48,12 @@
             button7 = new Button();
             comboBox3 = new ComboBox();
             label8 = new Label();
-            buttn_SpeakSSML = new Button();
             button2 = new Button();
-            button11 = new Button();
             button12 = new Button();
             label9 = new Label();
+            hScrollBar1 = new HScrollBar();
+            label10 = new Label();
+            label11 = new Label();
             SuspendLayout();
             // 
             // openFileDialog1
@@ -82,34 +80,14 @@
             label1.TabIndex = 3;
             label1.Text = "label1";
             // 
-            // button1
-            // 
-            button1.Location = new Point(367, 9);
-            button1.Name = "button1";
-            button1.Size = new Size(97, 33);
-            button1.TabIndex = 4;
-            button1.Text = "Εκφώνηση";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click_1;
-            // 
-            // checkBox1
-            // 
-            checkBox1.AutoSize = true;
-            checkBox1.Location = new Point(12, 285);
-            checkBox1.Name = "checkBox1";
-            checkBox1.Size = new Size(95, 19);
-            checkBox1.TabIndex = 5;
-            checkBox1.Text = "Αποθήκευση";
-            checkBox1.UseVisualStyleBackColor = true;
-            // 
             // checkBox2
             // 
             checkBox2.AutoSize = true;
             checkBox2.Location = new Point(12, 260);
             checkBox2.Name = "checkBox2";
-            checkBox2.Size = new Size(85, 19);
+            checkBox2.Size = new Size(107, 19);
             checkBox2.TabIndex = 6;
-            checkBox2.Text = "Εκφώνηση";
+            checkBox2.Text = "Πλήρης Σίγαση";
             checkBox2.UseVisualStyleBackColor = true;
             // 
             // textBox1
@@ -123,17 +101,6 @@
             textBox1.Size = new Size(341, 446);
             textBox1.TabIndex = 8;
             // 
-            // button5
-            // 
-            button5.Location = new Point(13, 48);
-            button5.Margin = new Padding(1);
-            button5.Name = "button5";
-            button5.Size = new Size(96, 55);
-            button5.TabIndex = 9;
-            button5.Text = "Εκφώνηση απλού κειμένου";
-            button5.UseVisualStyleBackColor = true;
-            button5.Click += button5_Click;
-            // 
             // vScrollBar1
             // 
             vScrollBar1.LargeChange = 5;
@@ -143,7 +110,6 @@
             vScrollBar1.Name = "vScrollBar1";
             vScrollBar1.Size = new Size(42, 236);
             vScrollBar1.TabIndex = 11;
-            vScrollBar1.Scroll += vScrollBar1_Scroll;
             vScrollBar1.ValueChanged += vScrollBar1_ValueChanged;
             // 
             // vScrollBar2
@@ -153,7 +119,6 @@
             vScrollBar2.Minimum = -200;
             vScrollBar2.Name = "vScrollBar2";
             vScrollBar2.Size = new Size(52, 236);
-            vScrollBar2.SmallChange = 5;
             vScrollBar2.TabIndex = 12;
             vScrollBar2.ValueChanged += vScrollBar2_ValueChanged;
             // 
@@ -287,17 +252,6 @@
             label8.TabIndex = 26;
             label8.Text = "Style";
             // 
-            // buttn_SpeakSSML
-            // 
-            buttn_SpeakSSML.Location = new Point(13, 105);
-            buttn_SpeakSSML.Margin = new Padding(1);
-            buttn_SpeakSSML.Name = "buttn_SpeakSSML";
-            buttn_SpeakSSML.Size = new Size(96, 38);
-            buttn_SpeakSSML.TabIndex = 27;
-            buttn_SpeakSSML.Text = "Εκφώνηση SSML κειμένου";
-            buttn_SpeakSSML.UseVisualStyleBackColor = true;
-            buttn_SpeakSSML.Click += button10_Click;
-            // 
             // button2
             // 
             button2.Location = new Point(295, 509);
@@ -308,16 +262,6 @@
             button2.Text = "Ενημέρωση του αρχείου";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
-            // 
-            // button11
-            // 
-            button11.Location = new Point(474, 10);
-            button11.Name = "button11";
-            button11.Size = new Size(249, 33);
-            button11.TabIndex = 29;
-            button11.Text = "Φόρτωση χαρακτηριστικών από το αρχείο";
-            button11.UseVisualStyleBackColor = true;
-            button11.Click += button11_Click;
             // 
             // button12
             // 
@@ -338,16 +282,45 @@
             label9.TabIndex = 31;
             label9.Text = "label9";
             // 
+            // hScrollBar1
+            // 
+            hScrollBar1.Location = new Point(554, 540);
+            hScrollBar1.Name = "hScrollBar1";
+            hScrollBar1.Size = new Size(179, 30);
+            hScrollBar1.TabIndex = 32;
+            hScrollBar1.ValueChanged += hScrollBar1_ValueChanged;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Font = new Font("Calibri", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            label10.Location = new Point(474, 547);
+            label10.Name = "label10";
+            label10.Size = new Size(77, 23);
+            label10.TabIndex = 33;
+            label10.Text = "Volume :";
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Font = new Font("Calibri", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            label11.Location = new Point(736, 547);
+            label11.Name = "label11";
+            label11.Size = new Size(66, 23);
+            label11.TabIndex = 34;
+            label11.Text = "label11";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 599);
+            ClientSize = new Size(842, 599);
+            Controls.Add(label11);
+            Controls.Add(label10);
+            Controls.Add(hScrollBar1);
             Controls.Add(label9);
             Controls.Add(button12);
-            Controls.Add(button11);
             Controls.Add(button2);
-            Controls.Add(buttn_SpeakSSML);
             Controls.Add(label8);
             Controls.Add(comboBox3);
             Controls.Add(button7);
@@ -363,11 +336,8 @@
             Controls.Add(label2);
             Controls.Add(vScrollBar2);
             Controls.Add(vScrollBar1);
-            Controls.Add(button5);
             Controls.Add(textBox1);
             Controls.Add(checkBox2);
-            Controls.Add(checkBox1);
-            Controls.Add(button1);
             Controls.Add(label1);
             Controls.Add(button3);
             Name = "Form1";
@@ -381,11 +351,8 @@
         private OpenFileDialog openFileDialog1;
         private Button button3;
         private Label label1;
-        private Button button1;
-        private CheckBox checkBox1;
         private CheckBox checkBox2;
         private TextBox textBox1;
-        private Button button5;
         private VScrollBar vScrollBar1;
         private VScrollBar vScrollBar2;
         private Label label2;
@@ -401,10 +368,11 @@
         private Button button7;
         private ComboBox comboBox3;
         private Label label8;
-        private Button buttn_SpeakSSML;
         private Button button2;
-        private Button button11;
         private Button button12;
         private Label label9;
+        private HScrollBar hScrollBar1;
+        private Label label10;
+        private Label label11;
     }
 }
