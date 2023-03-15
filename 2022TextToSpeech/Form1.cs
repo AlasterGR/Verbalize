@@ -146,22 +146,44 @@ namespace _2022TextToSpeech
             MessageBox.Show("The audio file was created successfully");
             // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
 
-            #region If I manage to convert the produced .wav into anything other, it will go here
-            /* 
+            #region If I manage to convert the produced .wav into anything different, it will go here
+            
             SpeechSynthesizer speechSynthesizer1 = new SpeechSynthesizer(config, null);
 
-            var result = await speechSynthesizer1.SpeakSsmlAsync(ssmlText);
-            using var stream = AudioDataStream.FromResult(result);
-            
+            SpeechSynthesisResult result = await speechSynthesizer1.SpeakSsmlAsync(ssmlText);
+
+            MediaFoundationApi.Startup();
+
+            using var stream = new MemoryStream(result.AudioData);
+            var reader = new WaveFileReader(stream);
             string mp3FilePath = Path.ChangeExtension(outputFile, ".mp3");
-            WaveFileReader reader = new WaveFileReader(stream);
             MediaFoundationEncoder.EncodeToMp3(reader, mp3FilePath);
             MessageBox.Show(locationLoadedFile + ", " + mp3FilePath);
-            */
+
+
+
+
+            //if (result.Reason == ResultReason.SynthesizingAudioCompleted)
+
+
+            //using var reader = new WaveFileReader(stream);
+
+            //WaveFileReader reader = new WaveFileReader(stream);
+
+            /*
+               using var player = new WaveOutEvent();
+                player.Init(reader);
+                player.Play();
+                while (player.PlaybackState == PlaybackState.Playing)
+                {
+                    Thread.Sleep(500);
+                }*/
+
+
             #endregion
         }
 
-        async void InitializeVoices()
+        async void InitializeVoices()  //  See if it should be called from a button
         {
             try
             {
@@ -607,8 +629,8 @@ namespace _2022TextToSpeech
             this.label1.Text = string.Empty;
             this.label1.Visible = false;
         }
-        # region A string in XML format that is to be used should the app not be able to download the Voices file
-          
+        #region A string in XML format that is to be used should the app not be able to download the Voices file
+
         string VoicesBasic = @"<Voices>  
   <Voice>
     <Name>Microsoft Server Speech Text to Speech Voice (el-GR, AthinaNeural)</Name>

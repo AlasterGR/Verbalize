@@ -182,7 +182,7 @@
             comboBox1.Location = new Point(622, 9);
             comboBox1.Margin = new Padding(1);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(95, 23);
+            comboBox1.Size = new Size(112, 23);
             comboBox1.TabIndex = 17;
             comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
@@ -193,7 +193,7 @@
             comboBox2.Location = new Point(622, 34);
             comboBox2.Margin = new Padding(1);
             comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(95, 23);
+            comboBox2.Size = new Size(112, 23);
             comboBox2.TabIndex = 18;
             comboBox2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
             // 
@@ -221,7 +221,7 @@
             // 
             label6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label6.AutoSize = true;
-            label6.Location = new Point(729, 40);
+            label6.Location = new Point(788, 12);
             label6.Name = "label6";
             label6.Size = new Size(66, 15);
             label6.TabIndex = 22;
@@ -231,7 +231,7 @@
             // 
             label7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label7.AutoSize = true;
-            label7.Location = new Point(729, 12);
+            label7.Location = new Point(738, 42);
             label7.Name = "label7";
             label7.Size = new Size(117, 15);
             label7.TabIndex = 23;
