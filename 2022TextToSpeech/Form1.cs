@@ -192,7 +192,6 @@
                         uniqueLocales.Add(locale);
                         string localeName = node.SelectSingleNode("LocaleName").InnerText;
                         comboBox1.Items.Add(localeName);
-                        label6.Text = node.SelectSingleNode("Locale").InnerText;
                     }
                     string localName = node.SelectSingleNode("LocalName").InnerText;
                     string gender = node.SelectSingleNode("Gender").InnerText;
@@ -248,8 +247,7 @@
                 if (localName == selectedDisplayName)
                 {
                     config.SpeechSynthesisVoiceName = node.SelectSingleNode("ShortName").InnerText;  //  We store who our voice actor will be
-                    this.label7.Text = " - " + node.SelectSingleNode("LocalName").InnerText + " (" + node.SelectSingleNode("Gender").InnerText + ")";
-                    //this.label6.Text = node.SelectSingleNode("Locale").InnerText;
+                    this.label7.Text = " - " + node.SelectSingleNode("LocalName").InnerText + " (" + node.SelectSingleNode("Gender").InnerText + ")";                    
                 }
                 
             }
