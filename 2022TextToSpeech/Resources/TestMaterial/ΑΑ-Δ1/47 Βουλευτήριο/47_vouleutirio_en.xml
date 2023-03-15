@@ -1,9 +1,0 @@
-<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">
-  <voice name="en-US-JennyNeural">
-    <prosody rate="-10%" pitch="-10%">
-      <mstts:express-as style="calm">
-        				It was composed of 50 representatives from each of the ten tribes of Athens. Each deputy was elected by lot and served for one year. The deputies prepared the laws that would be debated and voted on by the people of Athens in the Municipal Church. Only the foundations of the building of the Bouleuterion are preserved.
-      </mstts:express-as>      
-    </prosody>
-  </voice>
-</speak>

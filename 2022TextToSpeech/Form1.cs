@@ -1,4 +1,6 @@
-﻿namespace _2022TextToSpeech
+﻿using Microsoft.VisualBasic.Devices;
+
+namespace _2022TextToSpeech
 {
     using System;
     using System.Drawing.Drawing2D;
@@ -32,6 +34,10 @@
     using System.ComponentModel;
     using System.Globalization;
     using System.Text.RegularExpressions;
+    //using NAudio.Lame;  // for the audio conversion
+    //using NAudio.Vorbis;// for the audio conversion
+    using NAudio.Wave;  // for the audio conversion
+    using NAudio.MediaFoundation;
 
     public partial class Form1 : Form
     {
@@ -66,7 +72,7 @@
         {
             InitializeComponent();
             #region Load the voices file that lists the various speech voices          
-            InitializeVoices();
+            //InitializeVoices();
             #endregion
         }
 
@@ -119,7 +125,7 @@
             {
                 if (openFileDialog1.FileName != "")
                 {
-                    string pathFileSelected = openFileDialog1.FileName;                    
+                    string pathFileSelected = openFileDialog1.FileName;
                     SynthesizeAudioAsync(pathFileSelected);
                 }
             }
@@ -137,8 +143,14 @@
             await speechSynthesizer.SpeakSsmlAsync(ssmlText);
             //if (bSpeak) { synthesizer = new SpeechSynthesizer(config); }  // Option of whether to speak the text.
             //  choose output format. The parent directory must already exist.            
-            MessageBox.Show("The file was saved successfully");
+            MessageBox.Show("The audio file was created successfully");
             // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
+
+           // speechSynthesizer = new SpeechSynthesizer(speechConfig, null);
+
+            var result = await speechSynthesizer.SpeakTextAsync("I'm excited to try text-to-speech");
+            using var stream = AudioDataStream.FromResult(result);
+
         }
 
         async void InitializeVoices()
@@ -672,5 +684,24 @@
   </Voice>
 </Voices>";
 
+        private void button5_Click(object sender, EventArgs e)
+        {
+            MediaFoundationApi.Startup();
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                locationLoadedFile = openFileDialog1.FileName;
+                string mp3FilePath = Path.ChangeExtension(locationLoadedFile, ".mp3");
+                WaveFileReader reader = new WaveFileReader(locationLoadedFile);
+                MediaFoundationEncoder.EncodeToMp3(reader, mp3FilePath);
+                MessageBox.Show(locationLoadedFile + ", " + mp3FilePath);
+
+                var outputFormat = new WaveFormat(44100, 16, 2);
+                /*
+                using (var writer = new MediaFoundationEncoder(outputFormat))
+                {
+                    writer.Encode(mp3FilePath, reader);
+                }*/
+            }
+        }
     }
 }

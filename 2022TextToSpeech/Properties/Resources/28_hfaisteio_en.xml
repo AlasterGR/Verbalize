@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" xml:lang="en-US" onlangfailure="ignoretext ">
   <voice name="en-US-JennyNeural">
-    <prosody rate="0%" pitch="200Hz" volume="80">
+    <prosody rate="0%" pitch="0Hz" volume="82">
       <mstts:express-as style="sad">
         	Built in the second half of the 5th century BC, it was dedicated to Hephaestus and Athena Hephaestia, protectors of the metalworkers and craftsmen who had their workshops in the neighbourhood.
 werteryuuyiu
