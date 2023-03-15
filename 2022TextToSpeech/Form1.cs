@@ -1,4 +1,4 @@
-namespace _2022TextToSpeech
+﻿namespace _2022TextToSpeech
 {
     using System;
     using System.Drawing.Drawing2D;
@@ -60,10 +60,12 @@ namespace _2022TextToSpeech
         public static string locationLoadedFile = string.Empty;
         Task<SpeechSynthesisResult> sound1;
 
+        
+
         public Form1()
         {
             InitializeComponent();
-            #region Load the voices file that lists the various speech voices
+            #region Load the voices file that lists the various speech voices          
             InitializeVoices();
             #endregion
         }
@@ -73,8 +75,6 @@ namespace _2022TextToSpeech
             this.label1.Visible = false;
             this.checkBox2.Checked = true;
             VoicesLoad();  //  Load the voices onto the combo boxes
-            VoicesRetrieve();
-
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -150,7 +150,6 @@ namespace _2022TextToSpeech
                     await VoicesRetrieve();
                 }
             }
-
         }
 
         #region Retrieve the list of voices from speech.microsoft.com and reload the voices into the boxes
@@ -182,7 +181,7 @@ namespace _2022TextToSpeech
         #region This function loads the list of language elements from the SSML Voice file onto the Languages combo box
         private void VoicesLoad()
         {
-            if (VoicesXML != null)
+            if (VoicesXML.DocumentElement != null)  //  To make sure it has been downloaded and loaded
             {
                 List<string> uniqueLocales = new List<string>();  //  List that will contain only the unique values of Locale, for reference, to populate the combo box with unique elements only
                 foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice")) //Expression "//Voice" works as well
@@ -200,6 +199,7 @@ namespace _2022TextToSpeech
                     comboBox1.SelectedIndex = 0;
                 }
             }
+            else { VoicesXML.LoadXml(VoicesBasic); VoicesLoad(); }
             this.comboBox3.SelectedItem = style;  //  Have the the default voice style preselected as default
         }
         #endregion
@@ -230,7 +230,7 @@ namespace _2022TextToSpeech
                 if (localeName == selectedLocaleName)
                 {
                     displayNames.Add(node.SelectSingleNode("DisplayName").InnerText);
-                    this.label6.Text = node.SelectSingleNode("Locale").InnerText;
+                    this.label6.Text = node.SelectSingleNode("Locale").InnerText;  //  can probably delete this
                     config.SpeechSynthesisLanguage = node.SelectSingleNode("Locale").InnerText;
                 }
             }
@@ -249,7 +249,9 @@ namespace _2022TextToSpeech
                 {
                     config.SpeechSynthesisVoiceName = node.SelectSingleNode("ShortName").InnerText;  //  We store who our voice actor will be
                     this.label7.Text = " - " + node.SelectSingleNode("LocalName").InnerText + " (" + node.SelectSingleNode("Gender").InnerText + ")";
+                    //this.label6.Text = node.SelectSingleNode("Locale").InnerText;
                 }
+                
             }
         }
         #endregion
@@ -544,7 +546,7 @@ namespace _2022TextToSpeech
             string nameFile = Path.GetFileNameWithoutExtension(locationLoadedFile);
             string typeFile = Path.GetExtension(locationLoadedFile);
             string typeFileSaved = ".wav"; // need to add option for choosing file type and sound option            
-            string pathFileSelected = Path.GetDirectoryName(locationLoadedFile); // I use Path.GetDirectoryName instead of FileInfo because it directly gets the exact path and doesn�t construct any large objects
+            string pathFileSelected = Path.GetDirectoryName(locationLoadedFile); // I use Path.GetDirectoryName instead of FileInfo because it directly gets the exact path and doesn’t construct any large objects
             string pathFileSaved = Path.Combine(pathFileSelected, "Recorded");
             string fileSound = Path.Combine(pathFileSaved, nameFile + typeFileSaved);
             #endregion
@@ -575,5 +577,89 @@ namespace _2022TextToSpeech
             this.label1.Text = string.Empty;
             this.label1.Visible = false;
         }
+        //  A string in XML format that is to be used should the app not be able to download the Voices file
+        string VoicesBasic = @"<Voices>  
+  <Voice>
+    <Name>Microsoft Server Speech Text to Speech Voice (el-GR, AthinaNeural)</Name>
+    <DisplayName>Athina</DisplayName>
+    <LocalName>Αθηνά</LocalName>
+    <ShortName>el-GR-AthinaNeural</ShortName>
+    <Gender>Female</Gender>
+    <Locale>el-GR</Locale>
+    <LocaleName>Greek (Greece)</LocaleName>
+  </Voice>
+  <Voice>
+    <Name>Microsoft Server Speech Text to Speech Voice (el-GR, NestorasNeural)</Name>
+    <DisplayName>Nestoras</DisplayName>
+    <LocalName>Νέστορας</LocalName>
+    <ShortName>el-GR-NestorasNeural</ShortName>
+    <Gender>Male</Gender>
+    <Locale>el-GR</Locale>
+    <LocaleName>Greek (Greece)</LocaleName>
+  </Voice>
+  <Voice>
+    <Name>Microsoft Server Speech Text to Speech Voice (en-US, JennyNeural)</Name>
+    <DisplayName>Jenny</DisplayName>
+    <LocalName>Jenny</LocalName>
+    <ShortName>en-US-JennyNeural</ShortName>
+    <Gender>Female</Gender>
+    <Locale>en-US</Locale>
+    <LocaleName>English (United States)</LocaleName>
+  </Voice>
+  <Voice>
+    <Name>Microsoft Server Speech Text to Speech Voice (en-US, JennyMultilingualNeural)</Name>
+    <DisplayName>Jenny Multilingual</DisplayName>
+    <LocalName>Jenny Multilingual</LocalName>
+    <ShortName>en-US-JennyMultilingualNeural</ShortName>
+    <Gender>Female</Gender>
+    <Locale>en-US</Locale>
+    <LocaleName>English (United States)</LocaleName>
+  </Voice>
+  <Voice>
+    <Name>Microsoft Server Speech Text to Speech Voice (en-US, GuyNeural)</Name>
+    <DisplayName>Guy</DisplayName>
+    <LocalName>Guy</LocalName>
+    <ShortName>en-US-GuyNeural</ShortName>
+    <Gender>Male</Gender>
+    <Locale>en-US</Locale>
+    <LocaleName>English (United States)</LocaleName>
+  </Voice>
+  <Voice>
+    <Name>Microsoft Server Speech Text to Speech Voice (sk-SK, LukasNeural)</Name>
+    <DisplayName>Lukas</DisplayName>
+    <LocalName>Lukáš</LocalName>
+    <ShortName>sk-SK-LukasNeural</ShortName>
+    <Gender>Male</Gender>
+    <Locale>sk-SK</Locale>
+    <LocaleName>Slovak (Slovakia)</LocaleName>
+  </Voice>
+  <Voice>
+    <Name>Microsoft Server Speech Text to Speech Voice (sk-SK, ViktoriaNeural)</Name>
+    <DisplayName>Viktoria</DisplayName>
+    <LocalName>Viktória</LocalName>
+    <ShortName>sk-SK-ViktoriaNeural</ShortName>
+    <Gender>Female</Gender>
+    <Locale>sk-SK</Locale>
+    <LocaleName>Slovak (Slovakia)</LocaleName>
+  </Voice>
+  <Voice>
+    <Name>Microsoft Server Speech Text to Speech Voice (sl-SI, PetraNeural)</Name>
+    <DisplayName>Petra</DisplayName>
+    <LocalName>Petra</LocalName>
+    <ShortName>sl-SI-PetraNeural</ShortName>
+    <Gender>Female</Gender>
+    <Locale>sl-SI</Locale>
+    <LocaleName>Slovenian (Slovenia)</LocaleName>
+  </Voice>
+  <Voice>
+    <Name>Microsoft Server Speech Text to Speech Voice (sl-SI, RokNeural)</Name>
+    <DisplayName>Rok</DisplayName>
+    <LocalName>Rok</LocalName>
+    <ShortName>sl-SI-RokNeural</ShortName>
+    <Gender>Male</Gender>
+    <Locale>sl-SI</Locale>
+    <LocaleName>Slovenian (Slovenia)</LocaleName>
+  </Voice>
+</Voices>";
     }
 }
