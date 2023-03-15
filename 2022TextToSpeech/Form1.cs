@@ -72,7 +72,7 @@ namespace _2022TextToSpeech
         {
             InitializeComponent();
             #region Load the voices file that lists the various speech voices          
-            //InitializeVoices();
+            //InitializeVoices();  Let's start with the basic voices first
             #endregion
         }
 
