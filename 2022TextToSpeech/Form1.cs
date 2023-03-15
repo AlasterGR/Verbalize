@@ -146,11 +146,19 @@ namespace _2022TextToSpeech
             MessageBox.Show("The audio file was created successfully");
             // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
 
-           // speechSynthesizer = new SpeechSynthesizer(speechConfig, null);
+            #region If I manage to convert the produced .wav into anything other, it will go here
+            /* 
+            SpeechSynthesizer speechSynthesizer1 = new SpeechSynthesizer(config, null);
 
-            var result = await speechSynthesizer.SpeakTextAsync("I'm excited to try text-to-speech");
+            var result = await speechSynthesizer1.SpeakSsmlAsync(ssmlText);
             using var stream = AudioDataStream.FromResult(result);
-
+            
+            string mp3FilePath = Path.ChangeExtension(outputFile, ".mp3");
+            WaveFileReader reader = new WaveFileReader(stream);
+            MediaFoundationEncoder.EncodeToMp3(reader, mp3FilePath);
+            MessageBox.Show(locationLoadedFile + ", " + mp3FilePath);
+            */
+            #endregion
         }
 
         async void InitializeVoices()
@@ -599,7 +607,8 @@ namespace _2022TextToSpeech
             this.label1.Text = string.Empty;
             this.label1.Visible = false;
         }
-        //  A string in XML format that is to be used should the app not be able to download the Voices file
+        # region A string in XML format that is to be used should the app not be able to download the Voices file
+          
         string VoicesBasic = @"<Voices>  
   <Voice>
     <Name>Microsoft Server Speech Text to Speech Voice (el-GR, AthinaNeural)</Name>
@@ -683,25 +692,6 @@ namespace _2022TextToSpeech
     <LocaleName>Slovenian (Slovenia)</LocaleName>
   </Voice>
 </Voices>";
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            MediaFoundationApi.Startup();
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                locationLoadedFile = openFileDialog1.FileName;
-                string mp3FilePath = Path.ChangeExtension(locationLoadedFile, ".mp3");
-                WaveFileReader reader = new WaveFileReader(locationLoadedFile);
-                MediaFoundationEncoder.EncodeToMp3(reader, mp3FilePath);
-                MessageBox.Show(locationLoadedFile + ", " + mp3FilePath);
-
-                var outputFormat = new WaveFormat(44100, 16, 2);
-                /*
-                using (var writer = new MediaFoundationEncoder(outputFormat))
-                {
-                    writer.Encode(mp3FilePath, reader);
-                }*/
-            }
-        }
+        #endregion
     }
 }
