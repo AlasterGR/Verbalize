@@ -60,7 +60,7 @@
         public static string locationLoadedFile = string.Empty;
         Task<SpeechSynthesisResult> sound1;
 
-        
+
 
         public Form1()
         {
@@ -234,7 +234,7 @@
                 }
             }
             comboBox2.DataSource = displayNames;
-            comboBox2.SelectedIndex = 0;
+            try { comboBox2.SelectedIndex = 0; } catch { } //  This clause is for when pressing to populate the boxes but with the basic Voices loaded
         }
         #endregion
         #region Voice actor combo box
@@ -247,9 +247,9 @@
                 if (localName == selectedDisplayName)
                 {
                     config.SpeechSynthesisVoiceName = node.SelectSingleNode("ShortName").InnerText;  //  We store who our voice actor will be
-                    this.label7.Text = " - " + node.SelectSingleNode("LocalName").InnerText + " (" + node.SelectSingleNode("Gender").InnerText + ")";                    
+                    this.label7.Text = " - " + node.SelectSingleNode("LocalName").InnerText + " (" + node.SelectSingleNode("Gender").InnerText + ")";
                 }
-                
+
             }
         }
         #endregion
