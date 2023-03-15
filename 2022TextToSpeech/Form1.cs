@@ -103,34 +103,43 @@
                 }
                 catch (XmlException ex)
                 {
-                    fileContents = File.ReadAllText(locationLoadedFile); ;
+                    fileContents = File.ReadAllText(locationLoadedFile); // File.ReadAllText locks the file
                 }
                 this.textBox1.Text = fileContents;
                 #endregion               
             }
         }
 
-        static async Task SynthesizeAudioAsync(string txt, string soundfile, bool bSave, string filetype, bool bSpeak)
+        private void button4_Click(object sender, EventArgs e)
         {
-            SpeechSynthesizer synthesizer;
-            //if (bSpeak) { synthesizer = new SpeechSynthesizer(config); }  // Option of whether to speak the text
-            if (bSave)
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+            //openFileDialog1.Filter = "*.xml|*.txt";
+            openFileDialog1.Title = "Select a file to be converted into sound.";
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                using AudioConfig audioConfig = AudioConfig.FromWavFileOutput(soundfile);
-                synthesizer = new SpeechSynthesizer(config, audioConfig);
+                if (openFileDialog1.FileName != "")
+                {
+                    string pathFileSelected = openFileDialog1.FileName;                    
+                    SynthesizeAudioAsync(pathFileSelected);
+                }
             }
-            else
-            {
-                synthesizer = new SpeechSynthesizer(config);
-            }
-            if (filetype.Equals(".txt"))
-            { await synthesizer.SpeakTextAsync(txt); }
-            else if (filetype.Equals(".xml"))
-            { await synthesizer.SpeakSsmlAsync(txt); }
-            //MessageBox.Show("The file was read");
+        }
+        static async Task SynthesizeAudioAsync(string soundfile)
+        {
+            string outputFile = soundfile;
+            outputFile = Path.ChangeExtension(soundfile, ".wav");  // save type of soundfile
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(soundfile);
+            string ssmlText = xmlDoc.OuterXml;
+            // config variable of speechconfig type is already set up
+            using AudioConfig audioConfig = AudioConfig.FromWavFileOutput(outputFile);  // soundfile is the path to write the .wav output
+            using var speechSynthesizer = new SpeechSynthesizer(config, audioConfig);
+            await speechSynthesizer.SpeakSsmlAsync(ssmlText);
+            //if (bSpeak) { synthesizer = new SpeechSynthesizer(config); }  // Option of whether to speak the text.
+            //  choose output format. The parent directory must already exist.            
+            MessageBox.Show("The file was saved successfully");
             // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
         }
-
 
         async void InitializeVoices()
         {
@@ -306,8 +315,10 @@
                     XmlDocument SSMLDocument = CreateSSML(text);
                     // Save the XML document to a file         
                     SSMLDocument.Save(pathFileSelected);
+                    SynthesizeAudioAsync(pathFileSelected);
                 }
             }
+
         }
         static XmlDocument CreateSSML(string text)
         {
@@ -371,6 +382,7 @@
                 XmlDocument SSMLDocument = CreateSSML(text);
                 // Save the XML document to a file         
                 SSMLDocument.Save(pathFileSelected);
+                SynthesizeAudioAsync(pathFileSelected);
             }
 
         }
@@ -659,5 +671,6 @@
     <LocaleName>Slovenian (Slovenia)</LocaleName>
   </Voice>
 </Voices>";
+
     }
 }

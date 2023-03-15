@@ -54,6 +54,7 @@
             label10 = new Label();
             label11 = new Label();
             button1 = new Button();
+            button4 = new Button();
             SuspendLayout();
             // 
             // openFileDialog1
@@ -243,9 +244,9 @@
             button7.Location = new Point(147, 408);
             button7.Margin = new Padding(1);
             button7.Name = "button7";
-            button7.Size = new Size(170, 50);
+            button7.Size = new Size(170, 56);
             button7.TabIndex = 24;
-            button7.Text = "Save textbox text to SSML .xml";
+            button7.Text = "Save textbox text to SSML .xml  - και παραγωγή αρχείου ήχου";
             button7.UseVisualStyleBackColor = true;
             button7.Click += button7_Click;
             // 
@@ -279,7 +280,7 @@
             button2.Name = "button2";
             button2.Size = new Size(153, 56);
             button2.TabIndex = 28;
-            button2.Text = "Ενημέρωση του αρχείου";
+            button2.Text = "Ενημέρωση του αρχείου  - και παραγωγή αρχείου ήχου";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
@@ -335,11 +336,22 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
+            // button4
+            // 
+            button4.Location = new Point(12, 206);
+            button4.Name = "button4";
+            button4.Size = new Size(95, 91);
+            button4.TabIndex = 36;
+            button4.Text = "Παραγωγή αρχείου ήχου από αρχείο";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(867, 474);
+            Controls.Add(button4);
             Controls.Add(button3);
             Controls.Add(button1);
             Controls.Add(textBox1);
@@ -399,5 +411,6 @@
         private Label label10;
         private Label label11;
         private Button button1;
+        private Button button4;
     }
 }
