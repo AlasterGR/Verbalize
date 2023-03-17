@@ -31,7 +31,6 @@
             openFileDialog1 = new OpenFileDialog();
             button3 = new Button();
             label1 = new Label();
-            checkBox2 = new CheckBox();
             textBox1 = new TextBox();
             vScrollBar1 = new VScrollBar();
             vScrollBar2 = new VScrollBar();
@@ -55,6 +54,7 @@
             label11 = new Label();
             button1 = new Button();
             button4 = new Button();
+            button5 = new Button();
             SuspendLayout();
             // 
             // openFileDialog1
@@ -83,16 +83,6 @@
             label1.Text = "Selected File address";
             label1.TextChanged += label1_TextChanged;
             label1.DoubleClick += label1_DoubleClick;
-            // 
-            // checkBox2
-            // 
-            checkBox2.AutoSize = true;
-            checkBox2.Location = new Point(12, 82);
-            checkBox2.Name = "checkBox2";
-            checkBox2.Size = new Size(107, 19);
-            checkBox2.TabIndex = 6;
-            checkBox2.Text = "Πλήρης Σίγαση";
-            checkBox2.UseVisualStyleBackColor = true;
             // 
             // textBox1
             // 
@@ -345,18 +335,28 @@
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
             // 
+            // button5
+            // 
+            button5.Location = new Point(14, 384);
+            button5.Name = "button5";
+            button5.Size = new Size(95, 81);
+            button5.TabIndex = 37;
+            button5.Text = "Παύση Ήχου";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(867, 474);
+            Controls.Add(button5);
             Controls.Add(button4);
             Controls.Add(button3);
             Controls.Add(button1);
             Controls.Add(textBox1);
             Controls.Add(button9);
             Controls.Add(button7);
-            Controls.Add(checkBox2);
             Controls.Add(button2);
             Controls.Add(button8);
             Controls.Add(label2);
@@ -387,7 +387,6 @@
         private OpenFileDialog openFileDialog1;
         private Button button3;
         private Label label1;
-        private CheckBox checkBox2;
         private TextBox textBox1;
         private VScrollBar vScrollBar1;
         private VScrollBar vScrollBar2;
@@ -411,5 +410,6 @@
         private Label label11;
         private Button button1;
         private Button button4;
+        private Button button5;
     }
 }

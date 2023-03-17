@@ -68,7 +68,8 @@ namespace _2022TextToSpeech
         public static string locationFileResponseBackup = Path.Combine(folderResources, voicesSSMLFileNameBackup);
         public static string shortName = "";
         public static string locationLoadedFile = string.Empty;
-        Task<SpeechSynthesisResult> sound1;
+        private Task<SpeechSynthesisResult> sound1;
+        public static SpeechSynthesizer synth;
 
 
 
@@ -136,22 +137,21 @@ namespace _2022TextToSpeech
         }
         static async Task SynthesizeAudioAsync(string soundfile)
         {
+
             string outputFile = soundfile;
             outputFile = Path.ChangeExtension(soundfile, ".wav");  // save type of soundfile
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(soundfile);
             string ssmlText = xmlDoc.OuterXml;
-            // config variable of speechconfig type is already set up
-            using AudioConfig audioConfig = AudioConfig.FromWavFileOutput(outputFile);  // soundfile is the path to write the .wav output
-            using var speechSynthesizer = new SpeechSynthesizer(config, null);
-            SpeechSynthesisResult result = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
-            //if (bSpeak) { synthesizer = new SpeechSynthesizer(config); }  // Option of whether to speak the text.
-            //  choose output format. The parent directory must already exist.
-            // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
 
-            #region Convert to mp3            
-            //SpeechSynthesizer speechSynthesizer1 = new SpeechSynthesizer(config, null);
-            //SpeechSynthesisResult result1 = await speechSynthesizer1.SpeakSsmlAsync(ssmlText);
+            #region Producing the sound file data
+            using var speechSynthesizer = new SpeechSynthesizer(config, null);
+            await speechSynthesizer.StopSpeakingAsync();
+            SpeechSynthesisResult result = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
+            // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
+            #endregion
+
+            #region Convert to mp3
             MediaFoundationApi.Startup();
             using var stream = new MemoryStream(result.AudioData);
             var reader = new WaveFileReader(stream);
@@ -314,7 +314,6 @@ namespace _2022TextToSpeech
             this.label11.Text = volume.ToString();
         }
 
-
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
             style = this.comboBox3.SelectedItem.ToString();
@@ -409,16 +408,15 @@ namespace _2022TextToSpeech
         //  Speak the selected text from the textbox
         private async void button12_Click(object sender, EventArgs e)
         {
-            //if (sound1 != null) { sound1.stat; }
+            if (sound1 != null || synth != null)  //  Stop the sound if it is already playing
+            {
+                synth.StopSpeakingAsync();
+            }
             string text = string.Empty;  // Initialize the text input for the synthesizer
             if (this.textBox1.SelectedText != "") { text = CreateSSML(this.textBox1.SelectedText).OuterXml; } //  If there is text selected within the textbox's text, feed that into the synthesizer
             else { text = CreateSSML(this.textBox1.Text).OuterXml; } //  if there is no text selected, feed the entire textbox's text into the synthesizer.
-            //  Initialize out speech synthesizer
-            //await synthesizer.SpeakSsmlAsync(text);  //  Speak the text
-
-            //sound1.
-            SpeechSynthesizer synthesizer = new SpeechSynthesizer(config);
-            sound1 = synthesizer.SpeakSsmlAsync(text);
+            synth = new SpeechSynthesizer(config);
+            sound1 = synth.SpeakSsmlAsync(text);
         }
 
         private void loadXMLtoApp(XmlDocument SSMLDocument) // Load all the markup of the XML onto the u.i.
@@ -692,5 +690,13 @@ namespace _2022TextToSpeech
   </Voice>
 </Voices>";
         #endregion
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (sound1 != null || synth != null)  //  Stop the sound if it is already playing
+            {
+                synth.StopSpeakingAsync();
+            }
+        }
     }
 }
