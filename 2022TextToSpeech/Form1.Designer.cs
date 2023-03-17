@@ -133,11 +133,10 @@
             // label2
             // 
             label2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            label2.AutoSize = true;
-            label2.Location = new Point(803, 178);
+            label2.Location = new Point(793, 178);
             label2.Margin = new Padding(1, 0, 1, 0);
             label2.Name = "label2";
-            label2.Size = new Size(34, 15);
+            label2.Size = new Size(61, 15);
             label2.TabIndex = 13;
             label2.Text = "Pitch";
             label2.TextAlign = ContentAlignment.MiddleCenter;
@@ -148,7 +147,7 @@
             label3.Location = new Point(606, 178);
             label3.Margin = new Padding(1, 0, 1, 0);
             label3.Name = "label3";
-            label3.Size = new Size(30, 15);
+            label3.Size = new Size(61, 15);
             label3.TabIndex = 14;
             label3.Text = "Rate";
             label3.TextAlign = ContentAlignment.MiddleCenter;

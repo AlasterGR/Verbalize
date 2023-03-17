@@ -46,9 +46,11 @@ namespace _2022TextToSpeech
         //static string speechKey = Environment.GetEnvironmentVariable("4b3dc697810e47fc845f076f446a62da");
         //static string regionService = Environment.GetEnvironmentVariable("westeurope");
         public static string ServerLocation = "westeurope";
-        readonly static string subscriptionKeyGiannis = "120f1e685b4244d8b1260b5bbc28f9ee";
-        readonly static string subscriptionKeyAlex = "5521b17037c34b96aa88e1ab83b34fb3";
-        public static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyAlex, ServerLocation);  //This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis
+        readonly static string subscriptionKeyGiannis1 = "4b3dc697810e47fc845f076f446a62da";
+        readonly static string subscriptionKeyGiannis2 = "120f1e685b4244d8b1260b5bbc28f9ee";
+        readonly static string subscriptionKeyAlex1 = "5521b17037c34b96aa88e1ab83b34fb3";
+        readonly static string subscriptionKeyAlex2 = "1491bf9d70da4dedab0f0f375beae896";
+        public static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyAlex2, ServerLocation);  //This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis
         #region The Prosody and assorted elements of speech
         // As per : https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice. The https://www.w3.org/TR/speech-synthesis11/ is irrelevant so far.
         public static int pitch = 0;  //  Pitch is expressed in 3 ways. Here, for now, we are using just the absolute value from the range [-200, +200]
@@ -141,47 +143,20 @@ namespace _2022TextToSpeech
             string ssmlText = xmlDoc.OuterXml;
             // config variable of speechconfig type is already set up
             using AudioConfig audioConfig = AudioConfig.FromWavFileOutput(outputFile);  // soundfile is the path to write the .wav output
-            using var speechSynthesizer = new SpeechSynthesizer(config, audioConfig);
-            await speechSynthesizer.SpeakSsmlAsync(ssmlText);
+            using var speechSynthesizer = new SpeechSynthesizer(config, null);
+            SpeechSynthesisResult result = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
             //if (bSpeak) { synthesizer = new SpeechSynthesizer(config); }  // Option of whether to speak the text.
-            //  choose output format. The parent directory must already exist.            
-            MessageBox.Show("The audio file was created successfully");
+            //  choose output format. The parent directory must already exist.
             // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
 
-            #region If I manage to convert the produced .wav into anything different, it will go here
-            
-            SpeechSynthesizer speechSynthesizer1 = new SpeechSynthesizer(config, null);
-
-            SpeechSynthesisResult result = await speechSynthesizer1.SpeakSsmlAsync(ssmlText);
-
+            #region Convert to mp3            
+            //SpeechSynthesizer speechSynthesizer1 = new SpeechSynthesizer(config, null);
+            //SpeechSynthesisResult result1 = await speechSynthesizer1.SpeakSsmlAsync(ssmlText);
             MediaFoundationApi.Startup();
-
             using var stream = new MemoryStream(result.AudioData);
             var reader = new WaveFileReader(stream);
             string mp3FilePath = Path.ChangeExtension(outputFile, ".mp3");
             MediaFoundationEncoder.EncodeToMp3(reader, mp3FilePath);
-            MessageBox.Show(locationLoadedFile + ", " + mp3FilePath);
-
-
-
-
-            //if (result.Reason == ResultReason.SynthesizingAudioCompleted)
-
-
-            //using var reader = new WaveFileReader(stream);
-
-            //WaveFileReader reader = new WaveFileReader(stream);
-
-            /*
-               using var player = new WaveOutEvent();
-                player.Init(reader);
-                player.Play();
-                while (player.PlaybackState == PlaybackState.Playing)
-                {
-                    Thread.Sleep(500);
-                }*/
-
-
             #endregion
         }
 
