@@ -46,7 +46,9 @@ namespace _2022TextToSpeech
         //static string speechKey = Environment.GetEnvironmentVariable("4b3dc697810e47fc845f076f446a62da");
         //static string regionService = Environment.GetEnvironmentVariable("westeurope");
         public static string ServerLocation = "westeurope";
-        public static SpeechConfig config = SpeechConfig.FromSubscription("120f1e685b4244d8b1260b5bbc28f9ee", ServerLocation);  //This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis
+        readonly static string subscriptionKeyGiannis = "120f1e685b4244d8b1260b5bbc28f9ee";
+        readonly static string subscriptionKeyAlex = "5521b17037c34b96aa88e1ab83b34fb3";
+        public static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyAlex, ServerLocation);  //This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis
         #region The Prosody and assorted elements of speech
         // As per : https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice. The https://www.w3.org/TR/speech-synthesis11/ is irrelevant so far.
         public static int pitch = 0;  //  Pitch is expressed in 3 ways. Here, for now, we are using just the absolute value from the range [-200, +200]
