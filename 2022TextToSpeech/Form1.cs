@@ -34,8 +34,7 @@ namespace _2022TextToSpeech
     using System.ComponentModel;
     using System.Globalization;
     using System.Text.RegularExpressions;
-    //using NAudio.Lame;  // for the audio conversion
-    //using NAudio.Vorbis;// for the audio conversion
+    //using NAudio.Vorbis;// for the audio conversion - add an ogg vorbis encoder as this one only decodes
     using NAudio.Wave;  // for the audio conversion
     using NAudio.MediaFoundation;
     using System.Diagnostics.Metrics;
@@ -140,40 +139,42 @@ namespace _2022TextToSpeech
         }
         static async Task SynthesizeAudioAsync(string soundfile, string formatOutputSound)
         {
-
-            //string outputFile = soundfile;
-            //outputFile = Path.ChangeExtension(soundfile, ".wav");  // save type of soundfile
+            #region Producing the sound data
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(soundfile);
             string ssmlText = xmlDoc.OuterXml;
-            //  static public variable for audio poutput formats
-            #region Producing the sound file data
-            using var speechSynthesizer = new SpeechSynthesizer(config, null);
+
+            using var speechSynthesizer = new SpeechSynthesizer(config, null); // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
             await speechSynthesizer.StopSpeakingAsync();
             SpeechSynthesisResult result = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
-            // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
             #endregion
+            #region Saving the sound data to the disk as a specific sound format
             string outputFile = Path.ChangeExtension(soundfile, "." + formatOutputSound);
-            using Stream stream = new MemoryStream(result.AudioData);            
+            using Stream stream = new MemoryStream(result.AudioData);
             switch (formatOutputSound)
-            {
-                #region Convert to mp3
+            {                
                 case "mp3" :
                     //outputFile = Path.ChangeExtension(outputFile, "."+formatOutputSound);
                     MediaFoundationApi.Startup();
                     var reader = new WaveFileReader(stream);  // Normally  public WaveFileReader(Stream inputStream) ought to handle it properly but it does not accept it
                     MediaFoundationEncoder.EncodeToMp3(reader, outputFile);
                     break;
-                #endregion
+                
                 case "wav":
-                    AudioDataStream stream1 = AudioDataStream.FromResult(result);
-                    await stream1.SaveToWaveFileAsync(outputFile);
-                    var stream2 = result.AudioData;
+                    MediaFoundationApi.Startup();
+                    var reader1 = new WaveFileReader(stream);
+                    WaveFileWriter.CreateWaveFile(outputFile, reader1);
                     break;
-                default:
-                    
+
+                case "ogg": // add an ogg vorbis encoder 
+                    break;
+
+                case "None": // include the entirety in an if clause in order to not create the audio resources at all
+                    break;
+                default:                    
                     break;
             }
+            #endregion
             /*
             if (formatOutputSound == "mp3") 
             {
