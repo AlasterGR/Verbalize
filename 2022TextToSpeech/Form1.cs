@@ -41,16 +41,15 @@ namespace _2022TextToSpeech
 
     public partial class Form1 : Form
     {
-        //private const string Key = "4b3dc697810e47fc845f076f446a62da";
-        //private const string Location = "westeurope"; // Azure Speech Service Location
         //static string speechKey = Environment.GetEnvironmentVariable("4b3dc697810e47fc845f076f446a62da");
         //static string regionService = Environment.GetEnvironmentVariable("westeurope");
-        public static string ServerLocation = "westeurope";
+        // If, at some point, MS changes Cognitive Services authorization protocols, https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech provides the methods used
+        public static string serverLocation = "westeurope"; // Azure Speech Service Location
         readonly static string subscriptionKeyGiannis1 = "4b3dc697810e47fc845f076f446a62da";
         readonly static string subscriptionKeyGiannis2 = "120f1e685b4244d8b1260b5bbc28f9ee";
         readonly static string subscriptionKeyAlex1 = "5521b17037c34b96aa88e1ab83b34fb3";
         readonly static string subscriptionKeyAlex2 = "1491bf9d70da4dedab0f0f375beae896";
-        public static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyAlex2, ServerLocation);  //This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis
+        public static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyAlex2, serverLocation);  //This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis
         #region The Prosody and assorted elements of speech
         // As per : https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice. The https://www.w3.org/TR/speech-synthesis11/ is irrelevant so far.
         public static int pitch = 0;  //  Pitch is expressed in 3 ways. Here, for now, we are using just the absolute value from the range [-200, +200]
@@ -60,7 +59,7 @@ namespace _2022TextToSpeech
         //  Integrate the rest of the speech elements, such as pitch contour, pitch range
         #endregion
         public static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
-        public string selectedLocale;
+        public static string selectedLocale;
         public static XmlDocument VoicesXML = new XmlDocument();  //  A file that needs to be used throughout the entire app. Might put it within the VoicesLoad() nethod if possible
         public static string voicesSSMLFileName = "Voices"; // Change this to the desired file name and extension
         public static string locationFileResponse = Path.Combine(folderResources, voicesSSMLFileName);
@@ -84,7 +83,6 @@ namespace _2022TextToSpeech
         private void Form1_Load(object sender, EventArgs e)
         {
             this.label1.Visible = false;
-            this.checkBox2.Checked = true;
             VoicesLoad();  //  Load the voices onto the combo boxes
         }
 
@@ -189,8 +187,8 @@ namespace _2022TextToSpeech
         async Task VoicesRetrieve()  // need to make it wait until it is finished
         {
             var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "120f1e685b4244d8b1260b5bbc28f9ee");
-            string listVoicesLocationURL = "https://" + ServerLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKeyGiannis1);
+            string listVoicesLocationURL = "https://" + serverLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
             HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
             if (response.IsSuccessStatusCode)
             {
@@ -505,6 +503,118 @@ namespace _2022TextToSpeech
             #endregion
         }
 
+        private void label1_TextChanged(object sender, EventArgs e) // Keep out save as button available only if we are making a new document
+        {
+            if (label1.Text != string.Empty) { this.button7.Enabled = false; this.button2.Enabled = true; }
+            else { this.button7.Enabled = true; this.button2.Enabled = false; }
+        }
+
+        private void label1_DoubleClick(object sender, EventArgs e)
+        {
+            this.label1.Text = string.Empty;
+            this.label1.Visible = false;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            this.label1.Text = string.Empty;
+            this.label1.Visible = false;
+        }
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (sound1 != null || synth != null)  //  Stop the sound if it is already playing
+            {
+                synth.StopSpeakingAsync();
+            }
+        }
+        #region A string in XML format that is to be used should the app not be able to download the Voices file
+        string VoicesBasic = @"<Voices>  
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (el-GR, AthinaNeural)</Name>
+                                    <DisplayName>Athina</DisplayName>
+                                    <LocalName>Αθηνά</LocalName>
+                                    <ShortName>el-GR-AthinaNeural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>el-GR</Locale>
+                                    <LocaleName>Greek (Greece)</LocaleName>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (el-GR, NestorasNeural)</Name>
+                                    <DisplayName>Nestoras</DisplayName>
+                                    <LocalName>Νέστορας</LocalName>
+                                    <ShortName>el-GR-NestorasNeural</ShortName>
+                                    <Gender>Male</Gender>
+                                    <Locale>el-GR</Locale>
+                                    <LocaleName>Greek (Greece)</LocaleName>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, JennyNeural)</Name>
+                                    <DisplayName>Jenny</DisplayName>
+                                    <LocalName>Jenny</LocalName>
+                                    <ShortName>en-US-JennyNeural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, JennyMultilingualNeural)</Name>
+                                    <DisplayName>Jenny Multilingual</DisplayName>
+                                    <LocalName>Jenny Multilingual</LocalName>
+                                    <ShortName>en-US-JennyMultilingualNeural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, GuyNeural)</Name>
+                                    <DisplayName>Guy</DisplayName>
+                                    <LocalName>Guy</LocalName>
+                                    <ShortName>en-US-GuyNeural</ShortName>
+                                    <Gender>Male</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (sk-SK, LukasNeural)</Name>
+                                    <DisplayName>Lukas</DisplayName>
+                                    <LocalName>Lukáš</LocalName>
+                                    <ShortName>sk-SK-LukasNeural</ShortName>
+                                    <Gender>Male</Gender>
+                                    <Locale>sk-SK</Locale>
+                                    <LocaleName>Slovak (Slovakia)</LocaleName>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (sk-SK, ViktoriaNeural)</Name>
+                                    <DisplayName>Viktoria</DisplayName>
+                                    <LocalName>Viktória</LocalName>
+                                    <ShortName>sk-SK-ViktoriaNeural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>sk-SK</Locale>
+                                    <LocaleName>Slovak (Slovakia)</LocaleName>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (sl-SI, PetraNeural)</Name>
+                                    <DisplayName>Petra</DisplayName>
+                                    <LocalName>Petra</LocalName>
+                                    <ShortName>sl-SI-PetraNeural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>sl-SI</Locale>
+                                    <LocaleName>Slovenian (Slovenia)</LocaleName>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (sl-SI, RokNeural)</Name>
+                                    <DisplayName>Rok</DisplayName>
+                                    <LocalName>Rok</LocalName>
+                                    <ShortName>sl-SI-RokNeural</ShortName>
+                                    <Gender>Male</Gender>
+                                    <Locale>sl-SI</Locale>
+                                    <LocaleName>Slovenian (Slovenia)</LocaleName>
+                                  </Voice>
+                                </Voices>";
+        #endregion
+
+
         #region deprecated code to be deleted once everything sorts out
         /* Quite Possibly unneeded - it's a button to transform a .txt file into a proper ssml .xml but we now load it first and save it afterwards
         private void button4_Click(object sender, EventArgs e)
@@ -586,117 +696,5 @@ namespace _2022TextToSpeech
         */
         #endregion
 
-        private void label1_TextChanged(object sender, EventArgs e) // Keep out save as button available only if we are making a new document
-        {
-            if (label1.Text != string.Empty) { this.button7.Enabled = false; this.button2.Enabled = true; }
-            else { this.button7.Enabled = true; this.button2.Enabled = false; }
-        }
-
-        private void label1_DoubleClick(object sender, EventArgs e)
-        {
-            this.label1.Text = string.Empty;
-            this.label1.Visible = false;
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-            this.label1.Text = string.Empty;
-            this.label1.Visible = false;
-        }
-        #region A string in XML format that is to be used should the app not be able to download the Voices file
-
-        string VoicesBasic = @"<Voices>  
-  <Voice>
-    <Name>Microsoft Server Speech Text to Speech Voice (el-GR, AthinaNeural)</Name>
-    <DisplayName>Athina</DisplayName>
-    <LocalName>Αθηνά</LocalName>
-    <ShortName>el-GR-AthinaNeural</ShortName>
-    <Gender>Female</Gender>
-    <Locale>el-GR</Locale>
-    <LocaleName>Greek (Greece)</LocaleName>
-  </Voice>
-  <Voice>
-    <Name>Microsoft Server Speech Text to Speech Voice (el-GR, NestorasNeural)</Name>
-    <DisplayName>Nestoras</DisplayName>
-    <LocalName>Νέστορας</LocalName>
-    <ShortName>el-GR-NestorasNeural</ShortName>
-    <Gender>Male</Gender>
-    <Locale>el-GR</Locale>
-    <LocaleName>Greek (Greece)</LocaleName>
-  </Voice>
-  <Voice>
-    <Name>Microsoft Server Speech Text to Speech Voice (en-US, JennyNeural)</Name>
-    <DisplayName>Jenny</DisplayName>
-    <LocalName>Jenny</LocalName>
-    <ShortName>en-US-JennyNeural</ShortName>
-    <Gender>Female</Gender>
-    <Locale>en-US</Locale>
-    <LocaleName>English (United States)</LocaleName>
-  </Voice>
-  <Voice>
-    <Name>Microsoft Server Speech Text to Speech Voice (en-US, JennyMultilingualNeural)</Name>
-    <DisplayName>Jenny Multilingual</DisplayName>
-    <LocalName>Jenny Multilingual</LocalName>
-    <ShortName>en-US-JennyMultilingualNeural</ShortName>
-    <Gender>Female</Gender>
-    <Locale>en-US</Locale>
-    <LocaleName>English (United States)</LocaleName>
-  </Voice>
-  <Voice>
-    <Name>Microsoft Server Speech Text to Speech Voice (en-US, GuyNeural)</Name>
-    <DisplayName>Guy</DisplayName>
-    <LocalName>Guy</LocalName>
-    <ShortName>en-US-GuyNeural</ShortName>
-    <Gender>Male</Gender>
-    <Locale>en-US</Locale>
-    <LocaleName>English (United States)</LocaleName>
-  </Voice>
-  <Voice>
-    <Name>Microsoft Server Speech Text to Speech Voice (sk-SK, LukasNeural)</Name>
-    <DisplayName>Lukas</DisplayName>
-    <LocalName>Lukáš</LocalName>
-    <ShortName>sk-SK-LukasNeural</ShortName>
-    <Gender>Male</Gender>
-    <Locale>sk-SK</Locale>
-    <LocaleName>Slovak (Slovakia)</LocaleName>
-  </Voice>
-  <Voice>
-    <Name>Microsoft Server Speech Text to Speech Voice (sk-SK, ViktoriaNeural)</Name>
-    <DisplayName>Viktoria</DisplayName>
-    <LocalName>Viktória</LocalName>
-    <ShortName>sk-SK-ViktoriaNeural</ShortName>
-    <Gender>Female</Gender>
-    <Locale>sk-SK</Locale>
-    <LocaleName>Slovak (Slovakia)</LocaleName>
-  </Voice>
-  <Voice>
-    <Name>Microsoft Server Speech Text to Speech Voice (sl-SI, PetraNeural)</Name>
-    <DisplayName>Petra</DisplayName>
-    <LocalName>Petra</LocalName>
-    <ShortName>sl-SI-PetraNeural</ShortName>
-    <Gender>Female</Gender>
-    <Locale>sl-SI</Locale>
-    <LocaleName>Slovenian (Slovenia)</LocaleName>
-  </Voice>
-  <Voice>
-    <Name>Microsoft Server Speech Text to Speech Voice (sl-SI, RokNeural)</Name>
-    <DisplayName>Rok</DisplayName>
-    <LocalName>Rok</LocalName>
-    <ShortName>sl-SI-RokNeural</ShortName>
-    <Gender>Male</Gender>
-    <Locale>sl-SI</Locale>
-    <LocaleName>Slovenian (Slovenia)</LocaleName>
-  </Voice>
-</Voices>";
-        #endregion
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            if (sound1 != null || synth != null)  //  Stop the sound if it is already playing
-            {
-                synth.StopSpeakingAsync();
-            }
-        }
     }
 }

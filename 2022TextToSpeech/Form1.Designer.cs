@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             openFileDialog1 = new OpenFileDialog();
-            button3 = new Button();
+            bttn3_LoadText = new Button();
             label1 = new Label();
             textBox1 = new TextBox();
             vScrollBar1 = new VScrollBar();
@@ -55,6 +55,7 @@
             button1 = new Button();
             button4 = new Button();
             button5 = new Button();
+            comboBox5 = new ComboBox();
             SuspendLayout();
             // 
             // openFileDialog1
@@ -62,15 +63,15 @@
             openFileDialog1.FileName = "openFileDialog1";
             openFileDialog1.RestoreDirectory = true;
             // 
-            // button3
+            // bttn3_LoadText
             // 
-            button3.Location = new Point(12, 12);
-            button3.Name = "button3";
-            button3.Size = new Size(126, 35);
-            button3.TabIndex = 2;
-            button3.Text = "Φόρτωση κειμένου";
-            button3.UseVisualStyleBackColor = true;
-            button3.Click += button3_Click;
+            bttn3_LoadText.Location = new Point(12, 12);
+            bttn3_LoadText.Name = "bttn3_LoadText";
+            bttn3_LoadText.Size = new Size(126, 35);
+            bttn3_LoadText.TabIndex = 2;
+            bttn3_LoadText.Text = "Φόρτωση κειμένου";
+            bttn3_LoadText.UseVisualStyleBackColor = true;
+            bttn3_LoadText.Click += button3_Click;
             // 
             // label1
             // 
@@ -341,18 +342,27 @@
             button5.Name = "button5";
             button5.Size = new Size(95, 81);
             button5.TabIndex = 37;
-            button5.Text = "Παύση Ήχου";
+            button5.Text = "Άμεση Παύση Ήχου";
             button5.UseVisualStyleBackColor = true;
             button5.Click += button5_Click;
+            // 
+            // comboBox5
+            // 
+            comboBox5.FormattingEnabled = true;
+            comboBox5.Location = new Point(12, 303);
+            comboBox5.Name = "comboBox5";
+            comboBox5.Size = new Size(121, 23);
+            comboBox5.TabIndex = 39;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(867, 474);
+            Controls.Add(comboBox5);
             Controls.Add(button5);
             Controls.Add(button4);
-            Controls.Add(button3);
+            Controls.Add(bttn3_LoadText);
             Controls.Add(button1);
             Controls.Add(textBox1);
             Controls.Add(button9);
@@ -385,7 +395,7 @@
 
         #endregion
         private OpenFileDialog openFileDialog1;
-        private Button button3;
+        private Button bttn3_LoadText;
         private Label label1;
         private TextBox textBox1;
         private VScrollBar vScrollBar1;
@@ -411,5 +421,6 @@
         private Button button1;
         private Button button4;
         private Button button5;
+        private ComboBox comboBox5;
     }
 }
