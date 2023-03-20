@@ -38,6 +38,7 @@ namespace _2022TextToSpeech
     //using NAudio.Vorbis;// for the audio conversion
     using NAudio.Wave;  // for the audio conversion
     using NAudio.MediaFoundation;
+    using System.Diagnostics.Metrics;
 
     public partial class Form1 : Form
     {
@@ -69,6 +70,7 @@ namespace _2022TextToSpeech
         public static string locationLoadedFile = string.Empty;
         private Task<SpeechSynthesisResult> sound1;
         public static SpeechSynthesizer synth;
+        public string formatOutputSound = "None";
 
 
 
@@ -84,9 +86,10 @@ namespace _2022TextToSpeech
         {
             this.label1.Visible = false;
             VoicesLoad();  //  Load the voices onto the combo boxes
+
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void bttn3_LoadText_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -129,33 +132,59 @@ namespace _2022TextToSpeech
                 if (openFileDialog1.FileName != "")
                 {
                     string pathFileSelected = openFileDialog1.FileName;
-                    SynthesizeAudioAsync(pathFileSelected);
+                    formatOutputSound = cmbBx_SelectSavedSoundFormat.SelectedItem.ToString();
+                    SynthesizeAudioAsync(pathFileSelected, formatOutputSound);
                 }
             }
+
         }
-        static async Task SynthesizeAudioAsync(string soundfile)
+        static async Task SynthesizeAudioAsync(string soundfile, string formatOutputSound)
         {
 
-            string outputFile = soundfile;
-            outputFile = Path.ChangeExtension(soundfile, ".wav");  // save type of soundfile
+            //string outputFile = soundfile;
+            //outputFile = Path.ChangeExtension(soundfile, ".wav");  // save type of soundfile
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(soundfile);
             string ssmlText = xmlDoc.OuterXml;
-
+            //  static public variable for audio poutput formats
             #region Producing the sound file data
             using var speechSynthesizer = new SpeechSynthesizer(config, null);
             await speechSynthesizer.StopSpeakingAsync();
             SpeechSynthesisResult result = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
             // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
             #endregion
-
-            #region Convert to mp3
-            MediaFoundationApi.Startup();
-            using var stream = new MemoryStream(result.AudioData);
-            var reader = new WaveFileReader(stream);
-            string mp3FilePath = Path.ChangeExtension(outputFile, ".mp3");
-            MediaFoundationEncoder.EncodeToMp3(reader, mp3FilePath);
-            #endregion
+            string outputFile = Path.ChangeExtension(soundfile, "." + formatOutputSound);
+            using Stream stream = new MemoryStream(result.AudioData);            
+            switch (formatOutputSound)
+            {
+                #region Convert to mp3
+                case "mp3" :
+                    //outputFile = Path.ChangeExtension(outputFile, "."+formatOutputSound);
+                    MediaFoundationApi.Startup();
+                    var reader = new WaveFileReader(stream);  // Normally  public WaveFileReader(Stream inputStream) ought to handle it properly but it does not accept it
+                    MediaFoundationEncoder.EncodeToMp3(reader, outputFile);
+                    break;
+                #endregion
+                case "wav":
+                    AudioDataStream stream1 = AudioDataStream.FromResult(result);
+                    await stream1.SaveToWaveFileAsync(outputFile);
+                    var stream2 = result.AudioData;
+                    break;
+                default:
+                    
+                    break;
+            }
+            /*
+            if (formatOutputSound == "mp3") 
+            {
+                #region Convert to mp3
+                string mp3FilePath = Path.ChangeExtension(outputFile, ".mp3");
+                MediaFoundationApi.Startup();
+                using var stream = new MemoryStream(result.AudioData);
+                var reader = new WaveFileReader(stream);
+                MediaFoundationEncoder.EncodeToMp3(reader, mp3FilePath);
+                #endregion
+            }*/
         }
 
         async void InitializeVoices()  //  See if it should be called from a button
@@ -331,7 +360,7 @@ namespace _2022TextToSpeech
                     XmlDocument SSMLDocument = CreateSSML(text);
                     // Save the XML document to a file         
                     SSMLDocument.Save(pathFileSelected);
-                    SynthesizeAudioAsync(pathFileSelected);
+                    SynthesizeAudioAsync(pathFileSelected, formatOutputSound);
                 }
             }
 
@@ -398,7 +427,7 @@ namespace _2022TextToSpeech
                 XmlDocument SSMLDocument = CreateSSML(text);
                 // Save the XML document to a file         
                 SSMLDocument.Save(pathFileSelected);
-                SynthesizeAudioAsync(pathFileSelected);
+                SynthesizeAudioAsync(pathFileSelected, formatOutputSound);
             }
 
         }
@@ -696,5 +725,9 @@ namespace _2022TextToSpeech
         */
         #endregion
 
+        private void cmbBx_SelectSavedSoundFormat_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            formatOutputSound = this.cmbBx_SelectSavedSoundFormat.SelectedItem.ToString();
+        }
     }
 }

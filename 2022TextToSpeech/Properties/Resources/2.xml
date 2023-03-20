@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" xml:lang="en-US" onlangfailure="ignoretext ">
   <voice name="en-US-JennyNeural">
-    <prosody rate="0%" pitch="200Hz" volume="80">
+    <prosody rate="0%" pitch="-9Hz" volume="80">
       <mstts:express-as style="sad">This is a test.</mstts:express-as>
     </prosody>
   </voice>

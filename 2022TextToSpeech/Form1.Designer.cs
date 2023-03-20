@@ -55,7 +55,7 @@
             button1 = new Button();
             button4 = new Button();
             button5 = new Button();
-            comboBox5 = new ComboBox();
+            cmbBx_SelectSavedSoundFormat = new ComboBox();
             SuspendLayout();
             // 
             // openFileDialog1
@@ -71,7 +71,7 @@
             bttn3_LoadText.TabIndex = 2;
             bttn3_LoadText.Text = "Φόρτωση κειμένου";
             bttn3_LoadText.UseVisualStyleBackColor = true;
-            bttn3_LoadText.Click += button3_Click;
+            bttn3_LoadText.Click += bttn3_LoadText_Click;
             // 
             // label1
             // 
@@ -346,20 +346,22 @@
             button5.UseVisualStyleBackColor = true;
             button5.Click += button5_Click;
             // 
-            // comboBox5
+            // cmbBx_SelectSavedSoundFormat
             // 
-            comboBox5.FormattingEnabled = true;
-            comboBox5.Location = new Point(12, 303);
-            comboBox5.Name = "comboBox5";
-            comboBox5.Size = new Size(121, 23);
-            comboBox5.TabIndex = 39;
+            cmbBx_SelectSavedSoundFormat.FormattingEnabled = true;
+            cmbBx_SelectSavedSoundFormat.Items.AddRange(new object[] { "None", "mp3", "wav" });
+            cmbBx_SelectSavedSoundFormat.Location = new Point(12, 303);
+            cmbBx_SelectSavedSoundFormat.Name = "cmbBx_SelectSavedSoundFormat";
+            cmbBx_SelectSavedSoundFormat.Size = new Size(121, 23);
+            cmbBx_SelectSavedSoundFormat.TabIndex = 39;
+            cmbBx_SelectSavedSoundFormat.SelectedIndexChanged += cmbBx_SelectSavedSoundFormat_SelectedIndexChanged;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(867, 474);
-            Controls.Add(comboBox5);
+            Controls.Add(cmbBx_SelectSavedSoundFormat);
             Controls.Add(button5);
             Controls.Add(button4);
             Controls.Add(bttn3_LoadText);
@@ -421,6 +423,6 @@
         private Button button1;
         private Button button4;
         private Button button5;
-        private ComboBox comboBox5;
+        private ComboBox cmbBx_SelectSavedSoundFormat;
     }
 }
