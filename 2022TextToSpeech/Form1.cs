@@ -34,7 +34,7 @@ namespace _2022TextToSpeech
     using System.ComponentModel;
     using System.Globalization;
     using System.Text.RegularExpressions;
-    //using NAudio.Vorbis;// for the audio conversion - add an ogg vorbis encoder as this one only decodes
+    // for the audio conversion - add an ogg vorbis encoder
     using NAudio.Wave;  // for the audio conversion
     using NAudio.MediaFoundation;
     using System.Diagnostics.Metrics;
@@ -85,7 +85,7 @@ namespace _2022TextToSpeech
         {
             this.label1.Visible = false;
             VoicesLoad();  //  Load the voices onto the combo boxes
-
+            this.cmbBx_SelectSavedSoundFormat.SelectedIndex = 0;
         }
 
         private void bttn3_LoadText_Click(object sender, EventArgs e)
@@ -151,41 +151,30 @@ namespace _2022TextToSpeech
             #region Saving the sound data to the disk as a specific sound format
             string outputFile = Path.ChangeExtension(soundfile, "." + formatOutputSound);
             using Stream stream = new MemoryStream(result.AudioData);
-            switch (formatOutputSound)
-            {                
-                case "mp3" :
-                    //outputFile = Path.ChangeExtension(outputFile, "."+formatOutputSound);
-                    MediaFoundationApi.Startup();
-                    var reader = new WaveFileReader(stream);  // Normally  public WaveFileReader(Stream inputStream) ought to handle it properly but it does not accept it
-                    MediaFoundationEncoder.EncodeToMp3(reader, outputFile);
-                    break;
-                
-                case "wav":
-                    MediaFoundationApi.Startup();
-                    var reader1 = new WaveFileReader(stream);
-                    WaveFileWriter.CreateWaveFile(outputFile, reader1);
-                    break;
-
-                case "ogg": // add an ogg vorbis encoder 
-                    break;
-
-                case "None": // include the entirety in an if clause in order to not create the audio resources at all
-                    break;
-                default:                    
-                    break;
-            }
-            #endregion
-            /*
-            if (formatOutputSound == "mp3") 
+            if (formatOutputSound != "none" || formatOutputSound != null)
             {
-                #region Convert to mp3
-                string mp3FilePath = Path.ChangeExtension(outputFile, ".mp3");
-                MediaFoundationApi.Startup();
-                using var stream = new MemoryStream(result.AudioData);
-                var reader = new WaveFileReader(stream);
-                MediaFoundationEncoder.EncodeToMp3(reader, mp3FilePath);
-                #endregion
-            }*/
+                switch (formatOutputSound)
+                {
+                    case "mp3":
+                        //outputFile = Path.ChangeExtension(outputFile, "."+formatOutputSound);
+                        MediaFoundationApi.Startup();
+                        var reader = new WaveFileReader(stream);  // Normally  public WaveFileReader(Stream inputStream) ought to handle it properly but it does not accept it
+                        MediaFoundationEncoder.EncodeToMp3(reader, outputFile);
+                        break;
+
+                    case "wav":
+                        MediaFoundationApi.Startup();
+                        var reader1 = new WaveFileReader(stream);
+                        WaveFileWriter.CreateWaveFile(outputFile, reader1);
+                        break;
+
+                    case "ogg": // add an ogg vorbis encoder 
+                        break;
+                    default:
+                        break;
+                }
+            }                
+            #endregion
         }
 
         async void InitializeVoices()  //  See if it should be called from a button
@@ -332,8 +321,17 @@ namespace _2022TextToSpeech
 
         private void vScrollBar1_ValueChanged(object sender, EventArgs e)
         {  // This handles integers only 
-            rate = this.vScrollBar1.Value;
-            this.label3.Text = "Rate = " + rate.ToString();
+            if (this.textBox1.SelectedText != "")
+            {
+                string rateLocal = "< prosody rate =" + this.vScrollBar1.Value + "% >";
+                this.textBox1.SelectedText = rateLocal+ this.textBox1.SelectedText + "</prosody>";
+            }
+            else
+            {
+                rate = this.vScrollBar1.Value;
+                this.label3.Text = "Rate = " + rate.ToString();
+            }
+
         }
 
         private void hScrollBar1_ValueChanged(object sender, EventArgs e)
