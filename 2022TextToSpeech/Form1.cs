@@ -320,18 +320,9 @@ namespace _2022TextToSpeech
         }
 
         private void vScrollBar1_ValueChanged(object sender, EventArgs e)
-        {  // This handles integers only 
-            if (this.textBox1.SelectedText != "")
-            {
-                string rateLocal = "< prosody rate =" + this.vScrollBar1.Value + "% >";
-                this.textBox1.SelectedText = rateLocal+ this.textBox1.SelectedText + "</prosody>";
-            }
-            else
-            {
-                rate = this.vScrollBar1.Value;
-                this.label3.Text = "Rate = " + rate.ToString();
-            }
-
+        {
+            rate = this.vScrollBar1.Value;
+            this.label3.Text = "Rate = " + rate.ToString();
         }
 
         private void hScrollBar1_ValueChanged(object sender, EventArgs e)
