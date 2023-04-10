@@ -56,6 +56,12 @@
             button4 = new Button();
             button5 = new Button();
             cmbBx_SelectSavedSoundFormat = new ComboBox();
+            panel1 = new Panel();
+            panel2 = new Panel();
+            comboBox4 = new ComboBox();
+            comboBox5 = new ComboBox();
+            panel1.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // openFileDialog1
@@ -100,20 +106,21 @@
             // 
             // vScrollBar1
             // 
-            vScrollBar1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            vScrollBar1.LargeChange = 5;
-            vScrollBar1.Location = new Point(606, 193);
+            vScrollBar1.Dock = DockStyle.Left;
+            vScrollBar1.LargeChange = 1;
+            vScrollBar1.Location = new Point(0, 0);
             vScrollBar1.Maximum = 50;
             vScrollBar1.Minimum = -50;
             vScrollBar1.Name = "vScrollBar1";
-            vScrollBar1.Size = new Size(61, 224);
+            vScrollBar1.Size = new Size(61, 229);
             vScrollBar1.TabIndex = 11;
             vScrollBar1.ValueChanged += vScrollBar1_ValueChanged;
             // 
             // vScrollBar2
             // 
-            vScrollBar2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            vScrollBar2.Location = new Point(793, 193);
+            vScrollBar2.Dock = DockStyle.Left;
+            vScrollBar2.LargeChange = 1;
+            vScrollBar2.Location = new Point(0, 0);
             vScrollBar2.Maximum = 200;
             vScrollBar2.Minimum = -200;
             vScrollBar2.Name = "vScrollBar2";
@@ -124,10 +131,10 @@
             // label2
             // 
             label2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            label2.Location = new Point(793, 178);
+            label2.Location = new Point(672, 146);
             label2.Margin = new Padding(1, 0, 1, 0);
             label2.Name = "label2";
-            label2.Size = new Size(61, 15);
+            label2.Size = new Size(126, 15);
             label2.TabIndex = 13;
             label2.Text = "Pitch";
             label2.TextAlign = ContentAlignment.MiddleCenter;
@@ -135,10 +142,10 @@
             // label3
             // 
             label3.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            label3.Location = new Point(606, 178);
+            label3.Location = new Point(514, 146);
             label3.Margin = new Padding(1, 0, 1, 0);
             label3.Name = "label3";
-            label3.Size = new Size(61, 15);
+            label3.Size = new Size(139, 15);
             label3.TabIndex = 14;
             label3.Text = "Rate";
             label3.TextAlign = ContentAlignment.MiddleCenter;
@@ -288,6 +295,7 @@
             // hScrollBar1
             // 
             hScrollBar1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            hScrollBar1.LargeChange = 1;
             hScrollBar1.Location = new Point(606, 435);
             hScrollBar1.Name = "hScrollBar1";
             hScrollBar1.Size = new Size(179, 30);
@@ -356,11 +364,53 @@
             cmbBx_SelectSavedSoundFormat.TabIndex = 39;
             cmbBx_SelectSavedSoundFormat.SelectedIndexChanged += cmbBx_SelectSavedSoundFormat_SelectedIndexChanged;
             // 
+            // panel1
+            // 
+            panel1.Controls.Add(vScrollBar1);
+            panel1.Location = new Point(514, 193);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(139, 229);
+            panel1.TabIndex = 40;
+            panel1.Paint += panel_Paint;
+            // 
+            // panel2
+            // 
+            panel2.Controls.Add(vScrollBar2);
+            panel2.Location = new Point(674, 193);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(124, 229);
+            panel2.TabIndex = 41;
+            panel2.Paint += panel_Paint;
+            // 
+            // comboBox4
+            // 
+            comboBox4.FormattingEnabled = true;
+            comboBox4.Items.AddRange(new object[] { "x-slow", "slow", "medium", "fast", "x-fast", "default" });
+            comboBox4.Location = new Point(514, 164);
+            comboBox4.Name = "comboBox4";
+            comboBox4.Size = new Size(139, 23);
+            comboBox4.TabIndex = 42;
+            comboBox4.SelectedIndexChanged += comboBox4_SelectedIndexChanged;
+            // 
+            // comboBox5
+            // 
+            comboBox5.FormattingEnabled = true;
+            comboBox5.Items.AddRange(new object[] { "x-low", "low", "medium", "high", "x-high", "default" });
+            comboBox5.Location = new Point(674, 164);
+            comboBox5.Name = "comboBox5";
+            comboBox5.Size = new Size(124, 23);
+            comboBox5.TabIndex = 43;
+            comboBox5.SelectedIndexChanged += comboBox5_SelectedIndexChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(867, 474);
+            Controls.Add(comboBox5);
+            Controls.Add(comboBox4);
+            Controls.Add(panel2);
+            Controls.Add(panel1);
             Controls.Add(cmbBx_SelectSavedSoundFormat);
             Controls.Add(button5);
             Controls.Add(button4);
@@ -379,9 +429,7 @@
             Controls.Add(label3);
             Controls.Add(label7);
             Controls.Add(comboBox3);
-            Controls.Add(vScrollBar2);
             Controls.Add(comboBox2);
-            Controls.Add(vScrollBar1);
             Controls.Add(label4);
             Controls.Add(label8);
             Controls.Add(button12);
@@ -391,6 +439,8 @@
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
+            panel1.ResumeLayout(false);
+            panel2.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -424,5 +474,9 @@
         private Button button4;
         private Button button5;
         private ComboBox cmbBx_SelectSavedSoundFormat;
+        private Panel panel1;
+        private Panel panel2;
+        private ComboBox comboBox4;
+        private ComboBox comboBox5;
     }
 }

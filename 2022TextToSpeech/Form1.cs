@@ -3,14 +3,11 @@
 namespace _2022TextToSpeech
 {
     using System;
-    using System.Drawing.Drawing2D;
+    using System.Drawing;
     using System.IO;
-    using System.Reflection;
-    using System.Resources;
     using System.Threading.Tasks;
-    using System.Windows.Forms.VisualStyles;
+    using System.Windows.Forms;
     using Microsoft.CognitiveServices.Speech;
-    using Microsoft.CognitiveServices.Speech.Audio;
     using System.Xml; // For constructing our xml file 
     using System.Xml.Linq; // For the queries towards MS in order to populate the languages and voices lists
     using System.Security.Cryptography.X509Certificates;
@@ -23,21 +20,11 @@ namespace _2022TextToSpeech
     using System.Text.Json;// for converting the Json files into XML ones. Possibly removable should we only load the XML file I am going to have produced
     using Properties;
     using System.Collections.Generic;
-    using System.Windows.Forms;
-    using System.Net.Http.Json;
-    using System.Text;
-    using System.Linq; // for <group by> in the comboboxes
-    using System.Runtime.CompilerServices;
-    using System.Configuration;
-    using System.Net;
-    using static System.Runtime.InteropServices.JavaScript.JSType;
-    using System.ComponentModel;
     using System.Globalization;
     using System.Text.RegularExpressions;
     // for the audio conversion - add an ogg vorbis encoder
     using NAudio.Wave;  // for the audio conversion
     using NAudio.MediaFoundation;
-    using System.Diagnostics.Metrics;
 
     public partial class Form1 : Form
     {
@@ -49,11 +36,11 @@ namespace _2022TextToSpeech
         readonly static string subscriptionKeyGiannis2 = "120f1e685b4244d8b1260b5bbc28f9ee";
         readonly static string subscriptionKeyAlex1 = "5521b17037c34b96aa88e1ab83b34fb3";
         readonly static string subscriptionKeyAlex2 = "1491bf9d70da4dedab0f0f375beae896";
-        public static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyAlex2, serverLocation);  //This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis
+        public static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyGiannis1, serverLocation);  //This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis
         #region The Prosody and assorted elements of speech
         // As per : https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice. The https://www.w3.org/TR/speech-synthesis11/ is irrelevant so far.
-        public static int pitch = 0;  //  Pitch is expressed in 3 ways. Here, for now, we are using just the absolute value from the range [-200, +200]
-        public static int rate = 0;  // Rate is expressed in 2 ways, an absolute value (string) and a relative (as a number) one. For now, we will use it only as a number (-50% - +50%), I will incoroprate it as a string later
+        public static string pitch = "default";  //  Pitch is expressed in 3 ways. Here, for now, we are using just the absolute value from the range [-200, +200]
+        public static string rate = "default";  // Rate is expressed in 2 ways, an absolute value (string) and a relative (as a number) one. For now, we will use it only as a number (-50% - +50%), I will incoroprate it as a string later
         public static int volume = 100; // Defaults in 100.
         public static string style = "calm";
         //  Integrate the rest of the speech elements, such as pitch contour, pitch range
@@ -173,7 +160,7 @@ namespace _2022TextToSpeech
                     default:
                         break;
                 }
-            }                
+            }
             #endregion
         }
 
@@ -314,22 +301,36 @@ namespace _2022TextToSpeech
 
 
         private void vScrollBar2_ValueChanged(object sender, EventArgs e)
-        {  // This handles integers only
-            pitch = this.vScrollBar2.Value;
-            this.label2.Text = "Pitch = " + pitch.ToString();
+        {
+            pitch = this.vScrollBar2.Value.ToString() + "Hz";
+            this.label2.Text = "Pitch = " + this.vScrollBar2.Value.ToString() + "Hz";
         }
 
         private void vScrollBar1_ValueChanged(object sender, EventArgs e)
         {
-            rate = this.vScrollBar1.Value;
-            this.label3.Text = "Rate = " + rate.ToString();
+            rate = this.vScrollBar1.Value.ToString() + "%";
+            this.label3.Text = "Rate = " + this.vScrollBar1.Value.ToString() + "%";
         }
 
         private void hScrollBar1_ValueChanged(object sender, EventArgs e)
         {  // This handles integers only 
             volume = this.hScrollBar1.Value;
-            this.label11.Text = volume.ToString();
+            this.label11.Text = this.hScrollBar1.Value.ToString();
         }
+
+        private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            rate = this.comboBox4.SelectedItem.ToString();
+            this.label3.Text = "Rate : " + this.comboBox4.SelectedItem.ToString();
+        }
+        private void comboBox5_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            pitch = this.comboBox5.SelectedItem.ToString();
+            this.label2.Text = "Pitch : " + this.comboBox5.SelectedItem.ToString();
+        }
+
+
 
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -388,8 +389,8 @@ namespace _2022TextToSpeech
             XmlElement voice = SSMLDocument.CreateElement("voice");
             voice.SetAttribute("name", config.SpeechSynthesisVoiceName);
             XmlElement prosody = SSMLDocument.CreateElement("prosody");
-            prosody.SetAttribute("rate", rate.ToString() + "%");
-            prosody.SetAttribute("pitch", pitch.ToString() + "Hz"); //  Hz or % ?
+            prosody.SetAttribute("rate", rate);
+            prosody.SetAttribute("pitch", pitch);
             prosody.SetAttribute("volume", (volume).ToString()); //  Might not work on this version of SSML
             XmlElement express = SSMLDocument.CreateElement("mstts", "express-as", "http://www.w3.org/2001/mstts");
             express.SetAttribute("style", style);
@@ -441,8 +442,8 @@ namespace _2022TextToSpeech
             #region Initialize every mark to its default values
             string styleSSML = "calm";
             string volumeSSML = "100";
-            string pitchSSML = "0";
-            string rateSSML = "0";
+            string pitchSSML = "default";
+            string rateSSML = "default";
             string nameValue = "en-US-JennyNeural";
             string langValue = "en-US";
 
@@ -477,24 +478,24 @@ namespace _2022TextToSpeech
             //  ... the rate
             try
             {
+
                 if (prosodyNode.Attributes["rate"] != null) { rateSSML = prosodyNode.Attributes["rate"].Value; } // For some reason, this cannot be handled by this generic try-catch                
-                rateSSML = Regex.Replace(rateSSML, "[^0-9-+]", "");
-                rate = Int32.Parse(rateSSML, NumberStyles.AllowLeadingSign);
-                if (rate > 50) { rate = 50; }  // replace with more abstract bounds
-                else if (rate < -50) { rate = -50; }
+                /**/
+                rate = rateSSML;
             }
-            catch { rateSSML = "0"; rate = 0; }
+            catch { rateSSML = "default"; rate = "default"; }
 
             //  ... the pitch 
             try
             {
                 if (prosodyNode.Attributes["pitch"] != null) { pitchSSML = prosodyNode.Attributes["pitch"].Value; } // For some reason, this cannot be handled by this generic try-catch                
-                pitchSSML = Regex.Replace(pitchSSML, "[^0-9-+]", "");
+                /*pitchSSML = Regex.Replace(pitchSSML, "[^0-9-+]", "");
                 pitch = Int32.Parse(pitchSSML, NumberStyles.AllowLeadingSign);
                 if (pitch > 200) { pitch = 200; }  // replace with more abstract bounds
-                else if (pitch < -200) { pitch = -200; }
+                else if (pitch < -200) { pitch = -200; }*/
+                pitch = pitchSSML;
             }
-            catch { pitchSSML = "0"; pitch = 0; }
+            catch { pitchSSML = "default"; pitch = "default"; }
 
             //  ... the volume
             try
@@ -516,8 +517,34 @@ namespace _2022TextToSpeech
             this.comboBox2.SelectedItem = DisplayName;
 
             this.comboBox3.SelectedItem = styleSSML;
-            this.vScrollBar1.Value = rate;  //  make a save clause to keep any value between [-50, +50], trasnforming out-of-bounds values to bounds
-            this.vScrollBar2.Value = pitch;  //  make a save clause to keep any value between bounds, trasnforming out-of-bounds values to bounds
+            //this.vScrollBar1.Value = rate;  //  make a save clause to keep any value between [-50, +50], trasnforming out-of-bounds values to bounds
+            //this.vScrollBar2.Value = pitch;  //  make a save clause to keep any value between bounds, trasnforming out-of-bounds values to bounds
+
+            if (comboBox5.Items.Contains(pitch))
+            { comboBox5.SelectedItem = pitch; }
+            else if (pitch.Contains("Hz"))
+            {
+                pitch = Regex.Replace(pitch, "[^0-9-+]", "");
+                int pitchInt = Int32.Parse(pitch, NumberStyles.AllowLeadingSign);
+                if (pitchInt > 200) { pitchInt = 200; }  // replace with more abstract bounds
+                else if (pitchInt < -200) { pitchInt = -200; }
+                vScrollBar2.Value = pitchInt;
+            }
+            else
+            { comboBox5.SelectedItem = "default"; }
+
+            if (comboBox4.Items.Contains(rate))
+            { comboBox4.SelectedItem = rate; }
+            else if (rate.Contains("%"))
+            {
+                rateSSML = Regex.Replace(rateSSML, "[^0-9-+]", "");
+                int rateInt = Int32.Parse(rateSSML, NumberStyles.AllowLeadingSign);
+                if (rateInt > 50) { rateInt = 50; }  // replace with more abstract bounds
+                else if (rateInt < -50) { rateInt = -50; }
+                vScrollBar1.Value = rateInt;
+            }
+            else
+            { comboBox4.SelectedItem = "default"; }
             this.hScrollBar1.Value = volume;  //  make a save clause to keep any value between [0, +100], trasnforming out-of-bounds values to bounds
             #endregion
         }
@@ -719,5 +746,45 @@ namespace _2022TextToSpeech
         {
             formatOutputSound = this.cmbBx_SelectSavedSoundFormat.SelectedItem.ToString();
         }
+
+        #region the vertical ScrollBar1's annotations
+        private void panel_Paint(object sender, PaintEventArgs e)
+        {
+            int annotationWidth = SystemInformation.VerticalScrollBarWidth;
+            int annotationHeight = (SystemInformation.VerticalScrollBarThumbHeight / 10);
+            int barHeight = SystemInformation.VerticalScrollBarThumbHeight;
+            //System.Windows.Forms.VScrollBar bar = this.panel1.Controls.;
+
+            System.Windows.Forms.VScrollBar vScrollBar = null;
+            foreach (Control c in panel1.Controls)
+            {
+                if (c is VScrollBar)
+                {
+                    vScrollBar = (System.Windows.Forms.VScrollBar)c;
+                    break;
+                }
+            }
+            int annotationX = vScrollBar.Right;
+            int ceiling = vScrollBar.Top + vScrollBar.Margin.Top + barHeight + barHeight / 2;  //  the highest point, within the control, from which the annontations are drawn - will be the 1st one as well
+            int floor = vScrollBar.Height - ceiling + barHeight / 2;
+            int stepMath = 10;//vScrollBar.Maximum - vScrollBar.Minimum; // the mathematical step between the annontations
+            int stepGraphic = (floor - ceiling) / stepMath; // the graphical step between the annontations
+            int annotationYOffset = 5; // A small offset so that the lines are always drawn at the middle of the Thumb.
+            int i = 0;  //  this is our step. There will be 10-increment steps
+            for (int annotationY = ceiling; annotationY <= floor; annotationY += stepGraphic)
+            {
+                if (i - Math.Abs(vScrollBar.Minimum) != 0)
+                {
+                    e.Graphics.FillRectangle(Brushes.Black, new Rectangle(annotationX, annotationY, annotationWidth, annotationHeight));
+                    e.Graphics.DrawString((i - Math.Abs(vScrollBar.Minimum)).ToString("+#;-#"), Font, Brushes.Black, new Point(annotationX + annotationWidth + annotationYOffset, annotationY - barHeight / 2));
+                }
+                i += stepMath;
+            }
+            e.Graphics.FillRectangle(Brushes.Red, new Rectangle(annotationX, vScrollBar.Height / 2, annotationWidth * 2, annotationHeight));
+            e.Graphics.DrawString("0", Font, Brushes.Black, new Point(annotationX + annotationWidth * 2 + annotationYOffset / 2, ((vScrollBar.Height / 2) - barHeight / 2)));
+
+        }
+        #endregion
+
     }
 }
