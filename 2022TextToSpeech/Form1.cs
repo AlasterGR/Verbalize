@@ -66,6 +66,7 @@ namespace _2022TextToSpeech
             #region Load the voices file that lists the various speech voices          
             //InitializeVoices();  Let's start with the basic voices first
             #endregion
+            label11.Text = string.Empty;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -314,8 +315,8 @@ namespace _2022TextToSpeech
 
         private void hScrollBar1_ValueChanged(object sender, EventArgs e)
         {  // This handles integers only 
-            volume = this.hScrollBar1.Value;
-            this.label11.Text = this.hScrollBar1.Value.ToString();
+            volume = hScrollBar1.Value;
+            label11.Text = hScrollBar1.Value.ToString();
         }
 
         private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
@@ -747,7 +748,7 @@ namespace _2022TextToSpeech
             formatOutputSound = this.cmbBx_SelectSavedSoundFormat.SelectedItem.ToString();
         }
 
-        #region the vertical ScrollBar1's annotations
+        #region the vertical ScrollBar's annotations ~ could make it abstract for horizontal scrollbar as well
         private void panel_Paint(object sender, PaintEventArgs e)
         {
             int annotationWidth = SystemInformation.VerticalScrollBarWidth;
@@ -765,18 +766,19 @@ namespace _2022TextToSpeech
                 }
             }
             int annotationX = vScrollBar.Right;
-            int ceiling = vScrollBar.Top + vScrollBar.Margin.Top + barHeight + barHeight / 2;  //  the highest point, within the control, from which the annontations are drawn - will be the 1st one as well
-            int floor = vScrollBar.Height - ceiling + barHeight / 2;
-            int stepMath = 10;//vScrollBar.Maximum - vScrollBar.Minimum; // the mathematical step between the annontations
+            int ceiling = vScrollBar.Top + vScrollBar.Margin.Top + barHeight + barHeight / 2;  //  the highest point, within the control, from which the annontations are drawn - will be the 1st one as well 
+            //int floor = vScrollBar.Height - ceiling - barHeight / 2;
+            int floor = vScrollBar.Bottom - vScrollBar.Margin.Bottom - barHeight - barHeight / 2;
+            int stepMath = 10;// the mathematical step between the annontations
             int stepGraphic = (floor - ceiling) / stepMath; // the graphical step between the annontations
             int annotationYOffset = 5; // A small offset so that the lines are always drawn at the middle of the Thumb.
             int i = 0;  //  this is our step. There will be 10-increment steps
-            for (int annotationY = ceiling; annotationY <= floor; annotationY += stepGraphic)
+            for (int annotationY = ceiling; annotationY <= floor; annotationY += stepGraphic) //  ceiling is actually a small number
             {
                 if (i - Math.Abs(vScrollBar.Minimum) != 0)
                 {
                     e.Graphics.FillRectangle(Brushes.Black, new Rectangle(annotationX, annotationY, annotationWidth, annotationHeight));
-                    e.Graphics.DrawString((i - Math.Abs(vScrollBar.Minimum)).ToString("+#;-#"), Font, Brushes.Black, new Point(annotationX + annotationWidth + annotationYOffset, annotationY - barHeight / 2));
+                    //e.Graphics.DrawString((i - Math.Abs(vScrollBar.Minimum)).ToString("+#;-#"), Font, Brushes.Black, new Point(annotationX + annotationWidth + annotationYOffset, annotationY - barHeight / 2));  //  Would rather draw the strings of the scrollbar's actual value
                 }
                 i += stepMath;
             }
