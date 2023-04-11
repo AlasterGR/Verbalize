@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" xml:lang="en-US" onlangfailure="ignoretext ">
+  <voice name="en-US-JennyNeural">
+    <prosody rate="-7%" pitch="-124Hz" volume="82">
+      <mstts:express-as style="calm">
+        	Built in the second half of the 5th century BC,			
+			<voice name="en-US-GuyNeural">
+				<prosody rate="10%" pitch="+124Hz" volume="100">
+				  <mstts:express-as style="calm">
+						it was dedicated to Hephaestus and Athena Hephaestia,
+				 </mstts:express-as>
+				</prosody>
+			  </voice>
+			  protectors of the metalworkers and craftsmen who had their workshops in the neighbourhood
+     </mstts:express-as>
+    </prosody>
+  </voice>
+</speak>

@@ -25,6 +25,8 @@ namespace _2022TextToSpeech
     // for the audio conversion - add an ogg vorbis encoder
     using NAudio.Wave;  // for the audio conversion
     using NAudio.MediaFoundation;
+    using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+    using System.Reflection;
 
     public partial class Form1 : Form
     {
@@ -139,7 +141,7 @@ namespace _2022TextToSpeech
             #region Saving the sound data to the disk as a specific sound format
             string outputFile = Path.ChangeExtension(soundfile, "." + formatOutputSound);
             using Stream stream = new MemoryStream(result.AudioData);
-            if (formatOutputSound != "none" || formatOutputSound != null)
+            if (formatOutputSound != "none" || formatOutputSound != null || formatOutputSound != string.Empty)
             {
                 switch (formatOutputSound)
                 {
@@ -262,7 +264,7 @@ namespace _2022TextToSpeech
                 if (localeName == selectedLocaleName)
                 {
                     displayNames.Add(node.SelectSingleNode("DisplayName").InnerText);
-                    this.label6.Text = node.SelectSingleNode("Locale").InnerText;  //  can probably delete this
+                    this.label6.Text = node.SelectSingleNode("Locale").InnerText;
                     config.SpeechSynthesisLanguage = node.SelectSingleNode("Locale").InnerText;
                 }
             }
@@ -788,22 +790,23 @@ namespace _2022TextToSpeech
         }
         #endregion
 
-        private void label3_Click(object sender, EventArgs e)
+
+        private void button3_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void label9_Click(object sender, EventArgs e)
-        {
+            System.Windows.Forms.TextBox textBox = new System.Windows.Forms.TextBox();
+            textBox.Name = "textBoxInner_" + (panel3.Controls.Count+1).ToString();
+            PropertyInfo[] properties = typeof(System.Windows.Forms.TextBox).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (PropertyInfo property in properties)
+            {
+                if (property.CanWrite)
+                {
+                    property.SetValue(textBox, property.GetValue(textBox1));
+                }
+            }
+            int textBoxInnerNewLoc = (panel3.Controls.OfType<System.Windows.Forms.TextBox>().Count() + 1) * (textBox.Height + panel3.Margin.Top);
+            textBox.Location = new Point(panel3.Margin.Left + 7, textBoxInnerNewLoc);
+            MessageBox.Show(textBoxInnerNewLoc.ToString());
+            panel3.Controls.Add(textBox);
         }
     }
 }
