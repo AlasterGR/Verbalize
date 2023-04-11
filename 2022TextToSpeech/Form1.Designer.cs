@@ -72,10 +72,9 @@
             // 
             // bttn3_LoadText
             // 
-            bttn3_LoadText.Location = new Point(34, 64);
-            bttn3_LoadText.Margin = new Padding(9, 10, 9, 10);
+            bttn3_LoadText.Location = new Point(12, 12);
             bttn3_LoadText.Name = "bttn3_LoadText";
-            bttn3_LoadText.Size = new Size(277, 112);
+            bttn3_LoadText.Size = new Size(97, 35);
             bttn3_LoadText.TabIndex = 2;
             bttn3_LoadText.Text = "Φόρτωση κειμένου";
             bttn3_LoadText.UseVisualStyleBackColor = true;
@@ -83,15 +82,14 @@
             // 
             // label1
             // 
-            label1.Anchor = AnchorStyles.Top;
             label1.Font = new Font("Calibri", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
-            label1.Location = new Point(594, 93);
-            label1.Margin = new Padding(9, 0, 9, 0);
+            label1.Location = new Point(111, 14);
             label1.Name = "label1";
-            label1.Size = new Size(554, 83);
+            label1.Size = new Size(194, 26);
             label1.TabIndex = 3;
             label1.Text = "Selected File address";
             label1.TextChanged += label1_TextChanged;
+            label1.Click += label1_Click;
             label1.DoubleClick += label1_DoubleClick;
             // 
             // textBox1
@@ -99,12 +97,14 @@
             textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             textBox1.Cursor = Cursors.IBeam;
             textBox1.HideSelection = false;
-            textBox1.Location = new Point(420, 194);
+            textBox1.Location = new Point(111, 51);
+            textBox1.Margin = new Padding(1);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
             textBox1.ScrollBars = ScrollBars.Both;
-            textBox1.Size = new Size(952, 1108);
+            textBox1.Size = new Size(413, 376);
             textBox1.TabIndex = 8;
+            textBox1.TextChanged += textBox1_TextChanged;
             // 
             // vScrollBar1
             // 
@@ -114,7 +114,7 @@
             vScrollBar1.Maximum = 50;
             vScrollBar1.Minimum = -50;
             vScrollBar1.Name = "vScrollBar1";
-            vScrollBar1.Size = new Size(61, 733);
+            vScrollBar1.Size = new Size(61, 313);
             vScrollBar1.TabIndex = 11;
             vScrollBar1.ValueChanged += vScrollBar1_ValueChanged;
             // 
@@ -126,37 +126,41 @@
             vScrollBar2.Maximum = 200;
             vScrollBar2.Minimum = -200;
             vScrollBar2.Name = "vScrollBar2";
-            vScrollBar2.Size = new Size(62, 733);
+            vScrollBar2.Size = new Size(62, 313);
             vScrollBar2.TabIndex = 12;
             vScrollBar2.ValueChanged += vScrollBar2_ValueChanged;
             // 
             // label2
             // 
-            label2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            label2.Location = new Point(1831, 542);
+            label2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label2.Location = new Point(691, 134);
+            label2.Margin = new Padding(1, 0, 1, 0);
             label2.Name = "label2";
-            label2.Size = new Size(360, 48);
+            label2.Size = new Size(126, 15);
             label2.TabIndex = 13;
             label2.Text = "Pitch";
             label2.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // label3
             // 
-            label3.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            label3.Location = new Point(1387, 542);
+            label3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label3.Location = new Point(535, 134);
+            label3.Margin = new Padding(1, 0, 1, 0);
             label3.Name = "label3";
-            label3.Size = new Size(397, 48);
+            label3.Size = new Size(139, 15);
             label3.TabIndex = 14;
             label3.Text = "Rate";
             label3.TextAlign = ContentAlignment.MiddleCenter;
+            label3.Click += label3_Click;
             // 
             // label4
             // 
             label4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label4.AutoSize = true;
-            label4.Location = new Point(1393, 195);
+            label4.Location = new Point(535, 41);
+            label4.Margin = new Padding(1, 0, 1, 0);
             label4.Name = "label4";
-            label4.Size = new Size(148, 48);
+            label4.Size = new Size(51, 15);
             label4.TabIndex = 15;
             label4.Text = "Γλώσσα";
             // 
@@ -164,9 +168,10 @@
             // 
             label5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label5.AutoSize = true;
-            label5.Location = new Point(1393, 275);
+            label5.Location = new Point(535, 66);
+            label5.Margin = new Padding(1, 0, 1, 0);
             label5.Name = "label5";
-            label5.Size = new Size(185, 48);
+            label5.Size = new Size(63, 15);
             label5.TabIndex = 16;
             label5.Text = "Αφηγητής";
             // 
@@ -174,9 +179,10 @@
             // 
             comboBox1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(1627, 186);
+            comboBox1.Location = new Point(616, 38);
+            comboBox1.Margin = new Padding(1);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(313, 56);
+            comboBox1.Size = new Size(112, 23);
             comboBox1.TabIndex = 17;
             comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
@@ -184,18 +190,18 @@
             // 
             comboBox2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             comboBox2.FormattingEnabled = true;
-            comboBox2.Location = new Point(1627, 266);
+            comboBox2.Location = new Point(616, 63);
+            comboBox2.Margin = new Padding(1);
             comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(313, 56);
+            comboBox2.Size = new Size(112, 23);
             comboBox2.TabIndex = 18;
             comboBox2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
             // 
             // button8
             // 
-            button8.Location = new Point(34, 340);
-            button8.Margin = new Padding(9, 10, 9, 10);
+            button8.Location = new Point(12, 98);
             button8.Name = "button8";
-            button8.Size = new Size(277, 131);
+            button8.Size = new Size(97, 41);
             button8.TabIndex = 20;
             button8.Text = "Download Voices list";
             button8.UseVisualStyleBackColor = true;
@@ -203,10 +209,9 @@
             // 
             // button9
             // 
-            button9.Location = new Point(34, 491);
-            button9.Margin = new Padding(9, 10, 9, 10);
+            button9.Location = new Point(12, 145);
             button9.Name = "button9";
-            button9.Size = new Size(277, 147);
+            button9.Size = new Size(97, 46);
             button9.TabIndex = 21;
             button9.Text = "Populate the combo boxes";
             button9.UseVisualStyleBackColor = true;
@@ -216,10 +221,9 @@
             // 
             label6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label6.AutoSize = true;
-            label6.Location = new Point(1959, 189);
-            label6.Margin = new Padding(9, 0, 9, 0);
+            label6.Location = new Point(733, 39);
             label6.Name = "label6";
-            label6.Size = new Size(194, 48);
+            label6.Size = new Size(66, 15);
             label6.TabIndex = 22;
             label6.Text = "Locale PCB";
             // 
@@ -227,10 +231,9 @@
             // 
             label7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label7.AutoSize = true;
-            label7.Location = new Point(1959, 269);
-            label7.Margin = new Padding(9, 0, 9, 0);
+            label7.Location = new Point(733, 64);
             label7.Name = "label7";
-            label7.Size = new Size(349, 48);
+            label7.Size = new Size(117, 15);
             label7.TabIndex = 23;
             label7.Text = "Local name (Gender)";
             label7.TextAlign = ContentAlignment.MiddleLeft;
@@ -238,9 +241,10 @@
             // button7
             // 
             button7.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            button7.Location = new Point(420, 1309);
+            button7.Location = new Point(111, 439);
+            button7.Margin = new Padding(1);
             button7.Name = "button7";
-            button7.Size = new Size(486, 179);
+            button7.Size = new Size(170, 81);
             button7.TabIndex = 24;
             button7.Text = "Save textbox text to SSML .xml  - και παραγωγή αρχείου ήχου";
             button7.UseVisualStyleBackColor = true;
@@ -251,9 +255,10 @@
             comboBox3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             comboBox3.FormattingEnabled = true;
             comboBox3.Items.AddRange(new object[] { "advertisement_upbeat", "affectionate", "angry", "assistant", "calm", "chat", "cheerful", "customerservice", "depressed", "disgruntled", "documentary-narration", "embarrassed", "empathetic", "envious", "excited", "fearful", "friendly", "gentle", "hopeful", "lyrical", "narration-professional", "narration-relaxed", "newscast", "newscast-casual", "newscast-formal", "poetry-reading", "sad", "serious", "shouting", "sports_commentary", "sports_commentary_excited", "whispering", "terrified", "unfriendly" });
-            comboBox3.Location = new Point(1576, 340);
+            comboBox3.Location = new Point(599, 86);
+            comboBox3.Margin = new Padding(1);
             comboBox3.Name = "comboBox3";
-            comboBox3.Size = new Size(364, 56);
+            comboBox3.Size = new Size(130, 23);
             comboBox3.TabIndex = 25;
             comboBox3.SelectedIndexChanged += comboBox3_SelectedIndexChanged;
             // 
@@ -261,19 +266,19 @@
             // 
             label8.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             label8.AutoSize = true;
-            label8.Location = new Point(1393, 340);
-            label8.Margin = new Padding(9, 0, 9, 0);
+            label8.Location = new Point(535, 86);
             label8.Name = "label8";
-            label8.Size = new Size(95, 48);
+            label8.Size = new Size(32, 15);
             label8.TabIndex = 26;
             label8.Text = "Style";
             // 
             // button2
             // 
             button2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button2.Location = new Point(935, 1308);
+            button2.Location = new Point(371, 439);
+            button2.Margin = new Padding(1);
             button2.Name = "button2";
-            button2.Size = new Size(437, 179);
+            button2.Size = new Size(153, 81);
             button2.TabIndex = 28;
             button2.Text = "Ενημέρωση του αρχείου  - και παραγωγή αρχείου ήχου";
             button2.UseVisualStyleBackColor = true;
@@ -282,10 +287,9 @@
             // button12
             // 
             button12.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button12.Location = new Point(1393, 408);
-            button12.Margin = new Padding(9, 10, 9, 10);
+            button12.Location = new Point(535, 108);
             button12.Name = "button12";
-            button12.Size = new Size(571, 74);
+            button12.Size = new Size(200, 23);
             button12.TabIndex = 30;
             button12.Text = "Εκφώνηση επιλεγμένου κειμένου";
             button12.UseVisualStyleBackColor = true;
@@ -295,9 +299,9 @@
             // 
             hScrollBar1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             hScrollBar1.LargeChange = 1;
-            hScrollBar1.Location = new Point(1624, 1419);
+            hScrollBar1.Location = new Point(612, 496);
             hScrollBar1.Name = "hScrollBar1";
-            hScrollBar1.Size = new Size(441, 69);
+            hScrollBar1.Size = new Size(154, 23);
             hScrollBar1.TabIndex = 32;
             hScrollBar1.ValueChanged += hScrollBar1_ValueChanged;
             // 
@@ -306,10 +310,9 @@
             label10.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             label10.AutoSize = true;
             label10.Font = new Font("Calibri", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            label10.Location = new Point(1380, 1419);
-            label10.Margin = new Padding(9, 0, 9, 0);
+            label10.Location = new Point(532, 496);
             label10.Name = "label10";
-            label10.Size = new Size(235, 69);
+            label10.Size = new Size(77, 23);
             label10.TabIndex = 33;
             label10.Text = "Volume :";
             // 
@@ -318,19 +321,17 @@
             label11.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             label11.AutoSize = true;
             label11.Font = new Font("Calibri", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            label11.Location = new Point(2074, 1419);
-            label11.Margin = new Padding(9, 0, 9, 0);
+            label11.Location = new Point(780, 496);
             label11.Name = "label11";
-            label11.Size = new Size(117, 69);
+            label11.Size = new Size(40, 23);
             label11.TabIndex = 34;
             label11.Text = "100";
             // 
             // button1
             // 
-            button1.Location = new Point(34, 188);
-            button1.Margin = new Padding(9, 10, 9, 10);
+            button1.Location = new Point(12, 51);
             button1.Name = "button1";
-            button1.Size = new Size(277, 74);
+            button1.Size = new Size(97, 23);
             button1.TabIndex = 35;
             button1.Text = "Εκκαθάριση";
             button1.UseVisualStyleBackColor = true;
@@ -338,10 +339,10 @@
             // 
             // button4
             // 
-            button4.Location = new Point(34, 690);
-            button4.Margin = new Padding(9, 10, 9, 10);
+            button4.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            button4.Location = new Point(10, 272);
             button4.Name = "button4";
-            button4.Size = new Size(277, 291);
+            button4.Size = new Size(97, 91);
             button4.TabIndex = 36;
             button4.Text = "Παραγωγή αρχείου ήχου από αρχείο";
             button4.UseVisualStyleBackColor = true;
@@ -349,10 +350,10 @@
             // 
             // button5
             // 
-            button5.Location = new Point(40, 1229);
-            button5.Margin = new Padding(9, 10, 9, 10);
+            button5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            button5.Location = new Point(14, 439);
             button5.Name = "button5";
-            button5.Size = new Size(265, 259);
+            button5.Size = new Size(93, 78);
             button5.TabIndex = 37;
             button5.Text = "Άμεση Παύση Ήχου";
             button5.UseVisualStyleBackColor = true;
@@ -360,74 +361,73 @@
             // 
             // cmbBx_SelectSavedSoundFormat
             // 
+            cmbBx_SelectSavedSoundFormat.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             cmbBx_SelectSavedSoundFormat.FormattingEnabled = true;
             cmbBx_SelectSavedSoundFormat.Items.AddRange(new object[] { "None", "mp3", "wav" });
-            cmbBx_SelectSavedSoundFormat.Location = new Point(34, 1116);
-            cmbBx_SelectSavedSoundFormat.Margin = new Padding(9, 10, 9, 10);
+            cmbBx_SelectSavedSoundFormat.Location = new Point(10, 405);
             cmbBx_SelectSavedSoundFormat.Name = "cmbBx_SelectSavedSoundFormat";
-            cmbBx_SelectSavedSoundFormat.Size = new Size(271, 56);
+            cmbBx_SelectSavedSoundFormat.Size = new Size(97, 23);
             cmbBx_SelectSavedSoundFormat.TabIndex = 39;
             cmbBx_SelectSavedSoundFormat.SelectedIndexChanged += cmbBx_SelectSavedSoundFormat_SelectedIndexChanged;
             // 
             // panel1
             // 
-            panel1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             panel1.Controls.Add(vScrollBar1);
-            panel1.Location = new Point(1384, 676);
-            panel1.Margin = new Padding(9, 10, 9, 10);
+            panel1.Location = new Point(533, 180);
             panel1.Name = "panel1";
-            panel1.Size = new Size(397, 733);
+            panel1.Size = new Size(144, 313);
             panel1.TabIndex = 40;
             panel1.Paint += panel_Paint;
             // 
             // panel2
             // 
-            panel2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             panel2.Controls.Add(vScrollBar2);
-            panel2.Location = new Point(1837, 676);
-            panel2.Margin = new Padding(9, 10, 9, 10);
+            panel2.Location = new Point(692, 180);
             panel2.Name = "panel2";
-            panel2.Size = new Size(354, 733);
+            panel2.Size = new Size(128, 313);
             panel2.TabIndex = 41;
             panel2.Paint += panel_Paint;
             // 
             // comboBox4
             // 
-            comboBox4.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            comboBox4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             comboBox4.FormattingEnabled = true;
             comboBox4.Items.AddRange(new object[] { "x-slow", "slow", "medium", "fast", "x-fast", "default" });
-            comboBox4.Location = new Point(1384, 600);
-            comboBox4.Margin = new Padding(9, 10, 9, 10);
+            comboBox4.Location = new Point(534, 153);
             comboBox4.Name = "comboBox4";
-            comboBox4.Size = new Size(400, 56);
+            comboBox4.Size = new Size(143, 23);
             comboBox4.TabIndex = 42;
             comboBox4.SelectedIndexChanged += comboBox4_SelectedIndexChanged;
             // 
             // comboBox5
             // 
-            comboBox5.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            comboBox5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             comboBox5.FormattingEnabled = true;
             comboBox5.Items.AddRange(new object[] { "x-low", "low", "medium", "high", "x-high", "default" });
-            comboBox5.Location = new Point(1831, 600);
-            comboBox5.Margin = new Padding(9, 10, 9, 10);
+            comboBox5.Location = new Point(691, 153);
             comboBox5.Name = "comboBox5";
-            comboBox5.Size = new Size(360, 56);
+            comboBox5.Size = new Size(129, 23);
             comboBox5.TabIndex = 43;
             comboBox5.SelectedIndexChanged += comboBox5_SelectedIndexChanged;
             // 
             // label9
             // 
-            label9.Location = new Point(34, 991);
+            label9.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            label9.Location = new Point(10, 366);
+            label9.Margin = new Padding(1, 0, 1, 0);
             label9.Name = "label9";
-            label9.Size = new Size(277, 115);
+            label9.Size = new Size(97, 36);
             label9.TabIndex = 44;
             label9.Text = "Τύπος αρχείου ήχου";
+            label9.Click += label9_Click;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(20F, 48F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(2316, 1517);
+            ClientSize = new Size(870, 530);
             Controls.Add(label9);
             Controls.Add(comboBox5);
             Controls.Add(comboBox4);
@@ -458,7 +458,6 @@
             Controls.Add(label10);
             Controls.Add(label5);
             Controls.Add(hScrollBar1);
-            Margin = new Padding(9, 10, 9, 10);
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
