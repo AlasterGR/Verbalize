@@ -123,19 +123,22 @@ namespace _2022TextToSpeech
                    
                     if (nodes.Count > 0)          
                     {
+                        int nodesListIndex = 0;  //  can probably use the SelectionBackColor for my needs 
                         int colorIndexFirst = 0; 
                         if (nodes.Count > 1) { colorIndexFirst = 1; } // if we have more than 1 nodes then we will iterate through all colours excluding the default non-selection one
                         colorIndex = colorIndexFirst;
                         foreach (XmlNode node in nodes)
                         {
                             int startIndex = richTextBox1.Text.Length; // Store the start index of the node's text
-                            richTextBox1.AppendText(node.InnerText.TrimStart()); // += overwrites the SelectionBackColor afterwards
+                            richTextBox1.AppendText("{" + nodesListIndex.ToString() + "}  " + node.InnerText.TrimStart() + "\n"); // += overwrites the SelectionBackColor afterwards
                             int length = richTextBox1.Text.Length - startIndex; // Calculate the length of the node's text
                             richTextBox1.Select(startIndex, length); // Highlight the node's text
                             richTextBox1.SelectionBackColor = pastelColors[colorIndex]; // Set the background color
                             colorIndex++; // Move to the next color in the array
                             if (colorIndex >= pastelColors.Length) { colorIndex = colorIndexFirst; } // Start over with the first color if we reach the end of the array
                             objectXML_NodesDictionary.Add(dIncex, node); dIncex++;
+                            nodesListIndex++;
+
                         }
                     }
                     //loadXMLtoApp(objectXML);
@@ -146,7 +149,6 @@ namespace _2022TextToSpeech
                     richTextBox1.Text = File.ReadAllText(locationLoadedFile); // File.ReadAllText locks the file
                 }
                 #endregion
-                MessageBox.Show(dIncex.ToString());
             }
         }
 
