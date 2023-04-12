@@ -62,8 +62,8 @@
             comboBox5 = new ComboBox();
             label9 = new Label();
             panel3 = new Panel();
-            button3 = new Button();
             richTextBox1 = new RichTextBox();
+            button3 = new Button();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
@@ -434,6 +434,14 @@
             panel3.Size = new Size(639, 335);
             panel3.TabIndex = 45;
             // 
+            // richTextBox1
+            // 
+            richTextBox1.Location = new Point(10, 187);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.Size = new Size(609, 145);
+            richTextBox1.TabIndex = 9;
+            richTextBox1.Text = "";
+            // 
             // button3
             // 
             button3.Location = new Point(414, 22);
@@ -443,14 +451,6 @@
             button3.Text = "Add TextBox";
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
-            // 
-            // richTextBox1
-            // 
-            richTextBox1.Location = new Point(14, 190);
-            richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(605, 119);
-            richTextBox1.TabIndex = 9;
-            richTextBox1.Text = "";
             // 
             // Form1
             // 
@@ -491,6 +491,7 @@
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
+            Paint += Form1_Paint;
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
             panel3.ResumeLayout(false);

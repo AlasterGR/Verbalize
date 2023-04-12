@@ -56,6 +56,7 @@ namespace _2022TextToSpeech
         public static SpeechSynthesizer synth;
         public string formatOutputSound = "None";
         public static XmlDocument objectXML = new XmlDocument(); // the dynamic object which stores the proccessed ssml
+        public static Dictionary<int, XmlNode> objectXML_NodesDictionary = new Dictionary<int, XmlNode>();
 
 
 
@@ -85,7 +86,7 @@ namespace _2022TextToSpeech
                 this.label1.Visible = true;
                 string fileContents = string.Empty;
 
-                //  Search further for advantages on using a rich text box instead. So far none found.
+                
                 #region Parse the selected file's contents and save its speakable text to the textbox ~ it will acquire only the inner texts, should the selected file have an xml format.
                 XmlDocument SSMLDocument = new XmlDocument();
                 try
@@ -107,34 +108,58 @@ namespace _2022TextToSpeech
                 }
                 this.textBox1.Text = fileContents;
                 #endregion
-
-                #region load the .xml file onto our dynamic object and output to rich textbox                
+                // all this previous part will become deprecated later
+                #region load the .xml file onto our dynamic object and output to rich textbox  
+                
+                richTextBox1.Text = string.Empty;
+                int colorIndex = 0;
+                objectXML_NodesDictionary.Clear();
+                int dIncex = 0;
                 try
                 {
                     objectXML.Load(locationLoadedFile);
                     //SSMLDocument.Load(locationLoadedFile);
                     XmlNodeList nodes = objectXML.SelectNodes("//text()[normalize-space()]");
-                    fileContents = string.Empty;
-                    if (nodes.Count > 0)
+                   
+                    if (nodes.Count > 0)          
                     {
+                        int colorIndexFirst = 0; 
+                        if (nodes.Count > 1) { colorIndexFirst = 1; } // if we have more than 1 nodes then we will iterate through all colours excluding the default non-selection one
+                        colorIndex = colorIndexFirst;
                         foreach (XmlNode node in nodes)
                         {
-                            richTextBox1.BackColor = Color.Yellow;
-                            richTextBox1.Text += node.InnerText;
+                            int startIndex = richTextBox1.Text.Length; // Store the start index of the node's text
+                            richTextBox1.AppendText(node.InnerText.TrimStart()); // += overwrites the SelectionBackColor afterwards
+                            int length = richTextBox1.Text.Length - startIndex; // Calculate the length of the node's text
+                            richTextBox1.Select(startIndex, length); // Highlight the node's text
+                            richTextBox1.SelectionBackColor = pastelColors[colorIndex]; // Set the background color
+                            colorIndex++; // Move to the next color in the array
+                            if (colorIndex >= pastelColors.Length) { colorIndex = colorIndexFirst; } // Start over with the first color if we reach the end of the array
+                            objectXML_NodesDictionary.Add(dIncex, node); dIncex++;
                         }
                     }
                     //loadXMLtoApp(objectXML);
                 }
                 catch (XmlException ex)
                 {
-                    richTextBox1.BackColor = Color.Red;
-                    fileContents = File.ReadAllText(locationLoadedFile); // File.ReadAllText locks the file
+                    richTextBox1.BackColor = pastelColors[colorIndex];
+                    richTextBox1.Text = File.ReadAllText(locationLoadedFile); // File.ReadAllText locks the file
                 }
-                //richTextBox1.Text = fileContents;
                 #endregion
+                MessageBox.Show(dIncex.ToString());
             }
-            //richTextBox1.SelectionBackColor = Color.Red;
         }
+
+        // The colour list from which it will iterate through ~ let's add more colours for fun
+        public Color[] pastelColors = new Color[]
+        {
+            SystemColors.Window,
+            Color.FromArgb(255, 207, 176),
+            Color.FromArgb(255, 217, 199),
+            Color.FromArgb(255, 229, 223),
+            Color.FromArgb(223, 240, 235),
+            Color.FromArgb(219, 219, 219)
+        };
 
         private void button4_Click(object sender, EventArgs e)
         {
@@ -780,13 +805,12 @@ namespace _2022TextToSpeech
         #region the vertical ScrollBar's annotations ~ could make it abstract for horizontal scrollbar as well
         private void panel_Paint(object sender, PaintEventArgs e)
         {
+            Panel panel = (Panel)sender;
             int annotationWidth = SystemInformation.VerticalScrollBarWidth;
             int annotationHeight = (SystemInformation.VerticalScrollBarThumbHeight / 10);
             int barHeight = SystemInformation.VerticalScrollBarThumbHeight;
-            //System.Windows.Forms.VScrollBar bar = this.panel1.Controls.;
-
             System.Windows.Forms.VScrollBar vScrollBar = null;
-            foreach (Control c in panel1.Controls)
+            foreach (Control c in panel.Controls)
             {
                 if (c is VScrollBar)
                 {
@@ -795,21 +819,24 @@ namespace _2022TextToSpeech
                 }
             }
             int annotationX = vScrollBar.Right;
-            int ceiling = vScrollBar.Top + vScrollBar.Margin.Top + barHeight + barHeight / 2;  //  the highest point, within the control, from which the annontations are drawn - will be the 1st one as well 
-            //int floor = vScrollBar.Height - ceiling - barHeight / 2;
+            int ceiling = vScrollBar.Top + vScrollBar.Margin.Top + barHeight + barHeight / 2;  //  the highest point, within the control, from which the annontations are drawn - will be the 1st one as well             
             int floor = vScrollBar.Bottom - vScrollBar.Margin.Bottom - barHeight - barHeight / 2;
             int stepMath = 10;// the mathematical step between the annontations
             int stepGraphic = (floor - ceiling) / stepMath; // the graphical step between the annontations
             int annotationYOffset = 5; // A small offset so that the lines are always drawn at the middle of the Thumb.
+            int stepAnontations = Math.Abs(vScrollBar.Maximum - vScrollBar.Minimum) / stepMath; // this nis how much will be added in the annontations, effectively showcasing the scrollbar's value at their point
             int i = 0;  //  this is our step. There will be 10-increment steps
+            int value = vScrollBar.Minimum;
             for (int annotationY = ceiling; annotationY <= floor; annotationY += stepGraphic) //  ceiling is actually a small number
             {
-                if (i - Math.Abs(vScrollBar.Minimum) != 0)
+                if (value != 0)
                 {
                     e.Graphics.FillRectangle(Brushes.Black, new Rectangle(annotationX, annotationY, annotationWidth, annotationHeight));
-                    //e.Graphics.DrawString((i - Math.Abs(vScrollBar.Minimum)).ToString("+#;-#"), Font, Brushes.Black, new Point(annotationX + annotationWidth + annotationYOffset, annotationY - barHeight / 2));  //  Would rather draw the strings of the scrollbar's actual value
+
+                    e.Graphics.DrawString(value.ToString("+#;-#"), Font, Brushes.Black, new Point(annotationX + annotationWidth + annotationYOffset, annotationY - barHeight / 2));  //  Would rather draw the strings of the scrollbar's actual value
                 }
                 i += stepMath;
+                value += stepAnontations;
             }
             e.Graphics.FillRectangle(Brushes.Red, new Rectangle(annotationX, vScrollBar.Height / 2, annotationWidth * 2, annotationHeight));
             e.Graphics.DrawString("0", Font, Brushes.Black, new Point(annotationX + annotationWidth * 2 + annotationYOffset / 2, ((vScrollBar.Height / 2) - barHeight / 2)));
@@ -817,6 +844,11 @@ namespace _2022TextToSpeech
         }
         #endregion
 
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {  //  This is in order to make sure the panels are redrawn properly. Invalidate() any other control that is drawn uniquely
+            panel1.Invalidate();
+            panel2.Invalidate();
+        }
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -835,5 +867,6 @@ namespace _2022TextToSpeech
             //MessageBox.Show(textBoxInnerNewLoc.ToString());
             panel3.Controls.Add(textBox);
         }
+
     }
 }
