@@ -63,6 +63,7 @@
             label9 = new Label();
             panel3 = new Panel();
             button3 = new Button();
+            richTextBox1 = new RichTextBox();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
@@ -426,6 +427,7 @@
             // 
             panel3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panel3.AutoScroll = true;
+            panel3.Controls.Add(richTextBox1);
             panel3.Controls.Add(textBox1);
             panel3.Location = new Point(115, 51);
             panel3.Name = "panel3";
@@ -441,6 +443,14 @@
             button3.Text = "Add TextBox";
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
+            // 
+            // richTextBox1
+            // 
+            richTextBox1.Location = new Point(14, 190);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.Size = new Size(605, 119);
+            richTextBox1.TabIndex = 9;
+            richTextBox1.Text = "";
             // 
             // Form1
             // 
@@ -525,5 +535,6 @@
         private Label label9;
         private Panel panel3;
         private Button button3;
+        private RichTextBox richTextBox1;
     }
 }

@@ -3,6 +3,20 @@
   <voice name="en-US-JennyNeural">
     <prosody rate="-7%" pitch="-124Hz" volume="82">
       <mstts:express-as style="calm">
+        	Built in the second half of the 5th century BC,
+     </mstts:express-as>
+    </prosody>
+  </voice>
+  <voice name="en-US-JennyNeural">
+    <prosody rate="-7%" pitch="-124Hz" volume="82">
+      <mstts:express-as style="calm">
+        	it was dedicated to Hephaestus and Athena Hephaestia,
+     </mstts:express-as>
+    </prosody>
+  </voice>
+  <voice name="en-US-JennyNeural">
+    <prosody rate="-7%" pitch="-124Hz" volume="82">
+      <mstts:express-as style="calm">
 			  protectors of the metalworkers and craftsmen who had their workshops in the neighbourhood.
      </mstts:express-as>
     </prosody>

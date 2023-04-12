@@ -15,17 +15,13 @@ namespace _2022TextToSpeech
     using static System.Windows.Forms.LinkLabel;
     using System.Net.Http; // for the supported languages of the voice
     using System.Net.Http.Headers;  // for the supported languages of the voice
-    using System.Net.Security;
     using Newtonsoft.Json; // for converting the Json files into XML ones. Possibly removable should we only load the XML file I am going to have produced
-    using System.Text.Json;// for converting the Json files into XML ones. Possibly removable should we only load the XML file I am going to have produced
-    using Properties;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Text.RegularExpressions;
     // for the audio conversion - add an ogg vorbis encoder
     using NAudio.Wave;  // for the audio conversion
     using NAudio.MediaFoundation;
-    using static System.Windows.Forms.VisualStyles.VisualStyleElement;
     using System.Reflection;
 
     public partial class Form1 : Form
@@ -41,8 +37,8 @@ namespace _2022TextToSpeech
         public static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyGiannis1, serverLocation);  //This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis
         #region The Prosody and assorted elements of speech
         // As per : https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice. The https://www.w3.org/TR/speech-synthesis11/ is irrelevant so far.
-        public static string pitch = "default";  //  Pitch is expressed in 3 ways. Here, for now, we are using just the absolute value from the range [-200, +200]
-        public static string rate = "default";  // Rate is expressed in 2 ways, an absolute value (string) and a relative (as a number) one. For now, we will use it only as a number (-50% - +50%), I will incoroprate it as a string later
+        public static string pitch = "default";
+        public static string rate = "default";
         public static int volume = 100; // Defaults in 100.
         public static string style = "calm";
         //  Integrate the rest of the speech elements, such as pitch contour, pitch range
@@ -59,6 +55,7 @@ namespace _2022TextToSpeech
         private Task<SpeechSynthesisResult> sound1;
         public static SpeechSynthesizer synth;
         public string formatOutputSound = "None";
+        public static XmlDocument objectXML = new XmlDocument(); // the dynamic object which stores the proccessed ssml
 
 
 
@@ -76,6 +73,7 @@ namespace _2022TextToSpeech
             this.label1.Visible = false;
             VoicesLoad();  //  Load the voices onto the combo boxes
             this.cmbBx_SelectSavedSoundFormat.SelectedIndex = 0;
+
         }
 
         private void bttn3_LoadText_Click(object sender, EventArgs e)
@@ -86,6 +84,7 @@ namespace _2022TextToSpeech
                 this.label1.Text = Path.GetFileNameWithoutExtension(locationLoadedFile); // Show the loaded file's name
                 this.label1.Visible = true;
                 string fileContents = string.Empty;
+
                 //  Search further for advantages on using a rich text box instead. So far none found.
                 #region Parse the selected file's contents and save its speakable text to the textbox ~ it will acquire only the inner texts, should the selected file have an xml format.
                 XmlDocument SSMLDocument = new XmlDocument();
@@ -107,8 +106,34 @@ namespace _2022TextToSpeech
                     fileContents = File.ReadAllText(locationLoadedFile); // File.ReadAllText locks the file
                 }
                 this.textBox1.Text = fileContents;
-                #endregion               
+                #endregion
+
+                #region load the .xml file onto our dynamic object and output to rich textbox                
+                try
+                {
+                    objectXML.Load(locationLoadedFile);
+                    //SSMLDocument.Load(locationLoadedFile);
+                    XmlNodeList nodes = objectXML.SelectNodes("//text()[normalize-space()]");
+                    fileContents = string.Empty;
+                    if (nodes.Count > 0)
+                    {
+                        foreach (XmlNode node in nodes)
+                        {
+                            richTextBox1.BackColor = Color.Yellow;
+                            richTextBox1.Text += node.InnerText;
+                        }
+                    }
+                    //loadXMLtoApp(objectXML);
+                }
+                catch (XmlException ex)
+                {
+                    richTextBox1.BackColor = Color.Red;
+                    fileContents = File.ReadAllText(locationLoadedFile); // File.ReadAllText locks the file
+                }
+                //richTextBox1.Text = fileContents;
+                #endregion
             }
+            //richTextBox1.SelectionBackColor = Color.Red;
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -340,7 +365,7 @@ namespace _2022TextToSpeech
             style = this.comboBox3.SelectedItem.ToString();
         }
 
-        private void button7_Click(object sender, EventArgs e)
+        private void button7_Click(object sender, EventArgs e)  //  the Save button
         {
             SaveFileDialog saveFileDialog1 = new SaveFileDialog();
             saveFileDialog1.Filter = "XML|*.xml";
@@ -350,10 +375,11 @@ namespace _2022TextToSpeech
                 if (saveFileDialog1.FileName != "")
                 {
                     string pathFileSelected = saveFileDialog1.FileName;
-                    string text = this.textBox1.Text;
+                    string text = textBox1.Text;
                     XmlDocument SSMLDocument = CreateSSML(text);
                     // Save the XML document to a file         
                     SSMLDocument.Save(pathFileSelected);
+                    //objectXML.Save(pathFileSelected); // decomment after I am done with objectXML
                     SynthesizeAudioAsync(pathFileSelected, formatOutputSound);
                 }
             }
@@ -419,8 +445,9 @@ namespace _2022TextToSpeech
                 string pathFileSelected = locationLoadedFile;
                 string text = this.textBox1.Text;
                 XmlDocument SSMLDocument = CreateSSML(text);
-                // Save the XML document to a file         
+                // Save the XML document to a file
                 SSMLDocument.Save(pathFileSelected);
+                // objectXML.Save(pathFileSelected); // decomment after finishing on objectXML
                 SynthesizeAudioAsync(pathFileSelected, formatOutputSound);
             }
 
@@ -794,7 +821,7 @@ namespace _2022TextToSpeech
         private void button3_Click(object sender, EventArgs e)
         {
             System.Windows.Forms.TextBox textBox = new System.Windows.Forms.TextBox();
-            textBox.Name = "textBoxInner_" + (panel3.Controls.Count+1).ToString();
+            textBox.Name = "textBoxInner_" + (panel3.Controls.Count + 1).ToString();
             PropertyInfo[] properties = typeof(System.Windows.Forms.TextBox).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (PropertyInfo property in properties)
             {
@@ -805,7 +832,7 @@ namespace _2022TextToSpeech
             }
             int textBoxInnerNewLoc = (panel3.Controls.OfType<System.Windows.Forms.TextBox>().Count() + 1) * (textBox.Height + panel3.Margin.Top);
             textBox.Location = new Point(panel3.Margin.Left + 7, textBoxInnerNewLoc);
-            MessageBox.Show(textBoxInnerNewLoc.ToString());
+            //MessageBox.Show(textBoxInnerNewLoc.ToString());
             panel3.Controls.Add(textBox);
         }
     }
