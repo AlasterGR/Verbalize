@@ -791,7 +791,7 @@ namespace _2022TextToSpeech
         }
         #endregion
 
-        private void Form1_Paint(object sender, PaintEventArgs e)
+        private void Form1_Paint(object sender, PaintEventArgs e) 
         {  //  This is in order to make sure the panels are redrawn properly. Invalidate() any other control that is drawn uniquely
             panel1.Invalidate();
             panel2.Invalidate();
