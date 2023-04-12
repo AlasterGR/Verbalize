@@ -25,6 +25,7 @@ namespace _2022TextToSpeech
     // for the audio conversion - add an ogg vorbis encoder
     using NAudio.Wave;  // for the audio conversion
     using NAudio.MediaFoundation;
+    using Newtonsoft.Json.Linq;
 
     public partial class Form1 : Form
     {
@@ -745,18 +746,18 @@ namespace _2022TextToSpeech
 
         private void cmbBx_SelectSavedSoundFormat_SelectedIndexChanged(object sender, EventArgs e)
         {
-            formatOutputSound = this.cmbBx_SelectSavedSoundFormat.SelectedItem.ToString();
+            formatOutputSound = cmbBx_SelectSavedSoundFormat.SelectedItem.ToString();
         }
 
         #region the vertical ScrollBar's annotations ~ could make it abstract for horizontal scrollbar as well
         private void panel_Paint(object sender, PaintEventArgs e)
         {
-
+            Panel panel = (Panel)sender;
             int annotationWidth = SystemInformation.VerticalScrollBarWidth;
             int annotationHeight = (SystemInformation.VerticalScrollBarThumbHeight / 10);
             int barHeight = SystemInformation.VerticalScrollBarThumbHeight;
             System.Windows.Forms.VScrollBar vScrollBar = null;
-            foreach (Control c in panel1.Controls)
+            foreach (Control c in panel.Controls)
             {
                 if (c is VScrollBar)
                 {
@@ -770,19 +771,19 @@ namespace _2022TextToSpeech
             int stepMath = 10;// the mathematical step between the annontations
             int stepGraphic = (floor - ceiling) / stepMath; // the graphical step between the annontations
             int annotationYOffset = 5; // A small offset so that the lines are always drawn at the middle of the Thumb.
+            int stepAnontations = Math.Abs(vScrollBar.Maximum - vScrollBar.Minimum) / stepMath; // this nis how much will be added in the annontations, effectively showcasing the scrollbar's value at their point
             int i = 0;  //  this is our step. There will be 10-increment steps
+            int value = vScrollBar.Minimum;
             for (int annotationY = ceiling; annotationY <= floor; annotationY += stepGraphic) //  ceiling is actually a small number
             {
-                if (i - Math.Abs(vScrollBar.Minimum) != 0)
+                if (value != 0)
                 {
                     e.Graphics.FillRectangle(Brushes.Black, new Rectangle(annotationX, annotationY, annotationWidth, annotationHeight));
 
-                    //int value = vScrollBar.Minimum +  (int)((annotationY - ceiling) /( (double)(floor - ceiling) )* (vScrollBar.Maximum - vScrollBar.Minimum));
-                    //e.Graphics.DrawString(value.ToString(), Font, Brushes.Black, new Point(annotationX + annotationWidth + annotationYOffset, annotationY - barHeight / 2));
-
-                    //e.Graphics.DrawString((i - Math.Abs(vScrollBar.Minimum)).ToString("+#;-#"), Font, Brushes.Black, new Point(annotationX + annotationWidth + annotationYOffset, annotationY - barHeight / 2));  //  Would rather draw the strings of the scrollbar's actual value
+                    e.Graphics.DrawString(value.ToString("+#;-#"), Font, Brushes.Black, new Point(annotationX + annotationWidth + annotationYOffset, annotationY - barHeight / 2));  //  Would rather draw the strings of the scrollbar's actual value
                 }
                 i += stepMath;
+                value += stepAnontations;
             }
             e.Graphics.FillRectangle(Brushes.Red, new Rectangle(annotationX, vScrollBar.Height / 2, annotationWidth * 2, annotationHeight));
             e.Graphics.DrawString("0", Font, Brushes.Black, new Point(annotationX + annotationWidth * 2 + annotationYOffset / 2, ((vScrollBar.Height / 2) - barHeight / 2)));
