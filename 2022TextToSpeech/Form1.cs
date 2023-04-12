@@ -751,11 +751,10 @@ namespace _2022TextToSpeech
         #region the vertical ScrollBar's annotations ~ could make it abstract for horizontal scrollbar as well
         private void panel_Paint(object sender, PaintEventArgs e)
         {
+
             int annotationWidth = SystemInformation.VerticalScrollBarWidth;
             int annotationHeight = (SystemInformation.VerticalScrollBarThumbHeight / 10);
             int barHeight = SystemInformation.VerticalScrollBarThumbHeight;
-            //System.Windows.Forms.VScrollBar bar = this.panel1.Controls.;
-
             System.Windows.Forms.VScrollBar vScrollBar = null;
             foreach (Control c in panel1.Controls)
             {
@@ -766,8 +765,7 @@ namespace _2022TextToSpeech
                 }
             }
             int annotationX = vScrollBar.Right;
-            int ceiling = vScrollBar.Top + vScrollBar.Margin.Top + barHeight + barHeight / 2;  //  the highest point, within the control, from which the annontations are drawn - will be the 1st one as well 
-            //int floor = vScrollBar.Height - ceiling - barHeight / 2;
+            int ceiling = vScrollBar.Top + vScrollBar.Margin.Top + barHeight + barHeight / 2;  //  the highest point, within the control, from which the annontations are drawn - will be the 1st one as well             
             int floor = vScrollBar.Bottom - vScrollBar.Margin.Bottom - barHeight - barHeight / 2;
             int stepMath = 10;// the mathematical step between the annontations
             int stepGraphic = (floor - ceiling) / stepMath; // the graphical step between the annontations
@@ -778,6 +776,10 @@ namespace _2022TextToSpeech
                 if (i - Math.Abs(vScrollBar.Minimum) != 0)
                 {
                     e.Graphics.FillRectangle(Brushes.Black, new Rectangle(annotationX, annotationY, annotationWidth, annotationHeight));
+
+                    //int value = vScrollBar.Minimum +  (int)((annotationY - ceiling) /( (double)(floor - ceiling) )* (vScrollBar.Maximum - vScrollBar.Minimum));
+                    //e.Graphics.DrawString(value.ToString(), Font, Brushes.Black, new Point(annotationX + annotationWidth + annotationYOffset, annotationY - barHeight / 2));
+
                     //e.Graphics.DrawString((i - Math.Abs(vScrollBar.Minimum)).ToString("+#;-#"), Font, Brushes.Black, new Point(annotationX + annotationWidth + annotationYOffset, annotationY - barHeight / 2));  //  Would rather draw the strings of the scrollbar's actual value
                 }
                 i += stepMath;
@@ -788,22 +790,10 @@ namespace _2022TextToSpeech
         }
         #endregion
 
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void label9_Click(object sender, EventArgs e)
-        {
+        private void Form1_Paint(object sender, PaintEventArgs e)
+        {  //  This is in order to make sure the panels are redrawn properly. Invalidate() any other control that is drawn uniquely
+            panel1.Invalidate();
+            panel2.Invalidate();
         }
     }
 }

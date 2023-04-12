@@ -89,7 +89,6 @@
             label1.TabIndex = 3;
             label1.Text = "Selected File address";
             label1.TextChanged += label1_TextChanged;
-            label1.Click += label1_Click;
             label1.DoubleClick += label1_DoubleClick;
             // 
             // textBox1
@@ -104,7 +103,6 @@
             textBox1.ScrollBars = ScrollBars.Both;
             textBox1.Size = new Size(413, 376);
             textBox1.TabIndex = 8;
-            textBox1.TextChanged += textBox1_TextChanged;
             // 
             // vScrollBar1
             // 
@@ -151,7 +149,6 @@
             label3.TabIndex = 14;
             label3.Text = "Rate";
             label3.TextAlign = ContentAlignment.MiddleCenter;
-            label3.Click += label3_Click;
             // 
             // label4
             // 
@@ -421,7 +418,6 @@
             label9.Size = new Size(97, 36);
             label9.TabIndex = 44;
             label9.Text = "Τύπος αρχείου ήχου";
-            label9.Click += label9_Click;
             // 
             // Form1
             // 
@@ -461,6 +457,8 @@
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
+           
+            Paint += Form1_Paint;
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
             ResumeLayout(false);
