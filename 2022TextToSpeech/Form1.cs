@@ -86,7 +86,7 @@ namespace _2022TextToSpeech
                 this.label1.Visible = true;
                 string fileContents = string.Empty;
 
-                
+
                 #region Parse the selected file's contents and save its speakable text to the textbox ~ it will acquire only the inner texts, should the selected file have an xml format.
                 XmlDocument SSMLDocument = new XmlDocument();
                 try
@@ -110,7 +110,7 @@ namespace _2022TextToSpeech
                 #endregion
                 // all this previous part will become deprecated later
                 #region load the .xml file onto our dynamic object and output to rich textbox  
-                
+
                 richTextBox1.Text = string.Empty;
                 int colorIndex = 0;
                 objectXML_NodesDictionary.Clear();
@@ -120,11 +120,11 @@ namespace _2022TextToSpeech
                     objectXML.Load(locationLoadedFile);
                     //SSMLDocument.Load(locationLoadedFile);
                     XmlNodeList nodes = objectXML.SelectNodes("//text()[normalize-space()]");
-                   
-                    if (nodes.Count > 0)          
+
+                    if (nodes.Count > 0)
                     {
                         int nodesListIndex = 0;  //  can probably use the SelectionBackColor for my needs 
-                        int colorIndexFirst = 0; 
+                        int colorIndexFirst = 0;
                         if (nodes.Count > 1) { colorIndexFirst = 1; } // if we have more than 1 nodes then we will iterate through all colours excluding the default non-selection one
                         colorIndex = colorIndexFirst;
                         foreach (XmlNode node in nodes)

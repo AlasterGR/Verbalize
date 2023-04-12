@@ -436,9 +436,9 @@
             // 
             // richTextBox1
             // 
-            richTextBox1.Location = new Point(10, 187);
+            richTextBox1.Location = new Point(10, 249);
             richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(609, 145);
+            richTextBox1.Size = new Size(609, 83);
             richTextBox1.TabIndex = 9;
             richTextBox1.Text = "";
             // 
