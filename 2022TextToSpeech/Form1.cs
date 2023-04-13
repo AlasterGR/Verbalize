@@ -55,7 +55,7 @@ namespace _2022TextToSpeech
         public static string locationFileResponseBackup = Path.Combine(folderResources, voicesSSMLFileNameBackup);
         public static string shortName = "";
         public static string locationLoadedFile = string.Empty;
-        private Task<SpeechSynthesisResult> sound1;
+        private static Task<SpeechSynthesisResult> sound1;
         public static SpeechSynthesizer synth;
         public string formatOutputSound = "None";
         public static bool isSynthSpeaking = false;
@@ -122,12 +122,12 @@ namespace _2022TextToSpeech
                 {
                     string pathFileSelected = openFileDialog1.FileName;
                     formatOutputSound = cmbBx_SelectSavedSoundFormat.SelectedItem.ToString();
-                    SynthesizeAudioAsync(pathFileSelected, formatOutputSound);
+                    SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
                 }
             }
 
         }
-        static async Task SynthesizeAudioAsync(string soundfile, string formatOutputSound)
+        static async Task SynthesizeAudioAsync(string soundfile, string formatOutputSound, bool _audioOn)
         {
             #region Producing the sound data
             XmlDocument xmlDoc = new XmlDocument();
@@ -136,10 +136,14 @@ namespace _2022TextToSpeech
 
             //using var speechSynthesizer = new SpeechSynthesizer(config, null); // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
             //await speechSynthesizer.StopSpeakingAsync();
-            await synth.StopSpeakingAsync();
-
+            //await synth.StopSpeakingAsync();
+            soundPause();
             //SpeechSynthesisResult result = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
+            //SpeechSynthesizer synth = new SpeechSynthesizer(config, null);
+            if (!_audioOn) { synth = new SpeechSynthesizer(config, null); }
+            else { synth = new SpeechSynthesizer(config, null); }
             SpeechSynthesisResult result = await synth.SpeakSsmlAsync(ssmlText);
+            //soundPause();
             #endregion
             #region Saving the sound data to the disk as a specific sound format
             string outputFile = Path.ChangeExtension(soundfile, "." + formatOutputSound);
@@ -357,7 +361,7 @@ namespace _2022TextToSpeech
                     XmlDocument SSMLDocument = CreateSSML(text);
                     // Save the XML document to a file         
                     SSMLDocument.Save(pathFileSelected);
-                    SynthesizeAudioAsync(pathFileSelected, formatOutputSound);
+                    SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
                 }
             }
 
@@ -424,7 +428,7 @@ namespace _2022TextToSpeech
                 XmlDocument SSMLDocument = CreateSSML(text);
                 // Save the XML document to a file         
                 SSMLDocument.Save(pathFileSelected);
-                SynthesizeAudioAsync(pathFileSelected, formatOutputSound);
+                SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
             }
 
         }
@@ -573,14 +577,24 @@ namespace _2022TextToSpeech
             this.label1.Text = string.Empty;
             this.label1.Visible = false;
         }
-        private void button5_Click(object sender, EventArgs e)
+        private async void button5_Click(object sender, EventArgs e)
         {
-            if (sound1 != null || synth != null )  //  Stop the sound if it is already playing
+            //if (sound1 != null || synth != null )  //  Stop the sound if it is already playing
+            //{
+            //    synth.StopSpeakingAsync();
+            //    //speechSynthesizer.StopSpeakingAsync();
+            //}
+            soundPause();
+        }
+
+        public static void soundPause()
+        {
+            if (sound1 != null || synth != null)  //  Stop the sound if it is already playing
             {
                 synth.StopSpeakingAsync();
-                //speechSynthesizer.StopSpeakingAsync();
             }
         }
+
         #region A string in XML format that is to be used should the app not be able to download the Voices file
         string VoicesBasic = @"<Voices>  
                                   <Voice>
