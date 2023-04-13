@@ -58,6 +58,7 @@ namespace _2022TextToSpeech
         private Task<SpeechSynthesisResult> sound1;
         public static SpeechSynthesizer synth;
         public string formatOutputSound = "None";
+        public static bool isSynthSpeaking = false;
 
 
 
@@ -133,9 +134,12 @@ namespace _2022TextToSpeech
             xmlDoc.Load(soundfile);
             string ssmlText = xmlDoc.OuterXml;
 
-            using var speechSynthesizer = new SpeechSynthesizer(config, null); // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
-            await speechSynthesizer.StopSpeakingAsync();
-            SpeechSynthesisResult result = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
+            //using var speechSynthesizer = new SpeechSynthesizer(config, null); // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
+            //await speechSynthesizer.StopSpeakingAsync();
+            await synth.StopSpeakingAsync();
+
+            //SpeechSynthesisResult result = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
+            SpeechSynthesisResult result = await synth.SpeakSsmlAsync(ssmlText);
             #endregion
             #region Saving the sound data to the disk as a specific sound format
             string outputFile = Path.ChangeExtension(soundfile, "." + formatOutputSound);
@@ -571,9 +575,10 @@ namespace _2022TextToSpeech
         }
         private void button5_Click(object sender, EventArgs e)
         {
-            if (sound1 != null || synth != null)  //  Stop the sound if it is already playing
+            if (sound1 != null || synth != null )  //  Stop the sound if it is already playing
             {
                 synth.StopSpeakingAsync();
+                //speechSynthesizer.StopSpeakingAsync();
             }
         }
         #region A string in XML format that is to be used should the app not be able to download the Voices file
