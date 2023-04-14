@@ -436,10 +436,7 @@ namespace _2022TextToSpeech
         //  Speak the selected text from the textbox
         private async void button12_Click(object sender, EventArgs e)
         {
-            if (sound1 != null || synth != null)  //  Stop the sound if it is already playing
-            {
-                synth.StopSpeakingAsync();
-            }
+            soundPause();
             string text = string.Empty;  // Initialize the text input for the synthesizer
             if (this.textBox1.SelectedText != "") { text = CreateSSML(this.textBox1.SelectedText).OuterXml; } //  If there is text selected within the textbox's text, feed that into the synthesizer
             else { text = CreateSSML(this.textBox1.Text).OuterXml; } //  if there is no text selected, feed the entire textbox's text into the synthesizer.
