@@ -9,27 +9,17 @@ namespace _2022TextToSpeech
     using System.Windows.Forms;
     using Microsoft.CognitiveServices.Speech;
     using System.Xml; // For constructing our xml file 
-    using System.Xml.Linq; // For the queries towards MS in order to populate the languages and voices lists
-    using System.Security.Cryptography.X509Certificates;
-    using static System.Net.Mime.MediaTypeNames;
-    using static System.Windows.Forms.LinkLabel;
     using System.Net.Http; // for the supported languages of the voice
-    using System.Net.Http.Headers;  // for the supported languages of the voice
-    using System.Net.Security;
-    using Newtonsoft.Json; // for converting the Json files into XML ones. Possibly removable should we only load the XML file I am going to have produced
-    using System.Text.Json;// for converting the Json files into XML ones. Possibly removable should we only load the XML file I am going to have produced
-    using Properties;
+    using Newtonsoft.Json; // for converting the Json files into XML ones. Possibly removable should we only load the XML file I am going to have produced 
     using System.Collections.Generic;
     using System.Globalization;
     using System.Text.RegularExpressions;
     // for the audio conversion - add an ogg vorbis encoder
     using NAudio.Wave;  // for the audio conversion
     using NAudio.MediaFoundation;
-    using Newtonsoft.Json.Linq;
 
     public partial class Form1 : Form
     {
-        //static string speechKey = Environment.GetEnvironmentVariable("4b3dc697810e47fc845f076f446a62da");
         //static string regionService = Environment.GetEnvironmentVariable("westeurope");
         // If, at some point, MS changes Cognitive Services authorization protocols, https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech provides the methods used
         public static string serverLocation = "westeurope"; // Azure Speech Service Location
@@ -59,7 +49,6 @@ namespace _2022TextToSpeech
         public static SpeechSynthesizer synth;
         public string formatOutputSound = "None";
         public static bool isSynthSpeaking = false;
-
 
 
         public Form1()
@@ -133,17 +122,10 @@ namespace _2022TextToSpeech
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(soundfile);
             string ssmlText = xmlDoc.OuterXml;
-
-            //using var speechSynthesizer = new SpeechSynthesizer(config, null); // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
-            //await speechSynthesizer.StopSpeakingAsync();
-            //await synth.StopSpeakingAsync();
             soundPause();
-            //SpeechSynthesisResult result = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
-            //SpeechSynthesizer synth = new SpeechSynthesizer(config, null);
-            if (!_audioOn) { synth = new SpeechSynthesizer(config, null); }
+            if (!_audioOn) { synth = new SpeechSynthesizer(config, null); } // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
             else { synth = new SpeechSynthesizer(config, null); }
             SpeechSynthesisResult result = await synth.SpeakSsmlAsync(ssmlText);
-            //soundPause();
             #endregion
             #region Saving the sound data to the disk as a specific sound format
             string outputFile = Path.ChangeExtension(soundfile, "." + formatOutputSound);
@@ -155,7 +137,7 @@ namespace _2022TextToSpeech
                     case "mp3":
                         //outputFile = Path.ChangeExtension(outputFile, "."+formatOutputSound);
                         MediaFoundationApi.Startup();
-                        var reader = new WaveFileReader(stream);  // Normally  public WaveFileReader(Stream inputStream) ought to handle it properly but it does not accept it
+                        var reader = new WaveFileReader(stream);  // Normally public WaveFileReader(Stream inputStream) ought to handle it properly but it does not accept it
                         MediaFoundationEncoder.EncodeToMp3(reader, outputFile);
                         break;
 
@@ -226,6 +208,7 @@ namespace _2022TextToSpeech
             if (VoicesXML.DocumentElement != null)  //  To make sure it has been downloaded and loaded
             {
                 List<string> uniqueLocales = new List<string>();  //  List that will contain only the unique values of Locale, for reference, to populate the combo box with unique elements only
+                comboBox1.Items.Clear();
                 foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice")) //Expression "//Voice" works as well
                 {
                     string locale = node.SelectSingleNode("Locale").InnerText;
@@ -460,7 +443,6 @@ namespace _2022TextToSpeech
             #region Parse the loaded document and acquire the desired values. Add try-catch...
             XmlNamespaceManager nsMgr = new XmlNamespaceManager(SSMLDocument.NameTable);
             nsMgr.AddNamespace("speak", "http://www.w3.org/2001/10/synthesis");
-
             // Find the general default language of the entire document
             XmlNode speakNode = SSMLDocument.SelectSingleNode("//speak:speak", nsMgr);
             langValue = speakNode.Attributes["xml:lang"].Value;
@@ -524,15 +506,13 @@ namespace _2022TextToSpeech
             this.comboBox2.SelectedItem = DisplayName;
 
             this.comboBox3.SelectedItem = styleSSML;
-            //this.vScrollBar1.Value = rate;  //  make a save clause to keep any value between [-50, +50], trasnforming out-of-bounds values to bounds
-            //this.vScrollBar2.Value = pitch;  //  make a save clause to keep any value between bounds, trasnforming out-of-bounds values to bounds
 
             if (comboBox5.Items.Contains(pitch))
             { comboBox5.SelectedItem = pitch; }
             else if (pitch.Contains("Hz"))
             {
-                pitch = Regex.Replace(pitch, "[^0-9-+]", "");
-                int pitchInt = Int32.Parse(pitch, NumberStyles.AllowLeadingSign);
+                pitchSSML = Regex.Replace(pitchSSML, "[^0-9-+]", "");
+                int pitchInt = Int32.Parse(pitchSSML, NumberStyles.AllowLeadingSign);
                 if (pitchInt > 200) { pitchInt = 200; }  // replace with more abstract bounds
                 else if (pitchInt < -200) { pitchInt = -200; }
                 vScrollBar2.Value = pitchInt;
@@ -576,11 +556,6 @@ namespace _2022TextToSpeech
         }
         private async void button5_Click(object sender, EventArgs e)
         {
-            //if (sound1 != null || synth != null )  //  Stop the sound if it is already playing
-            //{
-            //    synth.StopSpeakingAsync();
-            //    //speechSynthesizer.StopSpeakingAsync();
-            //}
             soundPause();
         }
 
@@ -680,84 +655,6 @@ namespace _2022TextToSpeech
 
 
         #region deprecated code to be deleted once everything sorts out
-        /* Quite Possibly unneeded - it's a button to transform a .txt file into a proper ssml .xml but we now load it first and save it afterwards
-        private void button4_Click(object sender, EventArgs e)
-        {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                string text = System.IO.File.ReadAllText(openFileDialog1.FileName);
-                string xmlFile = Path.GetFileNameWithoutExtension(openFileDialog1.FileName) + ".xml";
-                string pathFileSelected = Path.Combine(Path.GetDirectoryName(openFileDialog1.FileName), xmlFile);
-                XmlDocument SSMLDocument = CreateSSML(text);
-                // Save the XML document to a file         
-                SSMLDocument.Save(pathFileSelected);
-            }
-        }*/
-        /*
-        private void button6_Click(object sender, EventArgs e)
-        {
-            #region Saves the written text as a txt file
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.Filter = "Text|*.txt";
-            saveFileDialog1.Title = "Save the text box as a .txt File";
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                string pathFileSelected = saveFileDialog1.FileName;
-                if (saveFileDialog1.FileName != "")
-                {
-                    using (StreamWriter writer = new StreamWriter(pathFileSelected))
-                    {
-                        writer.Write(textBox1.Text);
-                    }
-                }
-            }
-            #endregion
-           
-        }        
-        private async void button10_Click(object sender, EventArgs e)
-        {
-            string text = this.textBox1.Text;
-            XmlDocument SSMLDocument = CreateSSML(text);
-            text = SSMLDocument.OuterXml;
-            //MessageBox.Show(text);
-            SpeechSynthesizer synthesizer;
-            synthesizer = new SpeechSynthesizer(config);
-            await synthesizer.SpeakSsmlAsync(SSMLDocument.OuterXml);
-        }
-        private void button5_Click(object sender, EventArgs e)
-        {
-            ReadText();
-        }
-        private async void ReadText()
-        {
-            string text = this.textBox1.Text;
-            SpeechSynthesizer synthesizer;
-            synthesizer = new SpeechSynthesizer(config);
-            await synthesizer.SpeakTextAsync(text);
-        }
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            PlaySound();
-        }
-        private void PlaySound()
-        {
-            string text = System.IO.File.ReadAllText(locationLoadedFile);
-
-            #region descontructing selected file's path, name and type info in order to build abstraction
-            string nameFile = Path.GetFileNameWithoutExtension(locationLoadedFile);
-            string typeFile = Path.GetExtension(locationLoadedFile);
-            string typeFileSaved = ".wav"; // need to add option for choosing file type and sound option            
-            string pathFileSelected = Path.GetDirectoryName(locationLoadedFile); // I use Path.GetDirectoryName instead of FileInfo because it directly gets the exact path and doesn’t construct any large objects
-            string pathFileSaved = Path.Combine(pathFileSelected, "Recorded");
-            string fileSound = Path.Combine(pathFileSaved, nameFile + typeFileSaved);
-            #endregion
-
-            bool bSave = this.checkBox1.Checked;
-            bool bSpeak = this.checkBox1.Checked;
-
-            Task task = SynthesizeAudioAsync(text, fileSound, bSave, typeFile, bSpeak);
-        }
-        */
         #endregion
 
         private void cmbBx_SelectSavedSoundFormat_SelectedIndexChanged(object sender, EventArgs e)
@@ -803,11 +700,10 @@ namespace _2022TextToSpeech
             }
             e.Graphics.FillRectangle(Brushes.Red, new Rectangle(annotationX, vScrollBar.Height / 2, annotationWidth * 2, annotationHeight));
             e.Graphics.DrawString("0", Font, Brushes.Black, new Point(annotationX + annotationWidth * 2 + annotationYOffset / 2, ((vScrollBar.Height / 2) - barHeight / 2)));
-
         }
         #endregion
 
-        private void Form1_Paint(object sender, PaintEventArgs e) 
+        private void Form1_Paint(object sender, PaintEventArgs e)
         {  //  This is in order to make sure the panels are redrawn properly. Invalidate() any other control that is drawn uniquely
             panel1.Invalidate();
             panel2.Invalidate();

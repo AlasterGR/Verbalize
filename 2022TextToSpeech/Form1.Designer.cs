@@ -76,7 +76,7 @@
             bttn3_LoadText.Name = "bttn3_LoadText";
             bttn3_LoadText.Size = new Size(97, 35);
             bttn3_LoadText.TabIndex = 2;
-            bttn3_LoadText.Text = "Φόρτωση κειμένου";
+            bttn3_LoadText.Text = "&Φόρτωση κειμένου";
             bttn3_LoadText.UseVisualStyleBackColor = true;
             bttn3_LoadText.Click += bttn3_LoadText_Click;
             // 
@@ -277,7 +277,7 @@
             button2.Name = "button2";
             button2.Size = new Size(153, 81);
             button2.TabIndex = 28;
-            button2.Text = "Ενημέρωση του αρχείου  - και παραγωγή αρχείου ήχου";
+            button2.Text = "Ενημέρωση του αρχείου  - και παραγωγή αρχείου ήχου :  &Ν, &N";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
@@ -286,9 +286,9 @@
             button12.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button12.Location = new Point(535, 108);
             button12.Name = "button12";
-            button12.Size = new Size(200, 23);
+            button12.Size = new Size(219, 23);
             button12.TabIndex = 30;
-            button12.Text = "Εκφώνηση επιλεγμένου κειμένου";
+            button12.Text = "&Εκφώνηση επιλεγμένου κειμένου : &E";
             button12.UseVisualStyleBackColor = true;
             button12.Click += button12_Click;
             // 
@@ -352,7 +352,7 @@
             button5.Name = "button5";
             button5.Size = new Size(93, 78);
             button5.TabIndex = 37;
-            button5.Text = "Άμεση Παύση Ήχου";
+            button5.Text = "Άμεση Παύση Ήχου : &M";
             button5.UseVisualStyleBackColor = true;
             button5.Click += button5_Click;
             // 
@@ -457,7 +457,6 @@
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
-           
             Paint += Form1_Paint;
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
