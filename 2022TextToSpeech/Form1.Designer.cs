@@ -64,6 +64,7 @@
             panel3 = new Panel();
             richTextBox1 = new RichTextBox();
             button3 = new Button();
+            tableLayoutPanel1 = new TableLayoutPanel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
@@ -97,15 +98,15 @@
             // 
             // textBox1
             // 
-            textBox1.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             textBox1.Cursor = Cursors.IBeam;
             textBox1.HideSelection = false;
-            textBox1.Location = new Point(10, 9);
+            textBox1.Location = new Point(10, 7);
             textBox1.Margin = new Padding(1);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
             textBox1.ScrollBars = ScrollBars.Both;
-            textBox1.Size = new Size(609, 174);
+            textBox1.Size = new Size(609, 192);
             textBox1.TabIndex = 8;
             // 
             // vScrollBar1
@@ -116,7 +117,7 @@
             vScrollBar1.Maximum = 50;
             vScrollBar1.Minimum = -50;
             vScrollBar1.Name = "vScrollBar1";
-            vScrollBar1.Size = new Size(61, 271);
+            vScrollBar1.Size = new Size(61, 345);
             vScrollBar1.TabIndex = 11;
             vScrollBar1.ValueChanged += vScrollBar1_ValueChanged;
             // 
@@ -128,7 +129,7 @@
             vScrollBar2.Maximum = 200;
             vScrollBar2.Minimum = -200;
             vScrollBar2.Name = "vScrollBar2";
-            vScrollBar2.Size = new Size(62, 271);
+            vScrollBar2.Size = new Size(62, 345);
             vScrollBar2.TabIndex = 12;
             vScrollBar2.ValueChanged += vScrollBar2_ValueChanged;
             // 
@@ -242,7 +243,7 @@
             // button7
             // 
             button7.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            button7.Location = new Point(111, 397);
+            button7.Location = new Point(111, 471);
             button7.Margin = new Padding(1);
             button7.Name = "button7";
             button7.Size = new Size(170, 81);
@@ -276,7 +277,7 @@
             // button2
             // 
             button2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button2.Location = new Point(601, 397);
+            button2.Location = new Point(601, 471);
             button2.Margin = new Padding(1);
             button2.Name = "button2";
             button2.Size = new Size(153, 81);
@@ -300,7 +301,7 @@
             // 
             hScrollBar1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             hScrollBar1.LargeChange = 1;
-            hScrollBar1.Location = new Point(842, 454);
+            hScrollBar1.Location = new Point(842, 528);
             hScrollBar1.Name = "hScrollBar1";
             hScrollBar1.Size = new Size(154, 23);
             hScrollBar1.TabIndex = 32;
@@ -311,7 +312,7 @@
             label10.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             label10.AutoSize = true;
             label10.Font = new Font("Calibri", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            label10.Location = new Point(762, 454);
+            label10.Location = new Point(762, 528);
             label10.Name = "label10";
             label10.Size = new Size(77, 23);
             label10.TabIndex = 33;
@@ -322,7 +323,7 @@
             label11.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             label11.AutoSize = true;
             label11.Font = new Font("Calibri", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            label11.Location = new Point(1010, 454);
+            label11.Location = new Point(1010, 528);
             label11.Name = "label11";
             label11.Size = new Size(40, 23);
             label11.TabIndex = 34;
@@ -341,7 +342,7 @@
             // button4
             // 
             button4.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            button4.Location = new Point(10, 230);
+            button4.Location = new Point(10, 304);
             button4.Name = "button4";
             button4.Size = new Size(97, 91);
             button4.TabIndex = 36;
@@ -352,7 +353,7 @@
             // button5
             // 
             button5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            button5.Location = new Point(14, 397);
+            button5.Location = new Point(14, 471);
             button5.Name = "button5";
             button5.Size = new Size(93, 78);
             button5.TabIndex = 37;
@@ -365,7 +366,7 @@
             cmbBx_SelectSavedSoundFormat.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             cmbBx_SelectSavedSoundFormat.FormattingEnabled = true;
             cmbBx_SelectSavedSoundFormat.Items.AddRange(new object[] { "None", "mp3", "wav" });
-            cmbBx_SelectSavedSoundFormat.Location = new Point(10, 363);
+            cmbBx_SelectSavedSoundFormat.Location = new Point(10, 437);
             cmbBx_SelectSavedSoundFormat.Name = "cmbBx_SelectSavedSoundFormat";
             cmbBx_SelectSavedSoundFormat.Size = new Size(97, 23);
             cmbBx_SelectSavedSoundFormat.TabIndex = 39;
@@ -377,7 +378,7 @@
             panel1.Controls.Add(vScrollBar1);
             panel1.Location = new Point(763, 180);
             panel1.Name = "panel1";
-            panel1.Size = new Size(144, 271);
+            panel1.Size = new Size(144, 345);
             panel1.TabIndex = 40;
             panel1.Paint += panel_Paint;
             // 
@@ -387,7 +388,7 @@
             panel2.Controls.Add(vScrollBar2);
             panel2.Location = new Point(922, 180);
             panel2.Name = "panel2";
-            panel2.Size = new Size(128, 271);
+            panel2.Size = new Size(128, 345);
             panel2.TabIndex = 41;
             panel2.Paint += panel_Paint;
             // 
@@ -416,7 +417,7 @@
             // label9
             // 
             label9.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            label9.Location = new Point(14, 324);
+            label9.Location = new Point(14, 398);
             label9.Margin = new Padding(1, 0, 1, 0);
             label9.Name = "label9";
             label9.Size = new Size(97, 36);
@@ -431,12 +432,13 @@
             panel3.Controls.Add(textBox1);
             panel3.Location = new Point(115, 51);
             panel3.Name = "panel3";
-            panel3.Size = new Size(639, 335);
+            panel3.Size = new Size(639, 344);
             panel3.TabIndex = 45;
             // 
             // richTextBox1
             // 
-            richTextBox1.Location = new Point(10, 249);
+            richTextBox1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            richTextBox1.Location = new Point(10, 202);
             richTextBox1.Name = "richTextBox1";
             richTextBox1.Size = new Size(609, 83);
             richTextBox1.TabIndex = 9;
@@ -452,11 +454,25 @@
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
             // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Location = new Point(285, 471);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Size = new Size(312, 81);
+            tableLayoutPanel1.TabIndex = 47;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1100, 488);
+            ClientSize = new Size(1100, 562);
+            Controls.Add(tableLayoutPanel1);
             Controls.Add(button3);
             Controls.Add(panel3);
             Controls.Add(label9);
@@ -537,5 +553,6 @@
         private Panel panel3;
         private Button button3;
         private RichTextBox richTextBox1;
+        private TableLayoutPanel tableLayoutPanel1;
     }
 }

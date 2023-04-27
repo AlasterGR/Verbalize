@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualBasic.Devices;
-
+#pragma warning disable 1591
 namespace _2022TextToSpeech
 {
     using System;
@@ -25,8 +25,8 @@ namespace _2022TextToSpeech
         public static string serverLocation = "westeurope"; // Azure Speech Service Location
         readonly static string subscriptionKeyGiannis1 = "4b3dc697810e47fc845f076f446a62da";
         readonly static string subscriptionKeyGiannis2 = "120f1e685b4244d8b1260b5bbc28f9ee";
-        readonly static string subscriptionKeyAlex1 = "5521b17037c34b96aa88e1ab83b34fb3";
-        readonly static string subscriptionKeyAlex2 = "1491bf9d70da4dedab0f0f375beae896";
+        //readonly static string subscriptionKeyAlex1 = "5521b17037c34b96aa88e1ab83b34fb3";
+        //readonly static string subscriptionKeyAlex2 = "1491bf9d70da4dedab0f0f375beae896";
         public static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyGiannis1, serverLocation);  //This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis
         #region The Prosody and assorted elements of speech
         // As per : https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice. The https://www.w3.org/TR/speech-synthesis11/ is irrelevant so far.
@@ -37,7 +37,7 @@ namespace _2022TextToSpeech
         //  Integrate the rest of the speech elements, such as pitch contour, pitch range
         #endregion
         public static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
-        public static string selectedLocale;
+        public static string selectedLocale = string.Empty;
         public static XmlDocument VoicesXML = new XmlDocument();  //  A file that needs to be used throughout the entire app. Might put it within the VoicesLoad() nethod if possible
         public static string voicesSSMLFileName = "Voices"; // Change this to the desired file name and extension
         public static string locationFileResponse = Path.Combine(folderResources, voicesSSMLFileName);
@@ -45,8 +45,8 @@ namespace _2022TextToSpeech
         public static string locationFileResponseBackup = Path.Combine(folderResources, voicesSSMLFileNameBackup);
         public static string shortName = "";
         public static string locationLoadedFile = string.Empty;
-        private static Task<SpeechSynthesisResult> sound1;
-        public static SpeechSynthesizer synth;
+        private static Task<SpeechSynthesisResult> sound1 ;
+        public static SpeechSynthesizer synth ;
         public string formatOutputSound = "None";
         public static XmlDocument objectXML = new XmlDocument(); // the dynamic object which stores the proccessed ssml
         public static Dictionary<int, XmlNode> objectXML_NodesDictionary = new Dictionary<int, XmlNode>();
@@ -86,7 +86,7 @@ namespace _2022TextToSpeech
                 {
                     SSMLDocument.Load(locationLoadedFile);
                     XmlNodeList nodes = SSMLDocument.SelectNodes("//text()[normalize-space()]");
-                    if (nodes.Count > 0)
+                    if (nodes?.Count > 0)  // If nodes is not null, then execute
                     {
                         foreach (XmlNode node in nodes)
                         {
@@ -114,7 +114,7 @@ namespace _2022TextToSpeech
                     //SSMLDocument.Load(locationLoadedFile);
                     XmlNodeList nodes = objectXML.SelectNodes("//text()[normalize-space()]");
 
-                    if (nodes.Count > 0)
+                    if (nodes?.Count > 0)  // if nodes is not null, then execute
                     {
                         int nodesListIndex = 0;  //  can probably use the SelectionBackColor for my needs 
                         int colorIndexFirst = 0;
@@ -850,6 +850,7 @@ namespace _2022TextToSpeech
 
         private void button3_Click(object sender, EventArgs e)
         {
+            MessageBox.Show(panel3.Controls.Count.ToString());
             System.Windows.Forms.TextBox textBox = new System.Windows.Forms.TextBox();
             textBox.Name = "textBoxInner_" + (panel3.Controls.Count + 1).ToString();
             PropertyInfo[] properties = typeof(System.Windows.Forms.TextBox).GetProperties(BindingFlags.Public | BindingFlags.Instance);
@@ -862,7 +863,7 @@ namespace _2022TextToSpeech
             }
             int textBoxInnerNewLoc = (panel3.Controls.OfType<System.Windows.Forms.TextBox>().Count() + 1) * (textBox.Height + panel3.Margin.Top);
             textBox.Location = new Point(panel3.Margin.Left + 7, textBoxInnerNewLoc);
-            //MessageBox.Show(textBoxInnerNewLoc.ToString());
+            MessageBox.Show(textBoxInnerNewLoc.ToString());
             panel3.Controls.Add(textBox);
         }
 
