@@ -8,13 +8,8 @@ namespace _2022TextToSpeech
     using System.Threading.Tasks;
     using System.Windows.Forms;
     using Microsoft.CognitiveServices.Speech;
-    using System.Xml; // For constructing our xml file 
-    using System.Xml.Linq; // For the queries towards MS in order to populate the languages and voices lists
-    using System.Security.Cryptography.X509Certificates;
-    using static System.Net.Mime.MediaTypeNames;
-    using static System.Windows.Forms.LinkLabel;
+    using System.Xml; // For constructing our xml file
     using System.Net.Http; // for the supported languages of the voice
-    using System.Net.Http.Headers;  // for the supported languages of the voice
     using Newtonsoft.Json; // for converting the Json files into XML ones. Possibly removable should we only load the XML file I am going to have produced
     using System.Collections.Generic;
     using System.Globalization;
@@ -26,8 +21,6 @@ namespace _2022TextToSpeech
 
     public partial class Form1 : Form
     {
-        //static string speechKey = Environment.GetEnvironmentVariable("4b3dc697810e47fc845f076f446a62da");
-        //static string regionService = Environment.GetEnvironmentVariable("westeurope");
         // If, at some point, MS changes Cognitive Services authorization protocols, https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech provides the methods used
         public static string serverLocation = "westeurope"; // Azure Speech Service Location
         readonly static string subscriptionKeyGiannis1 = "4b3dc697810e47fc845f076f446a62da";
