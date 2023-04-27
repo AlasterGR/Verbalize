@@ -263,6 +263,7 @@ namespace _2022TextToSpeech
         {
             if (VoicesXML.DocumentElement != null)  //  To make sure it has been downloaded and loaded
             {
+                comboBox1.Items.Clear();
                 List<string> uniqueLocales = new List<string>();  //  List that will contain only the unique values of Locale, for reference, to populate the combo box with unique elements only
                 foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice")) //Expression "//Voice" works as well
                 {
