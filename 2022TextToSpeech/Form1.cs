@@ -45,7 +45,7 @@ namespace _2022TextToSpeech
         public static string locationFileResponseBackup = Path.Combine(folderResources, voicesSSMLFileNameBackup);
         public static string shortName = "";
         public static string locationLoadedFile = string.Empty;
-        private Task<SpeechSynthesisResult> sound1;
+        private static Task<SpeechSynthesisResult> sound1;
         public static SpeechSynthesizer synth;
         public string formatOutputSound = "None";
         public static XmlDocument objectXML = new XmlDocument(); // the dynamic object which stores the proccessed ssml
@@ -477,10 +477,8 @@ namespace _2022TextToSpeech
         //  Speak the selected text from the textbox
         private async void button12_Click(object sender, EventArgs e)
         {
-            if (sound1 != null || synth != null)  //  Stop the sound if it is already playing
-            {
-                synth.StopSpeakingAsync();
-            }
+            soundPause(); // Cease whatever sound was being spoken... 
+
             string text = string.Empty;  // Initialize the text input for the synthesizer
             if (this.textBox1.SelectedText != "") { text = CreateSSML(this.textBox1.SelectedText).OuterXml; } //  If there is text selected within the textbox's text, feed that into the synthesizer
             else { text = CreateSSML(this.textBox1.Text).OuterXml; } //  if there is no text selected, feed the entire textbox's text into the synthesizer.
@@ -619,6 +617,10 @@ namespace _2022TextToSpeech
             this.label1.Visible = false;
         }
         private void button5_Click(object sender, EventArgs e)
+        {
+            soundPause();
+        }
+        public static void soundPause()
         {
             if (sound1 != null || synth != null)  //  Stop the sound if it is already playing
             {
