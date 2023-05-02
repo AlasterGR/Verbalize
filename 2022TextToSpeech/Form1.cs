@@ -18,6 +18,7 @@ namespace _2022TextToSpeech
     using NAudio.Wave;  // for the audio conversion
     using NAudio.MediaFoundation;
     using System.Reflection;
+    using System.Numerics;
 
     public partial class Form1 : Form
     {
@@ -36,17 +37,17 @@ namespace _2022TextToSpeech
         public static string style = "calm";
         //  Integrate the rest of the speech elements, such as pitch contour, pitch range
         #endregion
-        public static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
-        public static string selectedLocale = string.Empty;
+        readonly static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
+        static string selectedLocale = string.Empty;
         public static XmlDocument VoicesXML = new XmlDocument();  //  A file that needs to be used throughout the entire app. Might put it within the VoicesLoad() nethod if possible
-        public static string voicesSSMLFileName = "Voices"; // Change this to the desired file name and extension
-        public static string locationFileResponse = Path.Combine(folderResources, voicesSSMLFileName);
-        public static string voicesSSMLFileNameBackup = "Voices_[orig].xml"; // Change this to the desired file name and extension
-        public static string locationFileResponseBackup = Path.Combine(folderResources, voicesSSMLFileNameBackup);
-        public static string shortName = "";
-        public static string locationLoadedFile = string.Empty;
-        private static Task<SpeechSynthesisResult> sound1 ;
-        public static SpeechSynthesizer synth ;
+        readonly static string voicesSSMLFileName = "Voices"; // Change this to the desired file name and extension
+        readonly static string locationFileResponse = Path.Combine(folderResources, voicesSSMLFileName);
+        readonly static string voicesSSMLFileNameBackup = "Voices_[orig].xml"; // Change this to the desired file name and extension
+        readonly static string locationFileResponseBackup = Path.Combine(folderResources, voicesSSMLFileNameBackup);
+        static string shortName = "";
+        static string locationLoadedFile = string.Empty;
+        private static Task<SpeechSynthesisResult>? sound1;
+        public static SpeechSynthesizer? synth;
         public string formatOutputSound = "None";
         public static XmlDocument objectXML = new XmlDocument(); // the dynamic object which stores the proccessed ssml
         public static Dictionary<int, XmlNode> objectXML_NodesDictionary = new Dictionary<int, XmlNode>();
@@ -79,7 +80,6 @@ namespace _2022TextToSpeech
                 this.label1.Visible = true;
                 string fileContents = string.Empty;
 
-
                 #region Parse the selected file's contents and save its speakable text to the textbox ~ it will acquire only the inner texts, should the selected file have an xml format.
                 XmlDocument SSMLDocument = new XmlDocument();
                 try
@@ -102,6 +102,7 @@ namespace _2022TextToSpeech
                 this.textBox1.Text = fileContents;
                 #endregion
                 // all this previous part will become deprecated later
+
                 #region load the .xml file onto our dynamic object and output to rich textbox  
 
                 richTextBox1.Text = string.Empty;
@@ -850,9 +851,9 @@ namespace _2022TextToSpeech
 
         private void button3_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(panel3.Controls.Count.ToString());
+            //MessageBox.Show(panel3.Controls.Count.ToString());
             System.Windows.Forms.TextBox textBox = new System.Windows.Forms.TextBox();
-            textBox.Name = "textBoxInner_" + (panel3.Controls.Count + 1).ToString();
+            // textBox.Name = "textBoxInner_" + (panel3.Controls.Count + 1).ToString();
             PropertyInfo[] properties = typeof(System.Windows.Forms.TextBox).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (PropertyInfo property in properties)
             {
@@ -861,10 +862,16 @@ namespace _2022TextToSpeech
                     property.SetValue(textBox, property.GetValue(textBox1));
                 }
             }
-            int textBoxInnerNewLoc = (panel3.Controls.OfType<System.Windows.Forms.TextBox>().Count() + 1) * (textBox.Height + panel3.Margin.Top);
-            textBox.Location = new Point(panel3.Margin.Left + 7, textBoxInnerNewLoc);
-            MessageBox.Show(textBoxInnerNewLoc.ToString());
+            //int textBoxInnerNewLoc = (panel3.Controls.OfType<System.Windows.Forms.TextBox>().Count() + 1) * (800 + panel3.Margin.Top);
+            //int textBoxInnerNewLoc = (panel3.Controls.OfType<System.Windows.Forms.TextBox>().Count() + 1) * (800 + panel3.Margin.Top);
+            textBox.Width = 600;
+            textBox.Height = 190;
+            textBox.Location = new Point(10, 200);
+            //MessageBox.Show(textBoxInnerNewLoc.ToString());
             panel3.Controls.Add(textBox);
+
+
+
         }
 
     }

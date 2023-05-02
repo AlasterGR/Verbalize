@@ -101,12 +101,12 @@
             textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             textBox1.Cursor = Cursors.IBeam;
             textBox1.HideSelection = false;
-            textBox1.Location = new Point(10, 7);
+            textBox1.Location = new Point(10, 10);
             textBox1.Margin = new Padding(1);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
             textBox1.ScrollBars = ScrollBars.Both;
-            textBox1.Size = new Size(609, 192);
+            textBox1.Size = new Size(600, 190);
             textBox1.TabIndex = 8;
             // 
             // vScrollBar1
@@ -438,9 +438,9 @@
             // richTextBox1
             // 
             richTextBox1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            richTextBox1.Location = new Point(10, 202);
+            richTextBox1.Location = new Point(3, 258);
             richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(609, 83);
+            richTextBox1.Size = new Size(600, 83);
             richTextBox1.TabIndex = 9;
             richTextBox1.Text = "";
             // 
