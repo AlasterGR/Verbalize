@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             openFileDialog1 = new OpenFileDialog();
             bttn3_LoadText = new Button();
             label1 = new Label();
@@ -61,407 +62,368 @@
             comboBox4 = new ComboBox();
             comboBox5 = new ComboBox();
             label9 = new Label();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            panel3 = new Panel();
+            tableLayoutPanel3 = new TableLayoutPanel();
+            tableLayoutPanel4 = new TableLayoutPanel();
+            tableLayoutPanel5 = new TableLayoutPanel();
+            tableLayoutPanel6 = new TableLayoutPanel();
+            tableLayoutPanel7 = new TableLayoutPanel();
+            tableLayoutPanel8 = new TableLayoutPanel();
+            tableLayoutPanel9 = new TableLayoutPanel();
+            panel4 = new Panel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
+            tableLayoutPanel3.SuspendLayout();
+            tableLayoutPanel4.SuspendLayout();
+            tableLayoutPanel5.SuspendLayout();
+            tableLayoutPanel6.SuspendLayout();
+            tableLayoutPanel7.SuspendLayout();
+            tableLayoutPanel8.SuspendLayout();
+            tableLayoutPanel9.SuspendLayout();
             SuspendLayout();
             // 
             // openFileDialog1
             // 
             openFileDialog1.FileName = "openFileDialog1";
+            resources.ApplyResources(openFileDialog1, "openFileDialog1");
             openFileDialog1.RestoreDirectory = true;
             // 
             // bttn3_LoadText
             // 
-            bttn3_LoadText.Location = new Point(12, 12);
+            resources.ApplyResources(bttn3_LoadText, "bttn3_LoadText");
             bttn3_LoadText.Name = "bttn3_LoadText";
-            bttn3_LoadText.Size = new Size(97, 35);
-            bttn3_LoadText.TabIndex = 2;
-            bttn3_LoadText.Text = "&Φόρτωση κειμένου";
             bttn3_LoadText.UseVisualStyleBackColor = true;
             bttn3_LoadText.Click += bttn3_LoadText_Click;
             // 
             // label1
             // 
-            label1.Font = new Font("Calibri", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
-            label1.Location = new Point(111, 14);
+            resources.ApplyResources(label1, "label1");
             label1.Name = "label1";
-            label1.Size = new Size(194, 26);
-            label1.TabIndex = 3;
-            label1.Text = "Selected File address";
             label1.TextChanged += label1_TextChanged;
             label1.DoubleClick += label1_DoubleClick;
             // 
             // textBox1
             // 
-            textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            resources.ApplyResources(textBox1, "textBox1");
             textBox1.Cursor = Cursors.IBeam;
             textBox1.HideSelection = false;
-            textBox1.Location = new Point(111, 51);
-            textBox1.Margin = new Padding(1);
-            textBox1.Multiline = true;
             textBox1.Name = "textBox1";
-            textBox1.ScrollBars = ScrollBars.Both;
-            textBox1.Size = new Size(413, 376);
-            textBox1.TabIndex = 8;
             // 
             // vScrollBar1
             // 
-            vScrollBar1.Dock = DockStyle.Left;
+            resources.ApplyResources(vScrollBar1, "vScrollBar1");
             vScrollBar1.LargeChange = 1;
-            vScrollBar1.Location = new Point(0, 0);
             vScrollBar1.Maximum = 50;
             vScrollBar1.Minimum = -50;
             vScrollBar1.Name = "vScrollBar1";
-            vScrollBar1.Size = new Size(61, 313);
-            vScrollBar1.TabIndex = 11;
             vScrollBar1.ValueChanged += vScrollBar1_ValueChanged;
             // 
             // vScrollBar2
             // 
-            vScrollBar2.Dock = DockStyle.Left;
+            resources.ApplyResources(vScrollBar2, "vScrollBar2");
             vScrollBar2.LargeChange = 1;
-            vScrollBar2.Location = new Point(0, 0);
             vScrollBar2.Maximum = 200;
             vScrollBar2.Minimum = -200;
             vScrollBar2.Name = "vScrollBar2";
-            vScrollBar2.Size = new Size(62, 313);
-            vScrollBar2.TabIndex = 12;
             vScrollBar2.ValueChanged += vScrollBar2_ValueChanged;
             // 
             // label2
             // 
-            label2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label2.Location = new Point(691, 134);
-            label2.Margin = new Padding(1, 0, 1, 0);
+            resources.ApplyResources(label2, "label2");
             label2.Name = "label2";
-            label2.Size = new Size(126, 15);
-            label2.TabIndex = 13;
-            label2.Text = "Pitch";
-            label2.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // label3
             // 
-            label3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label3.Location = new Point(535, 134);
-            label3.Margin = new Padding(1, 0, 1, 0);
+            resources.ApplyResources(label3, "label3");
             label3.Name = "label3";
-            label3.Size = new Size(139, 15);
-            label3.TabIndex = 14;
-            label3.Text = "Rate";
-            label3.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // label4
             // 
-            label4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label4.AutoSize = true;
-            label4.Location = new Point(535, 41);
-            label4.Margin = new Padding(1, 0, 1, 0);
+            resources.ApplyResources(label4, "label4");
             label4.Name = "label4";
-            label4.Size = new Size(51, 15);
-            label4.TabIndex = 15;
-            label4.Text = "Γλώσσα";
             // 
             // label5
             // 
-            label5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label5.AutoSize = true;
-            label5.Location = new Point(535, 66);
-            label5.Margin = new Padding(1, 0, 1, 0);
+            resources.ApplyResources(label5, "label5");
             label5.Name = "label5";
-            label5.Size = new Size(63, 15);
-            label5.TabIndex = 16;
-            label5.Text = "Αφηγητής";
             // 
             // comboBox1
             // 
-            comboBox1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            resources.ApplyResources(comboBox1, "comboBox1");
             comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(616, 38);
-            comboBox1.Margin = new Padding(1);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(112, 23);
-            comboBox1.TabIndex = 17;
             comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
             // comboBox2
             // 
-            comboBox2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            resources.ApplyResources(comboBox2, "comboBox2");
             comboBox2.FormattingEnabled = true;
-            comboBox2.Location = new Point(616, 63);
-            comboBox2.Margin = new Padding(1);
             comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(112, 23);
-            comboBox2.TabIndex = 18;
             comboBox2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
             // 
             // button8
             // 
-            button8.Location = new Point(12, 98);
+            resources.ApplyResources(button8, "button8");
             button8.Name = "button8";
-            button8.Size = new Size(97, 41);
-            button8.TabIndex = 20;
-            button8.Text = "Download Voices list";
             button8.UseVisualStyleBackColor = true;
             button8.Click += button8_Click;
             // 
             // button9
             // 
-            button9.Location = new Point(12, 145);
+            resources.ApplyResources(button9, "button9");
             button9.Name = "button9";
-            button9.Size = new Size(97, 46);
-            button9.TabIndex = 21;
-            button9.Text = "Populate the combo boxes";
             button9.UseVisualStyleBackColor = true;
             button9.Click += button9_Click;
             // 
             // label6
             // 
-            label6.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label6.AutoSize = true;
-            label6.Location = new Point(733, 39);
+            resources.ApplyResources(label6, "label6");
             label6.Name = "label6";
-            label6.Size = new Size(66, 15);
-            label6.TabIndex = 22;
-            label6.Text = "Locale PCB";
             // 
             // label7
             // 
-            label7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label7.AutoSize = true;
-            label7.Location = new Point(733, 64);
+            resources.ApplyResources(label7, "label7");
             label7.Name = "label7";
-            label7.Size = new Size(117, 15);
-            label7.TabIndex = 23;
-            label7.Text = "Local name (Gender)";
-            label7.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // button7
             // 
-            button7.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            button7.Location = new Point(111, 439);
-            button7.Margin = new Padding(1);
+            resources.ApplyResources(button7, "button7");
             button7.Name = "button7";
-            button7.Size = new Size(170, 81);
-            button7.TabIndex = 24;
-            button7.Text = "Save textbox text to SSML .xml  - και παραγωγή αρχείου ήχου";
             button7.UseVisualStyleBackColor = true;
             button7.Click += button7_Click;
             // 
             // comboBox3
             // 
-            comboBox3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            resources.ApplyResources(comboBox3, "comboBox3");
             comboBox3.FormattingEnabled = true;
-            comboBox3.Items.AddRange(new object[] { "advertisement_upbeat", "affectionate", "angry", "assistant", "calm", "chat", "cheerful", "customerservice", "depressed", "disgruntled", "documentary-narration", "embarrassed", "empathetic", "envious", "excited", "fearful", "friendly", "gentle", "hopeful", "lyrical", "narration-professional", "narration-relaxed", "newscast", "newscast-casual", "newscast-formal", "poetry-reading", "sad", "serious", "shouting", "sports_commentary", "sports_commentary_excited", "whispering", "terrified", "unfriendly" });
-            comboBox3.Location = new Point(599, 86);
-            comboBox3.Margin = new Padding(1);
+            comboBox3.Items.AddRange(new object[] { resources.GetString("comboBox3.Items"), resources.GetString("comboBox3.Items1"), resources.GetString("comboBox3.Items2"), resources.GetString("comboBox3.Items3"), resources.GetString("comboBox3.Items4"), resources.GetString("comboBox3.Items5"), resources.GetString("comboBox3.Items6"), resources.GetString("comboBox3.Items7"), resources.GetString("comboBox3.Items8"), resources.GetString("comboBox3.Items9"), resources.GetString("comboBox3.Items10"), resources.GetString("comboBox3.Items11"), resources.GetString("comboBox3.Items12"), resources.GetString("comboBox3.Items13"), resources.GetString("comboBox3.Items14"), resources.GetString("comboBox3.Items15"), resources.GetString("comboBox3.Items16"), resources.GetString("comboBox3.Items17"), resources.GetString("comboBox3.Items18"), resources.GetString("comboBox3.Items19"), resources.GetString("comboBox3.Items20"), resources.GetString("comboBox3.Items21"), resources.GetString("comboBox3.Items22"), resources.GetString("comboBox3.Items23"), resources.GetString("comboBox3.Items24"), resources.GetString("comboBox3.Items25"), resources.GetString("comboBox3.Items26"), resources.GetString("comboBox3.Items27"), resources.GetString("comboBox3.Items28"), resources.GetString("comboBox3.Items29"), resources.GetString("comboBox3.Items30"), resources.GetString("comboBox3.Items31"), resources.GetString("comboBox3.Items32"), resources.GetString("comboBox3.Items33") });
             comboBox3.Name = "comboBox3";
-            comboBox3.Size = new Size(130, 23);
-            comboBox3.TabIndex = 25;
             comboBox3.SelectedIndexChanged += comboBox3_SelectedIndexChanged;
             // 
             // label8
             // 
-            label8.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            label8.AutoSize = true;
-            label8.Location = new Point(535, 86);
+            resources.ApplyResources(label8, "label8");
             label8.Name = "label8";
-            label8.Size = new Size(32, 15);
-            label8.TabIndex = 26;
-            label8.Text = "Style";
             // 
             // button2
             // 
-            button2.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button2.Location = new Point(371, 439);
-            button2.Margin = new Padding(1);
+            resources.ApplyResources(button2, "button2");
             button2.Name = "button2";
-            button2.Size = new Size(153, 81);
-            button2.TabIndex = 28;
-            button2.Text = "Ενημέρωση του αρχείου  - και παραγωγή αρχείου ήχου :  &Ν, &N";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
             // button12
             // 
-            button12.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            button12.Location = new Point(535, 108);
+            resources.ApplyResources(button12, "button12");
             button12.Name = "button12";
-            button12.Size = new Size(219, 23);
-            button12.TabIndex = 30;
-            button12.Text = "&Εκφώνηση επιλεγμένου κειμένου : &E";
             button12.UseVisualStyleBackColor = true;
             button12.Click += button12_Click;
             // 
             // hScrollBar1
             // 
-            hScrollBar1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            resources.ApplyResources(hScrollBar1, "hScrollBar1");
             hScrollBar1.LargeChange = 1;
-            hScrollBar1.Location = new Point(612, 496);
             hScrollBar1.Name = "hScrollBar1";
-            hScrollBar1.Size = new Size(154, 23);
-            hScrollBar1.TabIndex = 32;
             hScrollBar1.ValueChanged += hScrollBar1_ValueChanged;
             // 
             // label10
             // 
-            label10.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            label10.AutoSize = true;
-            label10.Font = new Font("Calibri", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            label10.Location = new Point(532, 496);
+            resources.ApplyResources(label10, "label10");
             label10.Name = "label10";
-            label10.Size = new Size(77, 23);
-            label10.TabIndex = 33;
-            label10.Text = "Volume :";
             // 
             // label11
             // 
-            label11.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            label11.AutoSize = true;
-            label11.Font = new Font("Calibri", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            label11.Location = new Point(780, 496);
+            resources.ApplyResources(label11, "label11");
             label11.Name = "label11";
-            label11.Size = new Size(40, 23);
-            label11.TabIndex = 34;
-            label11.Text = "100";
             // 
             // button1
             // 
-            button1.Location = new Point(12, 51);
+            resources.ApplyResources(button1, "button1");
             button1.Name = "button1";
-            button1.Size = new Size(97, 23);
-            button1.TabIndex = 35;
-            button1.Text = "Εκκαθάριση";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
             // button4
             // 
-            button4.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            button4.Location = new Point(10, 272);
+            resources.ApplyResources(button4, "button4");
             button4.Name = "button4";
-            button4.Size = new Size(97, 91);
-            button4.TabIndex = 36;
-            button4.Text = "Παραγωγή αρχείου ήχου από αρχείο";
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
             // 
             // button5
             // 
-            button5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            button5.Location = new Point(14, 439);
+            resources.ApplyResources(button5, "button5");
             button5.Name = "button5";
-            button5.Size = new Size(93, 78);
-            button5.TabIndex = 37;
-            button5.Text = "Άμεση Παύση Ήχου : &M";
             button5.UseVisualStyleBackColor = true;
             button5.Click += button5_Click;
             // 
             // cmbBx_SelectSavedSoundFormat
             // 
-            cmbBx_SelectSavedSoundFormat.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            resources.ApplyResources(cmbBx_SelectSavedSoundFormat, "cmbBx_SelectSavedSoundFormat");
             cmbBx_SelectSavedSoundFormat.FormattingEnabled = true;
-            cmbBx_SelectSavedSoundFormat.Items.AddRange(new object[] { "None", "mp3", "wav" });
-            cmbBx_SelectSavedSoundFormat.Location = new Point(10, 405);
+            cmbBx_SelectSavedSoundFormat.Items.AddRange(new object[] { resources.GetString("cmbBx_SelectSavedSoundFormat.Items"), resources.GetString("cmbBx_SelectSavedSoundFormat.Items1"), resources.GetString("cmbBx_SelectSavedSoundFormat.Items2") });
             cmbBx_SelectSavedSoundFormat.Name = "cmbBx_SelectSavedSoundFormat";
-            cmbBx_SelectSavedSoundFormat.Size = new Size(97, 23);
-            cmbBx_SelectSavedSoundFormat.TabIndex = 39;
             cmbBx_SelectSavedSoundFormat.SelectedIndexChanged += cmbBx_SelectSavedSoundFormat_SelectedIndexChanged;
             // 
             // panel1
             // 
-            panel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            resources.ApplyResources(panel1, "panel1");
             panel1.Controls.Add(vScrollBar1);
-            panel1.Location = new Point(533, 180);
             panel1.Name = "panel1";
-            panel1.Size = new Size(144, 313);
-            panel1.TabIndex = 40;
             panel1.Paint += panel_Paint;
             // 
             // panel2
             // 
-            panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            resources.ApplyResources(panel2, "panel2");
             panel2.Controls.Add(vScrollBar2);
-            panel2.Location = new Point(692, 180);
             panel2.Name = "panel2";
-            panel2.Size = new Size(128, 313);
-            panel2.TabIndex = 41;
             panel2.Paint += panel_Paint;
             // 
             // comboBox4
             // 
-            comboBox4.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            resources.ApplyResources(comboBox4, "comboBox4");
             comboBox4.FormattingEnabled = true;
-            comboBox4.Items.AddRange(new object[] { "x-slow", "slow", "medium", "fast", "x-fast", "default" });
-            comboBox4.Location = new Point(534, 153);
+            comboBox4.Items.AddRange(new object[] { resources.GetString("comboBox4.Items"), resources.GetString("comboBox4.Items1"), resources.GetString("comboBox4.Items2"), resources.GetString("comboBox4.Items3"), resources.GetString("comboBox4.Items4"), resources.GetString("comboBox4.Items5") });
             comboBox4.Name = "comboBox4";
-            comboBox4.Size = new Size(143, 23);
-            comboBox4.TabIndex = 42;
             comboBox4.SelectedIndexChanged += comboBox4_SelectedIndexChanged;
             // 
             // comboBox5
             // 
-            comboBox5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            resources.ApplyResources(comboBox5, "comboBox5");
             comboBox5.FormattingEnabled = true;
-            comboBox5.Items.AddRange(new object[] { "x-low", "low", "medium", "high", "x-high", "default" });
-            comboBox5.Location = new Point(691, 153);
+            comboBox5.Items.AddRange(new object[] { resources.GetString("comboBox5.Items"), resources.GetString("comboBox5.Items1"), resources.GetString("comboBox5.Items2"), resources.GetString("comboBox5.Items3"), resources.GetString("comboBox5.Items4"), resources.GetString("comboBox5.Items5") });
             comboBox5.Name = "comboBox5";
-            comboBox5.Size = new Size(129, 23);
-            comboBox5.TabIndex = 43;
             comboBox5.SelectedIndexChanged += comboBox5_SelectedIndexChanged;
             // 
             // label9
             // 
-            label9.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            label9.Location = new Point(10, 366);
-            label9.Margin = new Padding(1, 0, 1, 0);
+            resources.ApplyResources(label9, "label9");
             label9.Name = "label9";
-            label9.Size = new Size(97, 36);
-            label9.TabIndex = 44;
-            label9.Text = "Τύπος αρχείου ήχου";
+            // 
+            // tableLayoutPanel1
+            // 
+            resources.ApplyResources(tableLayoutPanel1, "tableLayoutPanel1");
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 1);
+            tableLayoutPanel1.Controls.Add(button4, 0, 2);
+            tableLayoutPanel1.Controls.Add(button7, 0, 3);
+            tableLayoutPanel1.Controls.Add(button2, 0, 4);
+            tableLayoutPanel1.Controls.Add(button5, 0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            // 
+            // tableLayoutPanel2
+            // 
+            resources.ApplyResources(tableLayoutPanel2, "tableLayoutPanel2");
+            tableLayoutPanel2.Controls.Add(cmbBx_SelectSavedSoundFormat, 0, 1);
+            tableLayoutPanel2.Controls.Add(label9, 0, 0);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            // 
+            // panel3
+            // 
+            resources.ApplyResources(panel3, "panel3");
+            panel3.BackColor = Color.FromArgb(255, 128, 128);
+            panel3.Name = "panel3";
+            // 
+            // tableLayoutPanel3
+            // 
+            resources.ApplyResources(tableLayoutPanel3, "tableLayoutPanel3");
+            tableLayoutPanel3.Controls.Add(button1, 0, 1);
+            tableLayoutPanel3.Controls.Add(button8, 0, 2);
+            tableLayoutPanel3.Controls.Add(button9, 0, 3);
+            tableLayoutPanel3.Controls.Add(bttn3_LoadText, 0, 0);
+            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            // 
+            // tableLayoutPanel4
+            // 
+            resources.ApplyResources(tableLayoutPanel4, "tableLayoutPanel4");
+            tableLayoutPanel4.Controls.Add(label1, 0, 0);
+            tableLayoutPanel4.Controls.Add(textBox1, 0, 1);
+            tableLayoutPanel4.Name = "tableLayoutPanel4";
+            // 
+            // tableLayoutPanel5
+            // 
+            resources.ApplyResources(tableLayoutPanel5, "tableLayoutPanel5");
+            tableLayoutPanel5.Controls.Add(label3, 0, 0);
+            tableLayoutPanel5.Controls.Add(label2, 1, 0);
+            tableLayoutPanel5.Controls.Add(comboBox4, 0, 1);
+            tableLayoutPanel5.Controls.Add(comboBox5, 1, 1);
+            tableLayoutPanel5.Controls.Add(panel2, 1, 2);
+            tableLayoutPanel5.Controls.Add(panel1, 0, 2);
+            tableLayoutPanel5.Name = "tableLayoutPanel5";
+            // 
+            // tableLayoutPanel6
+            // 
+            resources.ApplyResources(tableLayoutPanel6, "tableLayoutPanel6");
+            tableLayoutPanel6.Controls.Add(label10, 0, 0);
+            tableLayoutPanel6.Controls.Add(hScrollBar1, 1, 0);
+            tableLayoutPanel6.Controls.Add(label11, 2, 0);
+            tableLayoutPanel6.Name = "tableLayoutPanel6";
+            // 
+            // tableLayoutPanel7
+            // 
+            resources.ApplyResources(tableLayoutPanel7, "tableLayoutPanel7");
+            tableLayoutPanel7.Controls.Add(tableLayoutPanel8, 0, 0);
+            tableLayoutPanel7.Controls.Add(tableLayoutPanel6, 0, 3);
+            tableLayoutPanel7.Controls.Add(tableLayoutPanel5, 0, 2);
+            tableLayoutPanel7.Controls.Add(button12, 0, 1);
+            tableLayoutPanel7.Name = "tableLayoutPanel7";
+            // 
+            // tableLayoutPanel8
+            // 
+            resources.ApplyResources(tableLayoutPanel8, "tableLayoutPanel8");
+            tableLayoutPanel8.Controls.Add(comboBox3, 1, 2);
+            tableLayoutPanel8.Controls.Add(comboBox2, 1, 1);
+            tableLayoutPanel8.Controls.Add(comboBox1, 1, 0);
+            tableLayoutPanel8.Controls.Add(label6, 2, 0);
+            tableLayoutPanel8.Controls.Add(label7, 2, 1);
+            tableLayoutPanel8.Controls.Add(label8, 0, 2);
+            tableLayoutPanel8.Controls.Add(label4, 0, 0);
+            tableLayoutPanel8.Controls.Add(label5, 0, 1);
+            tableLayoutPanel8.Name = "tableLayoutPanel8";
+            // 
+            // tableLayoutPanel9
+            // 
+            resources.ApplyResources(tableLayoutPanel9, "tableLayoutPanel9");
+            tableLayoutPanel9.Controls.Add(tableLayoutPanel4, 0, 0);
+            tableLayoutPanel9.Controls.Add(tableLayoutPanel7, 1, 0);
+            tableLayoutPanel9.Name = "tableLayoutPanel9";
+            // 
+            // panel4
+            // 
+            resources.ApplyResources(panel4, "panel4");
+            panel4.BackColor = Color.FromArgb(255, 128, 128);
+            panel4.Name = "panel4";
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(870, 530);
-            Controls.Add(label9);
-            Controls.Add(comboBox5);
-            Controls.Add(comboBox4);
-            Controls.Add(panel2);
-            Controls.Add(panel1);
-            Controls.Add(cmbBx_SelectSavedSoundFormat);
-            Controls.Add(button5);
-            Controls.Add(button4);
-            Controls.Add(bttn3_LoadText);
-            Controls.Add(button1);
-            Controls.Add(textBox1);
-            Controls.Add(button9);
-            Controls.Add(button7);
-            Controls.Add(button2);
-            Controls.Add(button8);
-            Controls.Add(label2);
-            Controls.Add(label1);
-            Controls.Add(label11);
-            Controls.Add(label6);
-            Controls.Add(comboBox1);
-            Controls.Add(label3);
-            Controls.Add(label7);
-            Controls.Add(comboBox3);
-            Controls.Add(comboBox2);
-            Controls.Add(label4);
-            Controls.Add(label8);
-            Controls.Add(button12);
-            Controls.Add(label10);
-            Controls.Add(label5);
-            Controls.Add(hScrollBar1);
+            Controls.Add(tableLayoutPanel9);
+            Controls.Add(tableLayoutPanel3);
+            Controls.Add(tableLayoutPanel1);
+            Controls.Add(panel3);
+            Controls.Add(panel4);
             Name = "Form1";
-            Text = "Form1";
             Load += Form1_Load;
             Paint += Form1_Paint;
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel3.ResumeLayout(false);
+            tableLayoutPanel4.ResumeLayout(false);
+            tableLayoutPanel4.PerformLayout();
+            tableLayoutPanel5.ResumeLayout(false);
+            tableLayoutPanel6.ResumeLayout(false);
+            tableLayoutPanel6.PerformLayout();
+            tableLayoutPanel7.ResumeLayout(false);
+            tableLayoutPanel8.ResumeLayout(false);
+            tableLayoutPanel8.PerformLayout();
+            tableLayoutPanel9.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -498,5 +460,16 @@
         private ComboBox comboBox4;
         private ComboBox comboBox5;
         private Label label9;
+        private TableLayoutPanel tableLayoutPanel1;
+        private TableLayoutPanel tableLayoutPanel2;
+        private Panel panel3;
+        private TableLayoutPanel tableLayoutPanel3;
+        private TableLayoutPanel tableLayoutPanel4;
+        private TableLayoutPanel tableLayoutPanel5;
+        private TableLayoutPanel tableLayoutPanel6;
+        private TableLayoutPanel tableLayoutPanel7;
+        private TableLayoutPanel tableLayoutPanel8;
+        private TableLayoutPanel tableLayoutPanel9;
+        private Panel panel4;
     }
 }
