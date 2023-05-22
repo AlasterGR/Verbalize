@@ -376,12 +376,12 @@
             resources.ApplyResources(tableLayoutPanel8, "tableLayoutPanel8");
             tableLayoutPanel8.Controls.Add(comboBox3, 1, 2);
             tableLayoutPanel8.Controls.Add(comboBox2, 1, 1);
-            tableLayoutPanel8.Controls.Add(comboBox1, 1, 0);
             tableLayoutPanel8.Controls.Add(label6, 2, 0);
             tableLayoutPanel8.Controls.Add(label7, 2, 1);
             tableLayoutPanel8.Controls.Add(label8, 0, 2);
             tableLayoutPanel8.Controls.Add(label4, 0, 0);
             tableLayoutPanel8.Controls.Add(label5, 0, 1);
+            tableLayoutPanel8.Controls.Add(comboBox1, 1, 0);
             tableLayoutPanel8.Name = "tableLayoutPanel8";
             // 
             // tableLayoutPanel9
