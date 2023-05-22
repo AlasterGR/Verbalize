@@ -31,7 +31,6 @@
             openFileDialog1 = new OpenFileDialog();
             bttn3_LoadText = new Button();
             label1 = new Label();
-            textBox1 = new TextBox();
             vScrollBar1 = new VScrollBar();
             vScrollBar2 = new VScrollBar();
             label2 = new Label();
@@ -61,12 +60,16 @@
             comboBox4 = new ComboBox();
             comboBox5 = new ComboBox();
             label9 = new Label();
-            panel3 = new Panel();
             richTextBox1 = new RichTextBox();
             button3 = new Button();
             tableLayoutPanel1 = new TableLayoutPanel();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            button6 = new Button();
+            panel3 = new Panel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
             panel3.SuspendLayout();
             SuspendLayout();
             // 
@@ -95,19 +98,6 @@
             label1.Text = "Selected File address";
             label1.TextChanged += label1_TextChanged;
             label1.DoubleClick += label1_DoubleClick;
-            // 
-            // textBox1
-            // 
-            textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            textBox1.Cursor = Cursors.IBeam;
-            textBox1.HideSelection = false;
-            textBox1.Location = new Point(10, 10);
-            textBox1.Margin = new Padding(1);
-            textBox1.Multiline = true;
-            textBox1.Name = "textBox1";
-            textBox1.ScrollBars = ScrollBars.Both;
-            textBox1.Size = new Size(600, 190);
-            textBox1.TabIndex = 8;
             // 
             // vScrollBar1
             // 
@@ -424,56 +414,89 @@
             label9.TabIndex = 44;
             label9.Text = "Τύπος αρχείου ήχου";
             // 
-            // panel3
-            // 
-            panel3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panel3.AutoScroll = true;
-            panel3.Controls.Add(richTextBox1);
-            panel3.Controls.Add(textBox1);
-            panel3.Location = new Point(115, 51);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(639, 344);
-            panel3.TabIndex = 45;
-            // 
             // richTextBox1
             // 
-            richTextBox1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            richTextBox1.Location = new Point(3, 258);
+            richTextBox1.Dock = DockStyle.Fill;
+            richTextBox1.Location = new Point(8, 8);
             richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(600, 83);
+            richTextBox1.Size = new Size(498, 384);
             richTextBox1.TabIndex = 9;
             richTextBox1.Text = "";
             // 
             // button3
             // 
-            button3.Location = new Point(414, 22);
+            button3.Dock = DockStyle.Fill;
+            button3.Location = new Point(8, 8);
             button3.Name = "button3";
-            button3.Size = new Size(107, 23);
+            button3.Size = new Size(104, 181);
             button3.TabIndex = 46;
-            button3.Text = "Add TextBox";
+            button3.Text = "Add new Node";
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
             // 
             // tableLayoutPanel1
             // 
+            tableLayoutPanel1.AutoScroll = true;
+            tableLayoutPanel1.AutoSize = true;
             tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Location = new Point(285, 471);
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 80F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 1, 0);
+            tableLayoutPanel1.Controls.Add(richTextBox1, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(5, 5);
+            tableLayoutPanel1.Margin = new Padding(5);
+            tableLayoutPanel1.MinimumSize = new Size(640, 150);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 2;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Size = new Size(312, 81);
+            tableLayoutPanel1.Padding = new Padding(5);
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
+            tableLayoutPanel1.Size = new Size(640, 400);
             tableLayoutPanel1.TabIndex = 47;
+            // 
+            // tableLayoutPanel2
+            // 
+            tableLayoutPanel2.ColumnCount = 1;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.Controls.Add(button3, 0, 0);
+            tableLayoutPanel2.Controls.Add(button6, 0, 1);
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(512, 8);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.Padding = new Padding(5);
+            tableLayoutPanel2.RowCount = 2;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.Size = new Size(120, 384);
+            tableLayoutPanel2.TabIndex = 49;
+            // 
+            // button6
+            // 
+            button6.Dock = DockStyle.Fill;
+            button6.Location = new Point(8, 195);
+            button6.Name = "button6";
+            button6.Size = new Size(104, 181);
+            button6.TabIndex = 10;
+            button6.Text = "Delete this Node";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += DeleteNodeButton_Click;
+            // 
+            // panel3
+            // 
+            panel3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panel3.Controls.Add(tableLayoutPanel1);
+            panel3.Location = new Point(121, 50);
+            panel3.Name = "panel3";
+            panel3.Padding = new Padding(5);
+            panel3.Size = new Size(636, 410);
+            panel3.TabIndex = 48;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            AutoScroll = true;
             ClientSize = new Size(1100, 562);
-            Controls.Add(tableLayoutPanel1);
-            Controls.Add(button3);
             Controls.Add(panel3);
             Controls.Add(label9);
             Controls.Add(comboBox5);
@@ -504,12 +527,15 @@
             Controls.Add(label10);
             Controls.Add(label5);
             Controls.Add(hScrollBar1);
+            MinimumSize = new Size(1100, 600);
             Name = "Form1";
             Text = "Form1";
             Load += Form1_Load;
             Paint += Form1_Paint;
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel2.ResumeLayout(false);
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
             ResumeLayout(false);
@@ -520,7 +546,6 @@
         private OpenFileDialog openFileDialog1;
         private Button bttn3_LoadText;
         private Label label1;
-        private TextBox textBox1;
         private VScrollBar vScrollBar1;
         private VScrollBar vScrollBar2;
         private Label label2;
@@ -550,9 +575,11 @@
         private ComboBox comboBox4;
         private ComboBox comboBox5;
         private Label label9;
-        private Panel panel3;
         private Button button3;
         private RichTextBox richTextBox1;
         private TableLayoutPanel tableLayoutPanel1;
+        private Panel panel3;
+        private Button button6;
+        private TableLayoutPanel tableLayoutPanel2;
     }
 }

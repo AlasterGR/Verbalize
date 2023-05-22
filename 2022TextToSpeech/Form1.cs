@@ -18,7 +18,7 @@ namespace _2022TextToSpeech
     using NAudio.Wave;  // for the audio conversion
     using NAudio.MediaFoundation;
     using System.Reflection;
-    using System.Numerics;
+    //using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
     public partial class Form1 : Form
     {
@@ -52,7 +52,7 @@ namespace _2022TextToSpeech
         public static XmlDocument objectXML = new XmlDocument(); // the dynamic object which stores the proccessed ssml
         public static Dictionary<int, XmlNode> objectXML_NodesDictionary = new Dictionary<int, XmlNode>();
 
-
+        public static int textBoxMinRowHeight = 100; // Set the desired min height value for a row (e.g., 100)
 
         public Form1()
         {
@@ -99,7 +99,7 @@ namespace _2022TextToSpeech
                 {
                     fileContents = File.ReadAllText(locationLoadedFile); // File.ReadAllText locks the file
                 }
-                this.textBox1.Text = fileContents;
+                //this.textBox1.Text = fileContents;
                 #endregion
                 // all this previous part will become deprecated later
 
@@ -397,7 +397,7 @@ namespace _2022TextToSpeech
                 if (saveFileDialog1.FileName != "")
                 {
                     string pathFileSelected = saveFileDialog1.FileName;
-                    string text = textBox1.Text;
+                    string text = richTextBox1.Text;
                     XmlDocument SSMLDocument = CreateSSML(text);
                     // Save the XML document to a file         
                     SSMLDocument.Save(pathFileSelected);
@@ -465,7 +465,7 @@ namespace _2022TextToSpeech
             else
             {
                 string pathFileSelected = locationLoadedFile;
-                string text = this.textBox1.Text;
+                string text = this.richTextBox1.Text;
                 XmlDocument SSMLDocument = CreateSSML(text);
                 // Save the XML document to a file
                 SSMLDocument.Save(pathFileSelected);
@@ -481,8 +481,8 @@ namespace _2022TextToSpeech
             soundPause(); // Cease whatever sound was being spoken... 
 
             string text = string.Empty;  // Initialize the text input for the synthesizer
-            if (this.textBox1.SelectedText != "") { text = CreateSSML(this.textBox1.SelectedText).OuterXml; } //  If there is text selected within the textbox's text, feed that into the synthesizer
-            else { text = CreateSSML(this.textBox1.Text).OuterXml; } //  if there is no text selected, feed the entire textbox's text into the synthesizer.
+            if (this.richTextBox1.SelectedText != "") { text = CreateSSML(this.richTextBox1.SelectedText).OuterXml; } //  If there is text selected within the textbox's text, feed that into the synthesizer
+            else { text = CreateSSML(this.richTextBox1.Text).OuterXml; } //  if there is no text selected, feed the entire textbox's text into the synthesizer.
             synth = new SpeechSynthesizer(config);
             sound1 = synth.SpeakSsmlAsync(text);
         }
@@ -847,31 +847,83 @@ namespace _2022TextToSpeech
         {  //  This is in order to make sure the panels are redrawn properly. Invalidate() any other control that is drawn uniquely
             panel1.Invalidate();
             panel2.Invalidate();
+            panel3.Invalidate();
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            //MessageBox.Show(panel3.Controls.Count.ToString());
-            System.Windows.Forms.TextBox textBox = new System.Windows.Forms.TextBox();
-            // textBox.Name = "textBoxInner_" + (panel3.Controls.Count + 1).ToString();
-            PropertyInfo[] properties = typeof(System.Windows.Forms.TextBox).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            foreach (PropertyInfo property in properties)
+            Button createRowButton = (Button)sender;
+            AddTableLayoutPanelRow(tableLayoutPanel1, tableLayoutPanel1.GetRow(createRowButton)); // if meaningfull, make tableLayoutPanel1 abstract
+        }
+
+        private void AddTableLayoutPanelRow(TableLayoutPanel _TableLayoutPanelOfTheTextBox, int _rowIndex)
+        {
+            CreateNewRow(_TableLayoutPanelOfTheTextBox);
+            RichTextBox newRichTextBox = CreateNewTextBox(_TableLayoutPanelOfTheTextBox, _rowIndex);
+            _TableLayoutPanelOfTheTextBox.Controls.Add(newRichTextBox, 0, _TableLayoutPanelOfTheTextBox.RowCount - 1);  // Add the RichTextBox to the desired cell in the new row
+            //Button createRowButton = 
+            FixRowHeight(_TableLayoutPanelOfTheTextBox);
+        }
+        private void FixRowHeight(TableLayoutPanel _TableLayoutPanelOfTheTextBox)
+        {// Iterate through each row in the TableLayoutPanel and // Set each row's height to a minimum of 100
+            for (int row = 0; row < _TableLayoutPanelOfTheTextBox.RowCount; row++) { _TableLayoutPanelOfTheTextBox.RowStyles[row] = new RowStyle(SizeType.Absolute, Math.Max(_TableLayoutPanelOfTheTextBox.RowStyles[row].Height, textBoxMinRowHeight)); }
+        }
+        private void CreateNewRow(TableLayoutPanel _TableLayoutPanelOfTheTextBox)
+        {
+            _TableLayoutPanelOfTheTextBox.RowCount++;
+            _TableLayoutPanelOfTheTextBox.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        }
+        private RichTextBox CreateNewTextBox(TableLayoutPanel _TableLayoutPanelOfTheTextBox, int _rowIndex)
+        {
+            RichTextBox initialTextBox = (RichTextBox)_TableLayoutPanelOfTheTextBox.GetControlFromPosition(0, _rowIndex);
+            PropertyInfo[] properties = initialTextBox.GetType().GetProperties();  //  Get the properties of the initial text box
+            RichTextBox newRichTextBox = new();  //  Create the template of the new text box which will be added in our form...
+            foreach (PropertyInfo property in properties)  //  Copy the properties of the initial text box to our newly created one
             {
-                if (property.CanWrite)
+                if (property != null && property.CanWrite)
                 {
-                    property.SetValue(textBox, property.GetValue(textBox1));
+                    object value = property.GetValue(richTextBox1);
+                    if (value != null)
+                    {
+                        property.SetValue(newRichTextBox, value);
+                    }
                 }
             }
-            //int textBoxInnerNewLoc = (panel3.Controls.OfType<System.Windows.Forms.TextBox>().Count() + 1) * (800 + panel3.Margin.Top);
-            //int textBoxInnerNewLoc = (panel3.Controls.OfType<System.Windows.Forms.TextBox>().Count() + 1) * (800 + panel3.Margin.Top);
-            textBox.Width = 600;
-            textBox.Height = 190;
-            textBox.Location = new Point(10, 200);
-            //MessageBox.Show(textBoxInnerNewLoc.ToString());
-            panel3.Controls.Add(textBox);
+            return newRichTextBox;
+        }
 
+        private void DeleteNodeButton_Click(object sender, EventArgs e)
+        {
+            // Get the clicked delete button
+            Button deleteButton = (Button)sender;
 
+            // Get the parent control of the delete button (TableLayoutPanel)
+            //TableLayoutPanel tableLayoutPanel = (TableLayoutPanel)deleteButton.Parent;
+            TableLayoutPanel tableLayoutPanel = tableLayoutPanel1;
 
+            // Get the row index of the delete button
+            int rowIndex = tableLayoutPanel.GetRow(deleteButton);
+
+            // Remove the row from the TableLayoutPanel
+            tableLayoutPanel.RowStyles.RemoveAt(rowIndex);
+            tableLayoutPanel.Controls.RemoveAt(rowIndex);
+
+            // Update the row count
+            tableLayoutPanel.RowCount--;
+
+            // Reset the row indices for subsequent rows
+            for (int i = rowIndex; i < tableLayoutPanel.RowCount; i++)
+            {
+                // Update the row index for each control in the subsequent rows
+                foreach (Control control in tableLayoutPanel.Controls)
+                {
+                    int currentRowIndex = tableLayoutPanel.GetRow(control);
+                    if (currentRowIndex > rowIndex)
+                    {
+                        tableLayoutPanel.SetRow(control, currentRowIndex - 1);
+                    }
+                }
+            }
         }
 
     }
