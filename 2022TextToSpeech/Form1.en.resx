@@ -61,6 +61,9 @@
   <data name="bttn3_LoadText.Size" type="System.Drawing.Size, System.Drawing">
     <value>84, 73</value>
   </data>
+  <data name="bttn3_LoadText.Text" xml:space="preserve">
+    <value>&amp;Load text</value>
+  </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
     <value>343, 39</value>
   </data>
@@ -82,6 +85,9 @@
   <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 60</value>
   </data>
+  <data name="label4.Text" xml:space="preserve">
+    <value>Language</value>
+  </data>
   <data name="label4.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleCenter</value>
   </data>
@@ -90,6 +96,9 @@
   </data>
   <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 60</value>
+  </data>
+  <data name="label5.Text" xml:space="preserve">
+    <value>Voice</value>
   </data>
   <data name="label5.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleCenter</value>
@@ -142,6 +151,9 @@
   <data name="button7.Size" type="System.Drawing.Size, System.Drawing">
     <value>143, 82</value>
   </data>
+  <data name="button7.Text" xml:space="preserve">
+    <value>Save textbox text to SSML .xml  - and produce sound file</value>
+  </data>
   <data name="comboBox3.Location" type="System.Drawing.Point, System.Drawing">
     <value>78, 121</value>
   </data>
@@ -163,11 +175,17 @@
   <data name="button2.Size" type="System.Drawing.Size, System.Drawing">
     <value>143, 70</value>
   </data>
+  <data name="button2.Text" xml:space="preserve">
+    <value>Update the text file  - and produce sound file :  &amp;Ν, &amp;N</value>
+  </data>
   <data name="button12.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 157</value>
   </data>
   <data name="button12.Size" type="System.Drawing.Size, System.Drawing">
     <value>319, 72</value>
+  </data>
+  <data name="button12.Text" xml:space="preserve">
+    <value>&amp;Speak selected text : &amp;E</value>
   </data>
   <data name="hScrollBar1.Location" type="System.Drawing.Point, System.Drawing">
     <value>95, 0</value>
@@ -187,14 +205,23 @@
   <data name="button1.Size" type="System.Drawing.Size, System.Drawing">
     <value>84, 293</value>
   </data>
+  <data name="button1.Text" xml:space="preserve">
+    <value>&amp;Clear</value>
+  </data>
   <data name="button4.Location" type="System.Drawing.Point, System.Drawing">
     <value>5, 248</value>
   </data>
   <data name="button4.Size" type="System.Drawing.Size, System.Drawing">
     <value>143, 101</value>
   </data>
+  <data name="button4.Text" xml:space="preserve">
+    <value>Produce a sound file from a local file</value>
+  </data>
   <data name="button5.Size" type="System.Drawing.Size, System.Drawing">
     <value>143, 115</value>
+  </data>
+  <data name="button5.Text" xml:space="preserve">
+    <value>Mute : &amp;M</value>
   </data>
   <data name="cmbBx_SelectSavedSoundFormat.Location" type="System.Drawing.Point, System.Drawing">
     <value>10, 62</value>
@@ -222,6 +249,9 @@
   </data>
   <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
     <value>127, 42</value>
+  </data>
+  <data name="label9.Text" xml:space="preserve">
+    <value>Type of exported sound file</value>
   </data>
   <data name="tableLayoutPanel2.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 128</value>
