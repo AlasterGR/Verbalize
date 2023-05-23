@@ -317,6 +317,7 @@
             // tableLayoutPanel2
             // 
             resources.ApplyResources(tableLayoutPanel2, "tableLayoutPanel2");
+            tableLayoutPanel2.BackColor = Color.FromArgb(192, 255, 255);
             tableLayoutPanel2.Controls.Add(cmbBx_SelectSavedSoundFormat, 0, 1);
             tableLayoutPanel2.Controls.Add(label9, 0, 0);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -339,6 +340,7 @@
             // tableLayoutPanel4
             // 
             resources.ApplyResources(tableLayoutPanel4, "tableLayoutPanel4");
+            tableLayoutPanel4.BackColor = SystemColors.Control;
             tableLayoutPanel4.Controls.Add(label1, 0, 0);
             tableLayoutPanel4.Controls.Add(textBox1, 0, 1);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
@@ -346,6 +348,7 @@
             // tableLayoutPanel5
             // 
             resources.ApplyResources(tableLayoutPanel5, "tableLayoutPanel5");
+            tableLayoutPanel5.BackColor = SystemColors.Control;
             tableLayoutPanel5.Controls.Add(label3, 0, 0);
             tableLayoutPanel5.Controls.Add(label2, 1, 0);
             tableLayoutPanel5.Controls.Add(comboBox4, 0, 1);
@@ -365,31 +368,35 @@
             // tableLayoutPanel7
             // 
             resources.ApplyResources(tableLayoutPanel7, "tableLayoutPanel7");
+            tableLayoutPanel7.BackColor = SystemColors.Control;
             tableLayoutPanel7.Controls.Add(tableLayoutPanel8, 0, 0);
-            tableLayoutPanel7.Controls.Add(tableLayoutPanel6, 0, 3);
-            tableLayoutPanel7.Controls.Add(tableLayoutPanel5, 0, 2);
             tableLayoutPanel7.Controls.Add(button12, 0, 1);
+            tableLayoutPanel7.Controls.Add(tableLayoutPanel5, 0, 2);
+            tableLayoutPanel7.Controls.Add(tableLayoutPanel6, 0, 3);
             tableLayoutPanel7.Name = "tableLayoutPanel7";
             // 
             // tableLayoutPanel8
             // 
             resources.ApplyResources(tableLayoutPanel8, "tableLayoutPanel8");
+            tableLayoutPanel8.BackColor = SystemColors.Control;
             tableLayoutPanel8.Controls.Add(comboBox3, 1, 2);
             tableLayoutPanel8.Controls.Add(comboBox2, 1, 1);
+            tableLayoutPanel8.Controls.Add(comboBox1, 1, 0);
             tableLayoutPanel8.Controls.Add(label6, 2, 0);
             tableLayoutPanel8.Controls.Add(label7, 2, 1);
             tableLayoutPanel8.Controls.Add(label8, 0, 2);
             tableLayoutPanel8.Controls.Add(label4, 0, 0);
             tableLayoutPanel8.Controls.Add(label5, 0, 1);
-            tableLayoutPanel8.Controls.Add(comboBox1, 1, 0);
             tableLayoutPanel8.Name = "tableLayoutPanel8";
             // 
             // tableLayoutPanel9
             // 
             resources.ApplyResources(tableLayoutPanel9, "tableLayoutPanel9");
-            tableLayoutPanel9.Controls.Add(tableLayoutPanel4, 0, 0);
+            tableLayoutPanel9.BackColor = SystemColors.Control;
             tableLayoutPanel9.Controls.Add(tableLayoutPanel7, 1, 0);
+            tableLayoutPanel9.Controls.Add(tableLayoutPanel4, 0, 0);
             tableLayoutPanel9.Name = "tableLayoutPanel9";
+            tableLayoutPanel9.Paint += tableLayoutPanel9_Paint;
             // 
             // panel4
             // 
@@ -423,7 +430,9 @@
             tableLayoutPanel8.ResumeLayout(false);
             tableLayoutPanel8.PerformLayout();
             tableLayoutPanel9.ResumeLayout(false);
+            tableLayoutPanel9.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

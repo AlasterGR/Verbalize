@@ -708,5 +708,10 @@ namespace _2022TextToSpeech
             panel1.Invalidate();
             panel2.Invalidate();
         }
+
+        private void tableLayoutPanel9_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }
