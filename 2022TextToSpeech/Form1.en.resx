@@ -277,6 +277,12 @@
   <data name="label9.Text" xml:space="preserve">
     <value>Type of exported sound file</value>
   </data>
+  <data name="tableLayoutPanel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 128</value>
+  </data>
+  <data name="tableLayoutPanel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>144, 112</value>
+  </data>
   <data name="tableLayoutPanel1.Location" type="System.Drawing.Point, System.Drawing">
     <value>783, 43</value>
   </data>
@@ -288,12 +294,6 @@
   </data>
   <data name="tableLayoutPanel1.Size" type="System.Drawing.Size, System.Drawing">
     <value>150, 526</value>
-  </data>
-  <data name="tableLayoutPanel2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 128</value>
-  </data>
-  <data name="tableLayoutPanel2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>144, 112</value>
   </data>
   <data name="panel3.Size" type="System.Drawing.Size, System.Drawing">
     <value>933, 43</value>
@@ -337,6 +337,15 @@
   <data name="tableLayoutPanel7.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="tableLayoutPanel8.MaximumSize" type="System.Drawing.Size, System.Drawing">
+    <value>0, 100</value>
+  </data>
+  <data name="tableLayoutPanel8.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>100, 100</value>
+  </data>
+  <data name="tableLayoutPanel8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>294, 100</value>
+  </data>
   <data name="tableLayoutPanel7.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Right</value>
   </data>
@@ -351,15 +360,6 @@
   </data>
   <data name="tableLayoutPanel7.Size" type="System.Drawing.Size, System.Drawing">
     <value>300, 520</value>
-  </data>
-  <data name="tableLayoutPanel8.MaximumSize" type="System.Drawing.Size, System.Drawing">
-    <value>0, 100</value>
-  </data>
-  <data name="tableLayoutPanel8.MinimumSize" type="System.Drawing.Size, System.Drawing">
-    <value>100, 100</value>
-  </data>
-  <data name="tableLayoutPanel8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>294, 100</value>
   </data>
   <data name="tableLayoutPanel9.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
