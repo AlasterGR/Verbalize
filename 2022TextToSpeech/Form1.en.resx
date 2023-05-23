@@ -69,7 +69,7 @@
     <value>True</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>279, 39</value>
+    <value>280, 39</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="textBox1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
@@ -82,7 +82,7 @@
     <value>1, 40</value>
   </data>
   <data name="textBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>283, 475</value>
+    <value>284, 475</value>
   </data>
   <data name="vScrollBar1.Size" type="System.Drawing.Size, System.Drawing">
     <value>61, 254</value>
@@ -179,7 +179,7 @@
     <value>140, 82</value>
   </data>
   <data name="button7.Text" xml:space="preserve">
-    <value>Save textbox text to SSML .xml  - and produce sound file</value>
+    <value>&amp;Save textbox text to SSML .xml  - and produce sound file</value>
   </data>
   <data name="comboBox3.Location" type="System.Drawing.Point, System.Drawing">
     <value>78, 67</value>
@@ -203,7 +203,7 @@
     <value>140, 70</value>
   </data>
   <data name="button2.Text" xml:space="preserve">
-    <value>Update the text file  - and produce sound file :  &amp;Ν, &amp;N</value>
+    <value>&amp;Update the text file  - and produce sound file</value>
   </data>
   <data name="button12.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 113</value>
@@ -212,22 +212,31 @@
     <value>294, 59</value>
   </data>
   <data name="button12.Text" xml:space="preserve">
-    <value>&amp;Speak selected text : &amp;E</value>
+    <value>Sp&amp;eak selected text</value>
+  </data>
+  <data name="hScrollBar1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>86, 0</value>
   </data>
   <data name="hScrollBar1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>157, 18</value>
+    <value>156, 18</value>
   </data>
   <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>81, 18</value>
+    <value>80, 18</value>
+  </data>
+  <data name="label11.Location" type="System.Drawing.Point, System.Drawing">
+    <value>245, 0</value>
   </data>
   <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
-    <value>44, 18</value>
+    <value>46, 18</value>
   </data>
   <data name="button1.Location" type="System.Drawing.Point, System.Drawing">
     <value>3, 82</value>
   </data>
   <data name="button1.Size" type="System.Drawing.Size, System.Drawing">
     <value>123, 293</value>
+  </data>
+  <data name="button1.Text" xml:space="preserve">
+    <value>&amp;Clear</value>
   </data>
   <data name="button4.Location" type="System.Drawing.Point, System.Drawing">
     <value>5, 248</value>
@@ -236,13 +245,13 @@
     <value>140, 101</value>
   </data>
   <data name="button4.Text" xml:space="preserve">
-    <value>Produce a sound file from a local file</value>
+    <value>&amp;Produce a sound file from a local file</value>
   </data>
   <data name="button5.Size" type="System.Drawing.Size, System.Drawing">
     <value>140, 115</value>
   </data>
   <data name="button5.Text" xml:space="preserve">
-    <value>Mute : &amp;M</value>
+    <value>&amp;Mute</value>
   </data>
   <data name="cmbBx_SelectSavedSoundFormat.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
@@ -387,5 +396,8 @@
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
     <value>933, 581</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Text to Speech by Diadrasis</value>
   </data>
 </root>

@@ -396,7 +396,6 @@
             tableLayoutPanel9.Controls.Add(tableLayoutPanel7, 1, 0);
             tableLayoutPanel9.Controls.Add(tableLayoutPanel4, 0, 0);
             tableLayoutPanel9.Name = "tableLayoutPanel9";
-            tableLayoutPanel9.Paint += tableLayoutPanel9_Paint;
             // 
             // panel4
             // 

@@ -64,7 +64,12 @@ namespace _2022TextToSpeech
         {
             this.label1.Visible = false;
             VoicesLoad();  //  Load the voices onto the combo boxes
-            this.cmbBx_SelectSavedSoundFormat.SelectedIndex = 0;
+            cmbBx_SelectSavedSoundFormat.SelectedIndex = 0;
+            button2.Enabled = false;
+            button8.Enabled = false;
+            button8.Visible = false;
+            button9.Enabled = false;
+            button9.Visible = false;
         }
 
         private void bttn3_LoadText_Click(object sender, EventArgs e)
@@ -340,13 +345,16 @@ namespace _2022TextToSpeech
                 if (saveFileDialog1.FileName != "")
                 {
                     string pathFileSelected = saveFileDialog1.FileName;
-                    string text = this.textBox1.Text;
+                    string text = textBox1.Text;
                     XmlDocument SSMLDocument = CreateSSML(text);
                     // Save the XML document to a file         
                     SSMLDocument.Save(pathFileSelected);
                     SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
+                    this.label1.Text = Path.GetFileNameWithoutExtension(pathFileSelected); // Show the loaded file's name
                 }
+
             }
+
 
         }
         static XmlDocument CreateSSML(string text)
@@ -538,8 +546,8 @@ namespace _2022TextToSpeech
 
         private void label1_TextChanged(object sender, EventArgs e) // Keep out save as button available only if we are making a new document
         {
-            if (label1.Text != string.Empty) { this.button7.Enabled = false; this.button2.Enabled = true; }
-            else { this.button7.Enabled = true; this.button2.Enabled = false; }
+            if (label1.Text != string.Empty) { this.button2.Enabled = true; label1.Visible = true; }
+            else { this.button2.Enabled = false; label1.Visible = false; }
         }
 
         private void label1_DoubleClick(object sender, EventArgs e)
@@ -709,9 +717,5 @@ namespace _2022TextToSpeech
             panel2.Invalidate();
         }
 
-        private void tableLayoutPanel9_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
     }
 }
