@@ -32,7 +32,7 @@ namespace _2022TextToSpeech
         // As per : https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice. The https://www.w3.org/TR/speech-synthesis11/ is irrelevant so far.
         public static string pitch = "default";  //  Pitch is expressed in 3 ways. Here, for now, we are using just the absolute value from the range [-200, +200]
         public static string rate = "default";  // Rate is expressed in 2 ways, an absolute value (string) and a relative (as a number) one. For now, we will use it only as a number (-50% - +50%), I will incoroprate it as a string later
-        public static int volume = 100; // Defaults in 100.
+        public static int volume = 80; // Defaults in 100.
         public static string style = "calm";
         //  Integrate the rest of the speech elements, such as pitch contour, pitch range
         #endregion
@@ -70,6 +70,7 @@ namespace _2022TextToSpeech
             button8.Visible = false;
             button9.Enabled = false;
             button9.Visible = false;
+            hScrollBar1.Value = volume;
         }
 
         private void bttn3_LoadText_Click(object sender, EventArgs e)
@@ -439,7 +440,7 @@ namespace _2022TextToSpeech
         {
             #region Initialize every mark to its default values
             string styleSSML = "calm";
-            string volumeSSML = "100";
+            string volumeSSML = "80";
             string pitchSSML = "default";
             string rateSSML = "default";
             string nameValue = "en-US-JennyNeural";
