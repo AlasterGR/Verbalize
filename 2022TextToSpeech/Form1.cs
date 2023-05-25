@@ -17,27 +17,37 @@ namespace _2022TextToSpeech
     // for the audio conversion - add an ogg vorbis encoder
     using NAudio.Wave;  // for the audio conversion
     using NAudio.MediaFoundation;
+    using System.Drawing.Drawing2D;
 
+    /// <summary>
+    /// The main Form of the app
+    /// </summary>
     public partial class Form1 : Form
     {
         //static string regionService = Environment.GetEnvironmentVariable("westeurope");
         // If, at some point, MS changes Cognitive Services authorization protocols, https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech provides the methods used
-        public static string serverLocation = "westeurope"; // Azure Speech Service Location
+        /// <summary>  Azure Speech Service Location </summary>
+        public static string serverLocation = "westeurope";
         readonly static string subscriptionKeyGiannis1 = "4b3dc697810e47fc845f076f446a62da";
         readonly static string subscriptionKeyGiannis2 = "120f1e685b4244d8b1260b5bbc28f9ee";
         readonly static string subscriptionKeyAlex1 = "5521b17037c34b96aa88e1ab83b34fb3";
         readonly static string subscriptionKeyAlex2 = "1491bf9d70da4dedab0f0f375beae896";
-        public static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyGiannis1, serverLocation);  //This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis
+        /// <summary>  This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis </summary>
+        public static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyGiannis1, serverLocation);
         #region The Prosody and assorted elements of speech
         // As per : https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice. The https://www.w3.org/TR/speech-synthesis11/ is irrelevant so far.
-        public static string pitch = "default";  //  Pitch is expressed in 3 ways. Here, for now, we are using just the absolute value from the range [-200, +200]
-        public static string rate = "default";  // Rate is expressed in 2 ways, an absolute value (string) and a relative (as a number) one. For now, we will use it only as a number (-50% - +50%), I will incoroprate it as a string later
-        public static int volume = 80; // Defaults in 100.
+        /// <summary>  Pitch is expressed in 3 ways. Here, for now, we are using just the absolute value from the range [-200, +200]</summary>
+        public static string pitch = "default";
+        /// <summary>  Rate is expressed in 2 ways, an absolute value (string) and a relative (as a number) one. For now, we will use it only as a number (-50% - +50%), I will incoroprate it as a string later </summary>
+        public static string rate = "default";
+        /// <summary>  Defaults in 100. </summary>
+        public static int volume = 80;
+        /// <summary>  The Voice's style. Defaults to "calm" </summary>
         public static string style = "calm";
         //  Integrate the rest of the speech elements, such as pitch contour, pitch range
         #endregion
         public static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
-        public static string selectedLocale;
+        public static string selectedLocale = string.Empty;
         public static XmlDocument VoicesXML = new XmlDocument();  //  A file that needs to be used throughout the entire app. Might put it within the VoicesLoad() nethod if possible
         public static string voicesSSMLFileName = "Voices"; // Change this to the desired file name and extension
         public static string locationFileResponse = Path.Combine(folderResources, voicesSSMLFileName);
@@ -71,6 +81,7 @@ namespace _2022TextToSpeech
             button9.Enabled = false;
             button9.Visible = false;
             hScrollBar1.Value = volume;
+
         }
 
         private void bttn3_LoadText_Click(object sender, EventArgs e)
@@ -78,35 +89,27 @@ namespace _2022TextToSpeech
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 locationLoadedFile = openFileDialog1.FileName;
-                this.label1.Text = Path.GetFileNameWithoutExtension(locationLoadedFile); // Show the loaded file's name
-                this.label1.Visible = true;
+                label1.Text = Path.GetFileNameWithoutExtension(locationLoadedFile); // Show the loaded file's name
+                label1.Visible = true;
                 string fileContents = string.Empty;
                 //  Search further for advantages on using a rich text box instead. So far none found.
                 #region Parse the selected file's contents and save its speakable text to the textbox ~ it will acquire only the inner texts, should the selected file have an xml format.
-                XmlDocument SSMLDocument = new XmlDocument();
+                XmlDocument SSMLDocument = new();
                 try
                 {
                     SSMLDocument.Load(locationLoadedFile);
-                    XmlNodeList nodes = SSMLDocument.SelectNodes("//text()[normalize-space()]");
-                    if (nodes.Count > 0)
-                    {
-                        foreach (XmlNode node in nodes)
-                        {
-                            fileContents = node.InnerText; // might need to put append instead of =, in order to support various voices within the text
-                        }
-                    }
-                    loadXMLtoApp(SSMLDocument);
+                    XmlNodeList? nodes = SSMLDocument?.SelectNodes("//text()[normalize-space()]");
+                    if (nodes?.Count > 0) { foreach (XmlNode node in nodes) { fileContents = node.InnerText; } }  // might need to put append instead of =, in order to support various voices within the text
+                    if (SSMLDocument != null) { loadXMLtoApp(SSMLDocument); }
                 }
                 catch (XmlException ex)
-                {
-                    fileContents = File.ReadAllText(locationLoadedFile); // File.ReadAllText locks the file
-                }
+                { fileContents = File.ReadAllText(locationLoadedFile); }  // File.ReadAllText locks the file
                 this.textBox1.Text = fileContents;
                 #endregion               
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void button4_Click(object sender, EventArgs e) // Produce sound from a local file
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             //openFileDialog1.Filter = "*.xml|*.txt";
@@ -551,12 +554,6 @@ namespace _2022TextToSpeech
             else { this.button2.Enabled = false; label1.Visible = false; }
         }
 
-        private void label1_DoubleClick(object sender, EventArgs e)
-        {
-            this.label1.Text = string.Empty;
-            this.label1.Visible = false;
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -663,9 +660,6 @@ namespace _2022TextToSpeech
         #endregion
 
 
-        #region deprecated code to be deleted once everything sorts out
-        #endregion
-
         private void cmbBx_SelectSavedSoundFormat_SelectedIndexChanged(object sender, EventArgs e)
         {
             formatOutputSound = cmbBx_SelectSavedSoundFormat.SelectedItem.ToString();
@@ -714,9 +708,33 @@ namespace _2022TextToSpeech
 
         private void Form1_Paint(object sender, PaintEventArgs e)
         {  //  This is in order to make sure the panels are redrawn properly. Invalidate() any other control that is drawn uniquely
-            panel1.Invalidate();
-            panel2.Invalidate();
+            ReDrawEverything();
         }
 
+
+        private void button3_Click(object sender, EventArgs e)
+        { Application.Exit(); }
+
+        private void label1_Paint(object sender, PaintEventArgs e)
+        {
+            using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, Color.LightBlue, Color.White, 0F))
+            {
+                e.Graphics.FillRectangle(brush, this.ClientRectangle);
+                TextRenderer.DrawText(e.Graphics, label1.Text, label1.Font, label1.ClientRectangle, label1.ForeColor);
+            }
+        }
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            ReDrawEverything();
+        }
+        public void ReDrawEverything()
+        {
+            foreach (Control control in Controls)
+            {
+                panel1.Invalidate();
+                panel2.Invalidate();
+                control.Invalidate();
+            }
+        }
     }
 }

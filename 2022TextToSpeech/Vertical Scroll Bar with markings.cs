@@ -40,9 +40,6 @@ namespace _2022TextToSpeech
                     var pos = (int)((float)(Height - barHeight) * (float)MarkerValue / (float)scrollBar.Maximum);
                     var linePen = new Pen(Color.Red, 2);
                     e.Graphics.DrawLine(linePen, 0, pos, Width, pos);
-
-
-
                 }
             }
         }
