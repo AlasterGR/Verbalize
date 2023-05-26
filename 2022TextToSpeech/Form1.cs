@@ -547,33 +547,23 @@ namespace _2022TextToSpeech
             this.hScrollBar1.Value = volume;  //  make a save clause to keep any value between [0, +100], trasnforming out-of-bounds values to bounds
             #endregion
         }
-
-        private void label1_TextChanged(object sender, EventArgs e) // Keep out save as button available only if we are making a new document
-        {
-            if (label1.Text != string.Empty) { this.button2.Enabled = true; label1.Visible = true; }
-            else { this.button2.Enabled = false; label1.Visible = false; }
-        }
-
+        /// <summary> Check if we have loaded a file and have the file name and update button accordingly visible.</summary>
+        private void label1_TextChanged(object sender, EventArgs e)
+        { button2.Enabled = !string.IsNullOrEmpty(label1.Text); }
+        /// <summary> Clears the Textbox and loaded file.</summary>
         private void button1_Click(object sender, EventArgs e)
         {
-
+            locationLoadedFile = string.Empty;
+            textBox1.Clear();
             this.label1.Text = string.Empty;
             this.label1.Visible = false;
         }
-        private async void button5_Click(object sender, EventArgs e)
-        {
-            soundPause();
-        }
+        /// <summary> The Mute button.</summary>
+        private async void button5_Click(object sender, EventArgs e) { soundPause(); }
+        /// <summary> Stop the sound if it is already playing.</summary>
+        public static void soundPause() { synth?.StopSpeakingAsync(); }
 
-        public static void soundPause()
-        {
-            if (sound1 != null || synth != null)  //  Stop the sound if it is already playing
-            {
-                synth.StopSpeakingAsync();
-            }
-        }
-
-        #region A string in XML format that is to be used should the app not be able to download the Voices file
+        #region A string in XML format that is to be used, should the app not be able to download the Voices file
         string VoicesBasic = @"<Voices>  
                                   <Voice>
                                     <Name>Microsoft Server Speech Text to Speech Voice (el-GR, AthinaNeural)</Name>
@@ -706,14 +696,11 @@ namespace _2022TextToSpeech
         }
         #endregion
 
-        private void Form1_Paint(object sender, PaintEventArgs e)
-        {  //  This is in order to make sure the panels are redrawn properly. Invalidate() any other control that is drawn uniquely
-            ReDrawEverything();
-        }
+        /// <summary> This is in order to make sure the panels are redrawn properly. Invalidate() any other control that is drawn uniquely. </summary>
+        private void Form1_Paint(object sender, PaintEventArgs e) { ReDrawEverything(); }
 
-
-        private void button3_Click(object sender, EventArgs e)
-        { Application.Exit(); }
+        /// <summary> The app's Quit button. </summary>
+        private void button3_Click(object sender, EventArgs e) { Application.Exit(); }
 
         private void label1_Paint(object sender, PaintEventArgs e)
         {
@@ -723,10 +710,7 @@ namespace _2022TextToSpeech
                 TextRenderer.DrawText(e.Graphics, label1.Text, label1.Font, label1.ClientRectangle, label1.ForeColor);
             }
         }
-        private void Form1_Resize(object sender, EventArgs e)
-        {
-            ReDrawEverything();
-        }
+        private void Form1_Resize(object sender, EventArgs e) { ReDrawEverything(); }
         public void ReDrawEverything()
         {
             foreach (Control control in Controls)
@@ -734,6 +718,7 @@ namespace _2022TextToSpeech
                 panel1.Invalidate();
                 panel2.Invalidate();
                 control.Invalidate();
+                label1.Invalidate();
             }
         }
     }

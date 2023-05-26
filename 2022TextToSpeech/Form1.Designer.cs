@@ -65,6 +65,8 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             tableLayoutPanel2 = new TableLayoutPanel();
             tableLayoutPanel3 = new TableLayoutPanel();
+            tableLayoutPanel12 = new TableLayoutPanel();
+            label12 = new Label();
             button3 = new Button();
             tableLayoutPanel4 = new TableLayoutPanel();
             tableLayoutPanel5 = new TableLayoutPanel();
@@ -81,6 +83,7 @@
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
+            tableLayoutPanel12.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
             tableLayoutPanel5.SuspendLayout();
             tableLayoutPanel6.SuspendLayout();
@@ -333,15 +336,28 @@
             // 
             resources.ApplyResources(tableLayoutPanel3, "tableLayoutPanel3");
             tableLayoutPanel3.Controls.Add(button1, 0, 1);
+            tableLayoutPanel3.Controls.Add(tableLayoutPanel12, 0, 4);
             tableLayoutPanel3.Controls.Add(button8, 0, 2);
             tableLayoutPanel3.Controls.Add(button9, 0, 3);
             tableLayoutPanel3.Controls.Add(bttn3_LoadText, 0, 0);
-            tableLayoutPanel3.Controls.Add(button3, 0, 4);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
+            // 
+            // tableLayoutPanel12
+            // 
+            resources.ApplyResources(tableLayoutPanel12, "tableLayoutPanel12");
+            tableLayoutPanel12.Controls.Add(label12, 0, 1);
+            tableLayoutPanel12.Controls.Add(button3, 0, 0);
+            tableLayoutPanel12.Name = "tableLayoutPanel12";
+            // 
+            // label12
+            // 
+            resources.ApplyResources(label12, "label12");
+            label12.Name = "label12";
             // 
             // button3
             // 
             resources.ApplyResources(button3, "button3");
+            button3.Cursor = Cursors.Hand;
             button3.Name = "button3";
             button3.UseVisualStyleBackColor = true;
             button3.Click += button3_Click;
@@ -447,6 +463,8 @@
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel3.ResumeLayout(false);
+            tableLayoutPanel12.ResumeLayout(false);
+            tableLayoutPanel12.PerformLayout();
             tableLayoutPanel4.ResumeLayout(false);
             tableLayoutPanel4.PerformLayout();
             tableLayoutPanel5.ResumeLayout(false);
@@ -510,5 +528,7 @@
         private TableLayoutPanel tableLayoutPanel11;
         private TableLayoutPanel tableLayoutPanel9;
         private Panel panel3;
+        private TableLayoutPanel tableLayoutPanel12;
+        private Label label12;
     }
 }
