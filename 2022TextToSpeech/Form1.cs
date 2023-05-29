@@ -519,8 +519,7 @@ namespace _2022TextToSpeech
 
             this.comboBox3.SelectedItem = styleSSML;
 
-            if (comboBox5.Items.Contains(pitch))
-            { comboBox5.SelectedItem = pitch; }
+            if (comboBox5.Items.Contains(pitch)) { comboBox5.SelectedItem = pitch; }
             else if (pitch.Contains("Hz"))
             {
                 pitchSSML = Regex.Replace(pitchSSML, "[^0-9-+]", "");
@@ -529,11 +528,9 @@ namespace _2022TextToSpeech
                 else if (pitchInt < -200) { pitchInt = -200; }
                 vScrollBar2.Value = pitchInt;
             }
-            else
-            { comboBox5.SelectedItem = "default"; }
+            else { comboBox5.SelectedItem = "default"; }
 
-            if (comboBox4.Items.Contains(rate))
-            { comboBox4.SelectedItem = rate; }
+            if (comboBox4.Items.Contains(rate)) { comboBox4.SelectedItem = rate; }
             else if (rate.Contains("%"))
             {
                 rateSSML = Regex.Replace(rateSSML, "[^0-9-+]", "");
@@ -542,8 +539,7 @@ namespace _2022TextToSpeech
                 else if (rateInt < -50) { rateInt = -50; }
                 vScrollBar1.Value = rateInt;
             }
-            else
-            { comboBox4.SelectedItem = "default"; }
+            else { comboBox4.SelectedItem = "default"; }
             this.hScrollBar1.Value = volume;  //  make a save clause to keep any value between [0, +100], trasnforming out-of-bounds values to bounds
             #endregion
         }
@@ -701,7 +697,7 @@ namespace _2022TextToSpeech
 
         /// <summary> The app's Quit button. </summary>
         private void button3_Click(object sender, EventArgs e) { Application.Exit(); }
-
+        /// <summary> Draw a light blue rectangle as the text file's title background. </summary>
         private void label1_Paint(object sender, PaintEventArgs e)
         {
             using (LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, Color.LightBlue, Color.White, 0F))

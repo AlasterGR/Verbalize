@@ -238,6 +238,7 @@
             resources.ApplyResources(hScrollBar1, "hScrollBar1");
             hScrollBar1.LargeChange = 1;
             hScrollBar1.Name = "hScrollBar1";
+            hScrollBar1.Value = 100;
             hScrollBar1.ValueChanged += hScrollBar1_ValueChanged;
             // 
             // label10
