@@ -941,7 +941,7 @@
     <value>Zoom</value>
   </data>
   <data name="button5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 124</value>
+    <value>134, 131</value>
   </data>
   <data name="cmbBx_SelectSavedSoundFormat.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Top</value>
@@ -1001,13 +1001,13 @@
     <value>NoControl</value>
   </data>
   <data name="label13.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 134</value>
+    <value>3, 141</value>
   </data>
   <data name="label13.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
     <value>No</value>
   </data>
   <data name="label13.Size" type="System.Drawing.Size, System.Drawing">
-    <value>138, 47</value>
+    <value>138, 40</value>
   </data>
   <data name="label13.Text" xml:space="preserve">
     <value>&amp;Mute</value>
