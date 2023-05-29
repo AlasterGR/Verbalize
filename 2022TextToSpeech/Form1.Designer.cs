@@ -63,6 +63,8 @@
             comboBox5 = new ComboBox();
             label9 = new Label();
             tableLayoutPanel1 = new TableLayoutPanel();
+            tableLayoutPanel13 = new TableLayoutPanel();
+            label13 = new Label();
             tableLayoutPanel2 = new TableLayoutPanel();
             tableLayoutPanel3 = new TableLayoutPanel();
             tableLayoutPanel12 = new TableLayoutPanel();
@@ -81,6 +83,7 @@
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
+            tableLayoutPanel13.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
             tableLayoutPanel12.SuspendLayout();
@@ -318,12 +321,24 @@
             // tableLayoutPanel1
             // 
             resources.ApplyResources(tableLayoutPanel1, "tableLayoutPanel1");
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel13, 0, 0);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 1);
             tableLayoutPanel1.Controls.Add(button4, 0, 2);
             tableLayoutPanel1.Controls.Add(button7, 0, 3);
             tableLayoutPanel1.Controls.Add(button2, 0, 4);
-            tableLayoutPanel1.Controls.Add(button5, 0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
+            // 
+            // tableLayoutPanel13
+            // 
+            resources.ApplyResources(tableLayoutPanel13, "tableLayoutPanel13");
+            tableLayoutPanel13.Controls.Add(label13, 0, 1);
+            tableLayoutPanel13.Controls.Add(button5, 0, 0);
+            tableLayoutPanel13.Name = "tableLayoutPanel13";
+            // 
+            // label13
+            // 
+            resources.ApplyResources(label13, "label13");
+            label13.Name = "label13";
             // 
             // tableLayoutPanel2
             // 
@@ -337,10 +352,10 @@
             // 
             resources.ApplyResources(tableLayoutPanel3, "tableLayoutPanel3");
             tableLayoutPanel3.Controls.Add(button1, 0, 1);
-            tableLayoutPanel3.Controls.Add(tableLayoutPanel12, 0, 4);
+            tableLayoutPanel3.Controls.Add(bttn3_LoadText, 0, 0);
             tableLayoutPanel3.Controls.Add(button8, 0, 2);
             tableLayoutPanel3.Controls.Add(button9, 0, 3);
-            tableLayoutPanel3.Controls.Add(bttn3_LoadText, 0, 0);
+            tableLayoutPanel3.Controls.Add(tableLayoutPanel12, 0, 4);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             // 
             // tableLayoutPanel12
@@ -462,6 +477,8 @@
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel13.ResumeLayout(false);
+            tableLayoutPanel13.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel12.ResumeLayout(false);
@@ -531,5 +548,7 @@
         private Panel panel3;
         private TableLayoutPanel tableLayoutPanel12;
         private Label label12;
+        private TableLayoutPanel tableLayoutPanel13;
+        private Label label13;
     }
 }
