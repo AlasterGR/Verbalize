@@ -269,9 +269,6 @@
   <data name="hScrollBar1.Size" type="System.Drawing.Size, System.Drawing">
     <value>281, 43</value>
   </data>
-  <data name="label10.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Calibri, 14.25pt</value>
-  </data>
   <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
     <value>149, 43</value>
   </data>
