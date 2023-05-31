@@ -12,6 +12,7 @@ namespace _2022TextToSpeech
 {
     public partial class Vertical_Scroll_Bar_with_markings : UserControl
     {
+        /// <summary> The custom control of a vertical Scrollbar with its values' marked on the side.</summary>
         public Vertical_Scroll_Bar_with_markings()
         {
             InitializeComponent();

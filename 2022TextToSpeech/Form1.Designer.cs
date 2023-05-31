@@ -108,7 +108,7 @@
             resources.ApplyResources(bttn3_LoadText, "bttn3_LoadText");
             bttn3_LoadText.Name = "bttn3_LoadText";
             bttn3_LoadText.UseVisualStyleBackColor = true;
-            bttn3_LoadText.Click += bttn3_LoadText_Click;
+            bttn3_LoadText.Click += Bttn3_LoadText_Click;
             // 
             // label1
             // 
@@ -169,14 +169,14 @@
             resources.ApplyResources(comboBox1, "comboBox1");
             comboBox1.FormattingEnabled = true;
             comboBox1.Name = "comboBox1";
-            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
+            comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
             // 
             // comboBox2
             // 
             resources.ApplyResources(comboBox2, "comboBox2");
             comboBox2.FormattingEnabled = true;
             comboBox2.Name = "comboBox2";
-            comboBox2.SelectedIndexChanged += comboBox2_SelectedIndexChanged;
+            comboBox2.SelectedIndexChanged += ComboBox2_SelectedIndexChanged;
             // 
             // button8
             // 
@@ -190,7 +190,7 @@
             resources.ApplyResources(button9, "button9");
             button9.Name = "button9";
             button9.UseVisualStyleBackColor = true;
-            button9.Click += button9_Click;
+            button9.Click += Button9_Click;
             // 
             // label6
             // 
