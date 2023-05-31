@@ -69,7 +69,7 @@
     <value>5, 5, 5, 5</value>
   </data>
   <data name="bttn3_LoadText.Size" type="System.Drawing.Size, System.Drawing">
-    <value>118, 143</value>
+    <value>118, 120</value>
   </data>
   <data name="bttn3_LoadText.Text" xml:space="preserve">
     <value>&amp;Load text</value>
@@ -88,7 +88,7 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>242, 153</value>
+    <value>345, 130</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="textBox1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
@@ -101,31 +101,31 @@
     <value>Calibri, 14.25pt</value>
   </data>
   <data name="textBox1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>2, 155</value>
+    <value>2, 132</value>
   </data>
   <data name="textBox1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
   </data>
   <data name="textBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>238, 664</value>
+    <value>341, 702</value>
   </data>
   <data name="vScrollBar1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>86, 429</value>
+    <value>86, 444</value>
   </data>
   <data name="vScrollBar2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>86, 429</value>
+    <value>86, 444</value>
   </data>
   <data name="label2.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 14.25pt, style=Underline</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>225, 0</value>
+    <value>176, 0</value>
   </data>
   <data name="label2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
   </data>
   <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>225, 43</value>
+    <value>176, 43</value>
   </data>
   <data name="label3.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 14.25pt, style=Underline</value>
@@ -137,7 +137,7 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>225, 43</value>
+    <value>176, 43</value>
   </data>
   <data name="label4.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 14.25pt</value>
@@ -203,22 +203,22 @@
     <value>242, 31</value>
   </data>
   <data name="button8.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 311</value>
+    <value>5, 265</value>
   </data>
   <data name="button8.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>5, 5, 5, 5</value>
   </data>
   <data name="button8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>118, 154</value>
+    <value>118, 198</value>
   </data>
   <data name="button9.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 475</value>
+    <value>5, 473</value>
   </data>
   <data name="button9.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>5, 5, 5, 5</value>
   </data>
   <data name="button9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>118, 154</value>
+    <value>118, 198</value>
   </data>
   <data name="label6.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 14.25pt</value>
@@ -267,13 +267,13 @@
     <value>NoControl</value>
   </data>
   <data name="button7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 585</value>
+    <value>7, 650</value>
   </data>
   <data name="button7.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>7, 8, 7, 8</value>
   </data>
   <data name="button7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>114, 107</value>
+    <value>158, 84</value>
   </data>
   <data name="button7.Text" xml:space="preserve">
     <value>... and &amp;Save textbox text to .xml </value>
@@ -312,13 +312,13 @@
     <value>NoControl</value>
   </data>
   <data name="button2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 708</value>
+    <value>7, 750</value>
   </data>
   <data name="button2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>7, 8, 7, 8</value>
   </data>
   <data name="button2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>114, 111</value>
+    <value>158, 84</value>
   </data>
   <data name="button2.Text" xml:space="preserve">
     <value>... and &amp;Update the text file </value>
@@ -333,7 +333,7 @@
     <value>5, 5, 5, 5</value>
   </data>
   <data name="button12.Size" type="System.Drawing.Size, System.Drawing">
-    <value>677, 51</value>
+    <value>530, 51</value>
   </data>
   <data name="button12.Text" xml:space="preserve">
     <value>Sp&amp;eak selected text</value>
@@ -342,25 +342,25 @@
     <value>Calibri, 14.25pt, style=Underline</value>
   </data>
   <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
-    <value>450, 0</value>
+    <value>352, 0</value>
   </data>
   <data name="label10.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
   </data>
   <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
-    <value>227, 43</value>
+    <value>178, 43</value>
   </data>
   <data name="label10.Text" xml:space="preserve">
     <value>Volume</value>
   </data>
   <data name="label11.Location" type="System.Drawing.Point, System.Drawing">
-    <value>450, 43</value>
+    <value>352, 43</value>
   </data>
   <data name="label11.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
   </data>
   <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
-    <value>227, 54</value>
+    <value>178, 54</value>
   </data>
   <data name="button1.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -480,13 +480,13 @@
     <value>Calibri, 14.25pt</value>
   </data>
   <data name="button1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 158</value>
+    <value>5, 135</value>
   </data>
   <data name="button1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>5, 5, 5, 5</value>
   </data>
   <data name="button1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>118, 143</value>
+    <value>118, 120</value>
   </data>
   <data name="button1.Text" xml:space="preserve">
     <value>&amp;Clear</value>
@@ -498,13 +498,13 @@
     <value>NoControl</value>
   </data>
   <data name="button4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 514</value>
+    <value>7, 550</value>
   </data>
   <data name="button4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>7, 8, 7, 8</value>
   </data>
   <data name="button4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>114, 55</value>
+    <value>158, 84</value>
   </data>
   <data name="button4.Text" xml:space="preserve">
     <value>... &amp;from a local file</value>
@@ -1069,14 +1069,8 @@
   <data name="button5.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Zoom</value>
   </data>
-  <data name="button5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>7, 8</value>
-  </data>
-  <data name="button5.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>7, 8, 7, 8</value>
-  </data>
   <data name="button5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>114, 201</value>
+    <value>162, 154</value>
   </data>
   <data name="button5.Text" xml:space="preserve">
     <value> </value>
@@ -1088,13 +1082,13 @@
     <value>Calibri, 14.25pt</value>
   </data>
   <data name="cmbBx_SelectSavedSoundFormat.Location" type="System.Drawing.Point, System.Drawing">
-    <value>14, 69</value>
+    <value>14, 35</value>
   </data>
   <data name="cmbBx_SelectSavedSoundFormat.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>7, 8, 7, 8</value>
+    <value>7, 0, 7, 8</value>
   </data>
   <data name="cmbBx_SelectSavedSoundFormat.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 31</value>
+    <value>144, 31</value>
   </data>
   <data name="panel1.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 14.25pt</value>
@@ -1106,19 +1100,19 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>225, 429</value>
+    <value>176, 444</value>
   </data>
   <data name="panel2.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 14.25pt</value>
   </data>
   <data name="panel2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>225, 97</value>
+    <value>176, 97</value>
   </data>
   <data name="panel2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
   </data>
   <data name="panel2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>225, 429</value>
+    <value>176, 444</value>
   </data>
   <data name="comboBox4.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 14.25pt</value>
@@ -1130,37 +1124,40 @@
     <value>3, 0, 3, 0</value>
   </data>
   <data name="comboBox4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>219, 31</value>
+    <value>170, 31</value>
   </data>
   <data name="comboBox5.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 14.25pt</value>
   </data>
   <data name="comboBox5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>228, 43</value>
+    <value>179, 43</value>
   </data>
   <data name="comboBox5.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 0, 3, 0</value>
   </data>
   <data name="comboBox5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>219, 31</value>
+    <value>170, 31</value>
+  </data>
+  <data name="label9.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="label9.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 12pt, style=Bold</value>
-  </data>
-  <data name="label9.ImageAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>BottomCenter</value>
   </data>
   <data name="label9.Location" type="System.Drawing.Point, System.Drawing">
     <value>14, 16</value>
   </data>
   <data name="label9.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>7, 8, 7, 8</value>
+    <value>7, 8, 7, 0</value>
   </data>
   <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 37</value>
+    <value>144, 19</value>
   </data>
   <data name="label9.Text" xml:space="preserve">
     <value>sound file type :</value>
+  </data>
+  <data name="label9.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>BottomCenter</value>
   </data>
   <data name="tableLayoutPanel13.ColumnCount" type="System.Int32, mscorlib">
     <value>1</value>
@@ -1178,16 +1175,16 @@
     <value>NoControl</value>
   </data>
   <data name="label13.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 217</value>
+    <value>3, 167</value>
   </data>
   <data name="label13.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 0, 5, 0</value>
+    <value>3, 3, 3, 3</value>
   </data>
   <data name="label13.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
     <value>No</value>
   </data>
   <data name="label13.Size" type="System.Drawing.Size, System.Drawing">
-    <value>118, 71</value>
+    <value>166, 34</value>
   </data>
   <data name="label13.Text" xml:space="preserve">
     <value>&amp;Mute</value>
@@ -1208,10 +1205,10 @@
     <value>2</value>
   </data>
   <data name="tableLayoutPanel13.Size" type="System.Drawing.Size, System.Drawing">
-    <value>128, 288</value>
+    <value>172, 204</value>
   </data>
   <data name="tableLayoutPanel2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 379</value>
+    <value>0, 442</value>
   </data>
   <data name="tableLayoutPanel2.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
@@ -1220,7 +1217,7 @@
     <value>7, 8, 7, 8</value>
   </data>
   <data name="tableLayoutPanel2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>128, 127</value>
+    <value>172, 100</value>
   </data>
   <data name="label14.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1235,16 +1232,19 @@
     <value>NoControl</value>
   </data>
   <data name="label14.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 326</value>
+    <value>0, 396</value>
   </data>
   <data name="label14.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
   </data>
   <data name="label14.Size" type="System.Drawing.Size, System.Drawing">
-    <value>128, 53</value>
+    <value>172, 46</value>
   </data>
   <data name="label14.Text" xml:space="preserve">
     <value>Export spoken text</value>
+  </data>
+  <data name="label14.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
   </data>
   <data name="label15.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1253,25 +1253,22 @@
     <value>Fill</value>
   </data>
   <data name="label15.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 288</value>
+    <value>0, 204</value>
   </data>
   <data name="label15.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 0, 0, 0</value>
   </data>
   <data name="label15.Size" type="System.Drawing.Size, System.Drawing">
-    <value>128, 38</value>
+    <value>172, 192</value>
   </data>
   <data name="tableLayoutPanel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
   <data name="tableLayoutPanel1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1100, 5</value>
+    <value>1056, 5</value>
   </data>
   <data name="tableLayoutPanel1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>5, 5, 5, 5</value>
-  </data>
-  <data name="tableLayoutPanel1.MaximumSize" type="System.Drawing.Size, System.Drawing">
-    <value>128, 0</value>
   </data>
   <data name="tableLayoutPanel1.MinimumSize" type="System.Drawing.Size, System.Drawing">
     <value>128, 644</value>
@@ -1280,7 +1277,7 @@
     <value>7</value>
   </data>
   <data name="tableLayoutPanel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>128, 827</value>
+    <value>172, 842</value>
   </data>
   <data name="tableLayoutPanel12.ColumnCount" type="System.Int32, mscorlib">
     <value>1</value>
@@ -1295,13 +1292,13 @@
     <value>Segoe UI, 14.25pt</value>
   </data>
   <data name="label12.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 131</value>
+    <value>5, 118</value>
   </data>
   <data name="label12.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>5, 0, 5, 0</value>
   </data>
   <data name="label12.Size" type="System.Drawing.Size, System.Drawing">
-    <value>108, 46</value>
+    <value>108, 32</value>
   </data>
   <data name="label12.Text" xml:space="preserve">
     <value>Exit</value>
@@ -1623,7 +1620,7 @@
     <value>5, 5, 5, 5</value>
   </data>
   <data name="button3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>108, 121</value>
+    <value>108, 108</value>
   </data>
   <data name="button3.TabIndex" type="System.Int32, mscorlib">
     <value>36</value>
@@ -1638,7 +1635,7 @@
     <value>Fill</value>
   </data>
   <data name="tableLayoutPanel12.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 639</value>
+    <value>5, 681</value>
   </data>
   <data name="tableLayoutPanel12.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>5, 5, 5, 5</value>
@@ -1647,7 +1644,7 @@
     <value>2</value>
   </data>
   <data name="tableLayoutPanel12.Size" type="System.Drawing.Size, System.Drawing">
-    <value>118, 177</value>
+    <value>118, 150</value>
   </data>
   <data name="tableLayoutPanel3.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -1668,7 +1665,7 @@
     <value>5</value>
   </data>
   <data name="tableLayoutPanel3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>128, 821</value>
+    <value>128, 836</value>
   </data>
   <data name="tableLayoutPanel4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1683,7 +1680,7 @@
     <value>7, 8, 7, 8</value>
   </data>
   <data name="tableLayoutPanel4.Size" type="System.Drawing.Size, System.Drawing">
-    <value>242, 821</value>
+    <value>345, 836</value>
   </data>
   <data name="tableLayoutPanel5.ColumnCount" type="System.Int32, mscorlib">
     <value>3</value>
@@ -1692,10 +1689,10 @@
     <value>Fill</value>
   </data>
   <data name="vScrollBar3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>450, 97</value>
+    <value>352, 97</value>
   </data>
   <data name="vScrollBar3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>227, 429</value>
+    <value>178, 444</value>
   </data>
   <data name="tableLayoutPanel5.Location" type="System.Drawing.Point, System.Drawing">
     <value>5, 296</value>
@@ -1704,7 +1701,7 @@
     <value>5, 5, 5, 5</value>
   </data>
   <data name="tableLayoutPanel5.Size" type="System.Drawing.Size, System.Drawing">
-    <value>677, 526</value>
+    <value>530, 541</value>
   </data>
   <data name="tableLayoutPanel7.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -1719,10 +1716,10 @@
     <value>143, 153</value>
   </data>
   <data name="tableLayoutPanel8.Size" type="System.Drawing.Size, System.Drawing">
-    <value>677, 220</value>
+    <value>530, 220</value>
   </data>
   <data name="tableLayoutPanel7.Location" type="System.Drawing.Point, System.Drawing">
-    <value>403, 5</value>
+    <value>506, 5</value>
   </data>
   <data name="tableLayoutPanel7.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>5, 5, 5, 5</value>
@@ -1734,7 +1731,7 @@
     <value>3</value>
   </data>
   <data name="tableLayoutPanel7.Size" type="System.Drawing.Size, System.Drawing">
-    <value>687, 827</value>
+    <value>540, 842</value>
   </data>
   <data name="panel4.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>Stretch</value>
@@ -2117,7 +2114,7 @@
     <value>5, 5, 5, 5</value>
   </data>
   <data name="panel3.Size" type="System.Drawing.Size, System.Drawing">
-    <value>59, 80</value>
+    <value>63, 65</value>
   </data>
   <data name="panel3.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -2129,10 +2126,13 @@
     <value>5, 5, 5, 5</value>
   </data>
   <data name="tableLayoutPanel9.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1233, 90</value>
+    <value>1233, 75</value>
   </data>
   <data name="tableLayoutPanel9.TabIndex" type="System.Int32, mscorlib">
     <value>54</value>
+  </data>
+  <data name="tableLayoutPanel11.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="tableLayoutPanel11.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
     <value>GrowAndShrink</value>
@@ -2144,7 +2144,7 @@
     <value>Fill</value>
   </data>
   <data name="tableLayoutPanel11.Location" type="System.Drawing.Point, System.Drawing">
-    <value>5, 105</value>
+    <value>5, 90</value>
   </data>
   <data name="tableLayoutPanel11.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>5, 5, 5, 5</value>
@@ -2153,7 +2153,7 @@
     <value>1</value>
   </data>
   <data name="tableLayoutPanel11.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1233, 837</value>
+    <value>1233, 852</value>
   </data>
   <data name="tableLayoutPanel10.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
