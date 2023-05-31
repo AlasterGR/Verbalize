@@ -480,8 +480,8 @@
             resources.ApplyResources(tableLayoutPanel11, "tableLayoutPanel11");
             tableLayoutPanel11.Controls.Add(tableLayoutPanel3, 0, 0);
             tableLayoutPanel11.Controls.Add(tableLayoutPanel4, 1, 0);
-            tableLayoutPanel11.Controls.Add(tableLayoutPanel1, 3, 0);
             tableLayoutPanel11.Controls.Add(tableLayoutPanel7, 2, 0);
+            tableLayoutPanel11.Controls.Add(tableLayoutPanel1, 3, 0);
             tableLayoutPanel11.Name = "tableLayoutPanel11";
             // 
             // Form1
