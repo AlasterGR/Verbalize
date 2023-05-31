@@ -80,8 +80,7 @@ namespace _2022TextToSpeech
             button8.Visible = false;
             button9.Enabled = false;
             button9.Visible = false;
-            hScrollBar1.Value = volume;
-
+            vScrollBar3.Value = volume;
         }
 
         private void bttn3_LoadText_Click(object sender, EventArgs e)
@@ -314,10 +313,10 @@ namespace _2022TextToSpeech
             this.label3.Text = "Rate = " + this.vScrollBar1.Value.ToString() + "%";
         }
 
-        private void hScrollBar1_ValueChanged(object sender, EventArgs e)
+        private void vScrollBar3_ValueChanged(object sender, EventArgs e)
         {  // This handles integers only 
-            volume = hScrollBar1.Value;
-            label11.Text = hScrollBar1.Value.ToString();
+            volume = vScrollBar3.Value;
+            label11.Text = vScrollBar3.Value.ToString();
         }
 
         private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
@@ -540,7 +539,8 @@ namespace _2022TextToSpeech
                 vScrollBar1.Value = rateInt;
             }
             else { comboBox4.SelectedItem = "default"; }
-            this.hScrollBar1.Value = volume;  //  make a save clause to keep any value between [0, +100], trasnforming out-of-bounds values to bounds
+            //hScrollBar1.Value = volume;  //  make a save clause to keep any value between [0, +100], trasnforming out-of-bounds values to bounds
+            vScrollBar3.Value = volume;
             #endregion
         }
         /// <summary> Check if we have loaded a file and have the file name and update button accordingly visible.</summary>
@@ -717,5 +717,6 @@ namespace _2022TextToSpeech
                 label1.Invalidate();
             }
         }
+
     }
 }

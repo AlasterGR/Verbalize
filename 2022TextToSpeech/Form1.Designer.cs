@@ -50,7 +50,6 @@
             label8 = new Label();
             button2 = new Button();
             button12 = new Button();
-            hScrollBar1 = new HScrollBar();
             label10 = new Label();
             label11 = new Label();
             button1 = new Button();
@@ -66,20 +65,22 @@
             tableLayoutPanel13 = new TableLayoutPanel();
             label13 = new Label();
             tableLayoutPanel2 = new TableLayoutPanel();
+            label14 = new Label();
+            label15 = new Label();
             tableLayoutPanel3 = new TableLayoutPanel();
             tableLayoutPanel12 = new TableLayoutPanel();
             label12 = new Label();
             button3 = new Button();
             tableLayoutPanel4 = new TableLayoutPanel();
             tableLayoutPanel5 = new TableLayoutPanel();
-            tableLayoutPanel6 = new TableLayoutPanel();
+            vScrollBar3 = new VScrollBar();
             tableLayoutPanel7 = new TableLayoutPanel();
             tableLayoutPanel8 = new TableLayoutPanel();
             panel4 = new Panel();
             tableLayoutPanel10 = new TableLayoutPanel();
-            tableLayoutPanel11 = new TableLayoutPanel();
             tableLayoutPanel9 = new TableLayoutPanel();
             panel3 = new Panel();
+            tableLayoutPanel11 = new TableLayoutPanel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -89,12 +90,11 @@
             tableLayoutPanel12.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
             tableLayoutPanel5.SuspendLayout();
-            tableLayoutPanel6.SuspendLayout();
             tableLayoutPanel7.SuspendLayout();
             tableLayoutPanel8.SuspendLayout();
             tableLayoutPanel10.SuspendLayout();
-            tableLayoutPanel11.SuspendLayout();
             tableLayoutPanel9.SuspendLayout();
+            tableLayoutPanel11.SuspendLayout();
             SuspendLayout();
             // 
             // openFileDialog1
@@ -205,8 +205,9 @@
             // button7
             // 
             resources.ApplyResources(button7, "button7");
+            button7.BackColor = Color.Transparent;
             button7.Name = "button7";
-            button7.UseVisualStyleBackColor = true;
+            button7.UseVisualStyleBackColor = false;
             button7.Click += button7_Click;
             // 
             // comboBox3
@@ -232,26 +233,21 @@
             // button12
             // 
             resources.ApplyResources(button12, "button12");
+            button12.BackColor = Color.Transparent;
             button12.Name = "button12";
-            button12.UseVisualStyleBackColor = true;
+            button12.UseVisualStyleBackColor = false;
             button12.Click += button12_Click;
-            // 
-            // hScrollBar1
-            // 
-            resources.ApplyResources(hScrollBar1, "hScrollBar1");
-            hScrollBar1.LargeChange = 1;
-            hScrollBar1.Name = "hScrollBar1";
-            hScrollBar1.Value = 100;
-            hScrollBar1.ValueChanged += hScrollBar1_ValueChanged;
             // 
             // label10
             // 
             resources.ApplyResources(label10, "label10");
+            label10.BackColor = Color.Transparent;
             label10.Name = "label10";
             // 
             // label11
             // 
             resources.ApplyResources(label11, "label11");
+            label11.BackColor = Color.Transparent;
             label11.Name = "label11";
             // 
             // button1
@@ -286,6 +282,7 @@
             // panel1
             // 
             resources.ApplyResources(panel1, "panel1");
+            panel1.BackColor = Color.White;
             panel1.Controls.Add(vScrollBar1);
             panel1.Name = "panel1";
             panel1.Paint += panel_Paint;
@@ -293,6 +290,7 @@
             // panel2
             // 
             resources.ApplyResources(panel2, "panel2");
+            panel2.BackColor = Color.White;
             panel2.Controls.Add(vScrollBar2);
             panel2.Name = "panel2";
             panel2.Paint += panel_Paint;
@@ -321,16 +319,20 @@
             // tableLayoutPanel1
             // 
             resources.ApplyResources(tableLayoutPanel1, "tableLayoutPanel1");
+            tableLayoutPanel1.BackColor = Color.FromArgb(192, 255, 192);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel13, 0, 0);
-            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 1);
-            tableLayoutPanel1.Controls.Add(button4, 0, 2);
-            tableLayoutPanel1.Controls.Add(button7, 0, 3);
-            tableLayoutPanel1.Controls.Add(button2, 0, 4);
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 3);
+            tableLayoutPanel1.Controls.Add(button4, 0, 4);
+            tableLayoutPanel1.Controls.Add(button7, 0, 5);
+            tableLayoutPanel1.Controls.Add(button2, 0, 6);
+            tableLayoutPanel1.Controls.Add(label14, 0, 2);
+            tableLayoutPanel1.Controls.Add(label15, 0, 1);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             // 
             // tableLayoutPanel13
             // 
             resources.ApplyResources(tableLayoutPanel13, "tableLayoutPanel13");
+            tableLayoutPanel13.BackColor = Color.FromArgb(255, 224, 192);
             tableLayoutPanel13.Controls.Add(label13, 0, 1);
             tableLayoutPanel13.Controls.Add(button5, 0, 0);
             tableLayoutPanel13.Name = "tableLayoutPanel13";
@@ -343,10 +345,22 @@
             // tableLayoutPanel2
             // 
             resources.ApplyResources(tableLayoutPanel2, "tableLayoutPanel2");
-            tableLayoutPanel2.BackColor = Color.FromArgb(192, 255, 255);
+            tableLayoutPanel2.BackColor = Color.FromArgb(192, 255, 192);
             tableLayoutPanel2.Controls.Add(cmbBx_SelectSavedSoundFormat, 0, 1);
             tableLayoutPanel2.Controls.Add(label9, 0, 0);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
+            // 
+            // label14
+            // 
+            resources.ApplyResources(label14, "label14");
+            label14.BackColor = Color.FromArgb(192, 255, 192);
+            label14.Name = "label14";
+            // 
+            // label15
+            // 
+            resources.ApplyResources(label15, "label15");
+            label15.BackColor = Color.White;
+            label15.Name = "label15";
             // 
             // tableLayoutPanel3
             // 
@@ -361,6 +375,7 @@
             // tableLayoutPanel12
             // 
             resources.ApplyResources(tableLayoutPanel12, "tableLayoutPanel12");
+            tableLayoutPanel12.BackColor = Color.FromArgb(255, 192, 192);
             tableLayoutPanel12.Controls.Add(label12, 0, 1);
             tableLayoutPanel12.Controls.Add(button3, 0, 0);
             tableLayoutPanel12.Name = "tableLayoutPanel12";
@@ -368,14 +383,16 @@
             // label12
             // 
             resources.ApplyResources(label12, "label12");
+            label12.BackColor = Color.Transparent;
             label12.Name = "label12";
             // 
             // button3
             // 
             resources.ApplyResources(button3, "button3");
+            button3.BackColor = Color.Transparent;
             button3.Cursor = Cursors.Hand;
             button3.Name = "button3";
-            button3.UseVisualStyleBackColor = true;
+            button3.UseVisualStyleBackColor = false;
             button3.Click += button3_Click;
             // 
             // tableLayoutPanel4
@@ -389,7 +406,10 @@
             // tableLayoutPanel5
             // 
             resources.ApplyResources(tableLayoutPanel5, "tableLayoutPanel5");
-            tableLayoutPanel5.BackColor = SystemColors.Control;
+            tableLayoutPanel5.BackColor = Color.FromArgb(192, 255, 192);
+            tableLayoutPanel5.Controls.Add(label10, 2, 0);
+            tableLayoutPanel5.Controls.Add(label11, 2, 1);
+            tableLayoutPanel5.Controls.Add(vScrollBar3, 2, 2);
             tableLayoutPanel5.Controls.Add(label3, 0, 0);
             tableLayoutPanel5.Controls.Add(label2, 1, 0);
             tableLayoutPanel5.Controls.Add(comboBox4, 0, 1);
@@ -398,36 +418,35 @@
             tableLayoutPanel5.Controls.Add(panel1, 0, 2);
             tableLayoutPanel5.Name = "tableLayoutPanel5";
             // 
-            // tableLayoutPanel6
+            // vScrollBar3
             // 
-            resources.ApplyResources(tableLayoutPanel6, "tableLayoutPanel6");
-            tableLayoutPanel6.Controls.Add(label10, 0, 0);
-            tableLayoutPanel6.Controls.Add(hScrollBar1, 1, 0);
-            tableLayoutPanel6.Controls.Add(label11, 2, 0);
-            tableLayoutPanel6.Name = "tableLayoutPanel6";
+            resources.ApplyResources(vScrollBar3, "vScrollBar3");
+            vScrollBar3.LargeChange = 1;
+            vScrollBar3.Name = "vScrollBar3";
+            vScrollBar3.Value = 100;
+            vScrollBar3.ValueChanged += vScrollBar3_ValueChanged;
             // 
             // tableLayoutPanel7
             // 
             resources.ApplyResources(tableLayoutPanel7, "tableLayoutPanel7");
-            tableLayoutPanel7.BackColor = SystemColors.Control;
+            tableLayoutPanel7.BackColor = Color.White;
+            tableLayoutPanel7.Controls.Add(tableLayoutPanel8, 0, 0);
             tableLayoutPanel7.Controls.Add(button12, 0, 1);
             tableLayoutPanel7.Controls.Add(tableLayoutPanel5, 0, 2);
-            tableLayoutPanel7.Controls.Add(tableLayoutPanel6, 0, 3);
-            tableLayoutPanel7.Controls.Add(tableLayoutPanel8, 0, 0);
             tableLayoutPanel7.Name = "tableLayoutPanel7";
             // 
             // tableLayoutPanel8
             // 
             resources.ApplyResources(tableLayoutPanel8, "tableLayoutPanel8");
-            tableLayoutPanel8.BackColor = SystemColors.Control;
+            tableLayoutPanel8.BackColor = Color.Transparent;
             tableLayoutPanel8.Controls.Add(comboBox3, 1, 2);
             tableLayoutPanel8.Controls.Add(comboBox2, 1, 1);
             tableLayoutPanel8.Controls.Add(comboBox1, 1, 0);
             tableLayoutPanel8.Controls.Add(label6, 2, 0);
-            tableLayoutPanel8.Controls.Add(label7, 2, 1);
             tableLayoutPanel8.Controls.Add(label8, 0, 2);
             tableLayoutPanel8.Controls.Add(label4, 0, 0);
             tableLayoutPanel8.Controls.Add(label5, 0, 1);
+            tableLayoutPanel8.Controls.Add(label7, 2, 1);
             tableLayoutPanel8.Name = "tableLayoutPanel8";
             // 
             // panel4
@@ -439,19 +458,10 @@
             // tableLayoutPanel10
             // 
             resources.ApplyResources(tableLayoutPanel10, "tableLayoutPanel10");
-            tableLayoutPanel10.Controls.Add(panel4, 0, 2);
-            tableLayoutPanel10.Controls.Add(tableLayoutPanel11, 0, 1);
             tableLayoutPanel10.Controls.Add(tableLayoutPanel9, 0, 0);
+            tableLayoutPanel10.Controls.Add(tableLayoutPanel11, 0, 1);
+            tableLayoutPanel10.Controls.Add(panel4, 0, 2);
             tableLayoutPanel10.Name = "tableLayoutPanel10";
-            // 
-            // tableLayoutPanel11
-            // 
-            resources.ApplyResources(tableLayoutPanel11, "tableLayoutPanel11");
-            tableLayoutPanel11.Controls.Add(tableLayoutPanel3, 0, 0);
-            tableLayoutPanel11.Controls.Add(tableLayoutPanel4, 1, 0);
-            tableLayoutPanel11.Controls.Add(tableLayoutPanel1, 3, 0);
-            tableLayoutPanel11.Controls.Add(tableLayoutPanel7, 2, 0);
-            tableLayoutPanel11.Name = "tableLayoutPanel11";
             // 
             // tableLayoutPanel9
             // 
@@ -465,10 +475,20 @@
             resources.ApplyResources(panel3, "panel3");
             panel3.Name = "panel3";
             // 
+            // tableLayoutPanel11
+            // 
+            resources.ApplyResources(tableLayoutPanel11, "tableLayoutPanel11");
+            tableLayoutPanel11.Controls.Add(tableLayoutPanel3, 0, 0);
+            tableLayoutPanel11.Controls.Add(tableLayoutPanel4, 1, 0);
+            tableLayoutPanel11.Controls.Add(tableLayoutPanel1, 3, 0);
+            tableLayoutPanel11.Controls.Add(tableLayoutPanel7, 2, 0);
+            tableLayoutPanel11.Name = "tableLayoutPanel11";
+            // 
             // Form1
             // 
             resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.White;
             Controls.Add(tableLayoutPanel10);
             Name = "Form1";
             Load += Form1_Load;
@@ -477,6 +497,7 @@
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
             tableLayoutPanel13.ResumeLayout(false);
             tableLayoutPanel13.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
@@ -486,15 +507,14 @@
             tableLayoutPanel4.ResumeLayout(false);
             tableLayoutPanel4.PerformLayout();
             tableLayoutPanel5.ResumeLayout(false);
-            tableLayoutPanel6.ResumeLayout(false);
-            tableLayoutPanel6.PerformLayout();
+            tableLayoutPanel5.PerformLayout();
             tableLayoutPanel7.ResumeLayout(false);
             tableLayoutPanel8.ResumeLayout(false);
             tableLayoutPanel8.PerformLayout();
             tableLayoutPanel10.ResumeLayout(false);
+            tableLayoutPanel9.ResumeLayout(false);
             tableLayoutPanel11.ResumeLayout(false);
             tableLayoutPanel11.PerformLayout();
-            tableLayoutPanel9.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -520,7 +540,6 @@
         private Label label8;
         private Button button2;
         private Button button12;
-        private HScrollBar hScrollBar1;
         private Label label10;
         private Label label11;
         private Button button1;
@@ -537,7 +556,6 @@
         private TableLayoutPanel tableLayoutPanel3;
         private TableLayoutPanel tableLayoutPanel4;
         private TableLayoutPanel tableLayoutPanel5;
-        private TableLayoutPanel tableLayoutPanel6;
         private TableLayoutPanel tableLayoutPanel7;
         private TableLayoutPanel tableLayoutPanel8;
         private Panel panel4;
@@ -550,5 +568,8 @@
         private Label label12;
         private TableLayoutPanel tableLayoutPanel13;
         private Label label13;
+        private VScrollBar vScrollBar3;
+        private Label label14;
+        private Label label15;
     }
 }
