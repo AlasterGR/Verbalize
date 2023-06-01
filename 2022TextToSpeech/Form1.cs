@@ -104,7 +104,7 @@ namespace _2022TextToSpeech
                     SSMLDocument.Load(locationLoadedFile);
                     XmlNodeList? nodes = SSMLDocument?.SelectNodes("//text()[normalize-space()]");
                     if (nodes?.Count > 0) { foreach (XmlNode node in nodes) { fileContents = node.InnerText; } }  // might need to put append instead of =, in order to support various voices within the text
-                    if (SSMLDocument != null) { loadXMLtoApp(SSMLDocument); }
+                    if (SSMLDocument != null) { LoadXMLtoApp(SSMLDocument); }
                 }
                 catch (XmlException)
                 { fileContents = File.ReadAllText(locationLoadedFile); }  // File.ReadAllText locks the file
@@ -277,10 +277,11 @@ namespace _2022TextToSpeech
         #region Voice actor combo box
         private void ComboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedDisplayName = comboBox2.SelectedItem.ToString();
+
             foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
             {
-                string localName = node.SelectSingleNode("DisplayName").InnerText;
+                string localName = node?.SelectSingleNode("DisplayName")?.InnerText ?? string.Empty;
+                string selectedDisplayName = comboBox2?.SelectedItem?.ToString() ?? string.Empty;
                 if (localName == selectedDisplayName)
                 {
                     config.SpeechSynthesisVoiceName = node.SelectSingleNode("ShortName").InnerText;  //  We store who our voice actor will be
@@ -304,40 +305,42 @@ namespace _2022TextToSpeech
             xmlDoc.Save(Path.Combine(folderResources, rootName));
         }
 
-
+        /// <summary> Voice Pitch slider </summary>
         private void vScrollBar2_ValueChanged(object sender, EventArgs e)
         {
             pitch = vScrollBar2.Value.ToString() + "Hz";
-            label2.Text = "Pitch = " + vScrollBar2.Value.ToString() + "Hz";
+            label2.Text = "Pitch = " + pitch;
+
         }
+        /// <summary> Voice Rate slider </summary>
         private void vScrollBar1_ValueChanged(object sender, EventArgs e)
         {
-            rate = vScrollBar1.Value.ToString() + "%";
+            //rate = vScrollBar1.Value.ToString() + "%";
             label3.Text = "Rate = " + vScrollBar1.Value.ToString() + "%";
+            comboBox4.SelectedItem = null;
         }
-
+        /// <summary> Voice Volume slider </summary>
         private void vScrollBar3_ValueChanged(object sender, EventArgs e)
-        {  // This handles integers only 
+        {
             volume = vScrollBar3.Value;
-            label11.Text = vScrollBar3.Value.ToString();
+            label11.Text = volume.ToString();
         }
-
+        /// <summary> Voice Rate selection </summary>
         private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
         {
             rate = comboBox4?.SelectedItem?.ToString() ?? "Default";
             label3.Text = "Rate : " + rate;
         }
+        /// <summary> Voice Pitch selection </summary>
         private void comboBox5_SelectedIndexChanged(object sender, EventArgs e)
         {
             pitch = comboBox5?.SelectedItem?.ToString() ?? "Default";
             label2.Text = "Pitch : " + pitch;
         }
-
-
-
+        /// <summary> Voice Style selection </summary>
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
-        { style = comboBox3?.SelectedItem?.ToString() ?? string.Empty; }
-
+        { style = comboBox3?.SelectedItem?.ToString() ?? "calm"; }
+        /// <summary> The Save button </summary>
         private void button7_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog1 = new() { Filter = "XML|*.xml", Title = "Save the text box as a .xml file compliant to the SSML type." };
@@ -351,10 +354,11 @@ namespace _2022TextToSpeech
                 label1.Text = Path.GetFileNameWithoutExtension(pathFileSelected); // Show the loaded file's name
             }
         }
+
         static XmlDocument CreateSSML(string text)
         {
             #region Creation of the XML document and and its root element
-            XmlDocument SSMLDocument = new XmlDocument();
+            XmlDocument SSMLDocument = new();
             XmlElement speak = SSMLDocument.CreateElement("speak");
             SSMLDocument.AppendChild(speak);
             #endregion
@@ -399,58 +403,49 @@ namespace _2022TextToSpeech
             express.InnerText = text;
             return SSMLDocument;
         }
-
+        /// <summary> The Save button </summary>
         private void button2_Click(object sender, EventArgs e)
         {
-            if (locationLoadedFile == string.Empty)
-            {
-                //this.button2.Enabled = false;
-            }
-            else
-            {
-                string pathFileSelected = locationLoadedFile;
-                string text = this.textBox1.Text;
-                XmlDocument SSMLDocument = CreateSSML(text);
-                // Save the XML document to a file         
-                SSMLDocument.Save(pathFileSelected);
-                SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
-            }
-
+            string pathFileSelected = locationLoadedFile;
+            string text = this.textBox1.Text;
+            XmlDocument SSMLDocument = CreateSSML(text);
+            SSMLDocument.Save(pathFileSelected);// Save the XML document to a file
+            _ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
         }
 
         //  Speak the selected text from the textbox
-        private async void button12_Click(object sender, EventArgs e)
+        private void Button12_Click(object sender, EventArgs e)
         {
             soundPause();
-            string text = string.Empty;  // Initialize the text input for the synthesizer
-            if (this.textBox1.SelectedText != "") { text = CreateSSML(this.textBox1.SelectedText).OuterXml; } //  If there is text selected within the textbox's text, feed that into the synthesizer
-            else { text = CreateSSML(this.textBox1.Text).OuterXml; } //  if there is no text selected, feed the entire textbox's text into the synthesizer.
             synth = new SpeechSynthesizer(config);
-            spokenTextSoundResult = synth.SpeakSsmlAsync(text);
+            spokenTextSoundResult = synth.SpeakSsmlAsync(CreateSSML(string.IsNullOrEmpty(textBox1.SelectedText) ? textBox1.Text : textBox1.SelectedText).OuterXml); // Create SSML from textbox's either selected text or entire text (whichever is nonempty) and feed it to the syntesizer
         }
 
-        private void loadXMLtoApp(XmlDocument SSMLDocument) // Load all the markup of the XML onto the u.i.
+        private void LoadXMLtoApp(XmlDocument SSMLDocument) // Load all the markup of the XML onto the u.i.
         {
             #region Initialize every mark to its default values
             string styleSSML = "calm";
             string volumeSSML = "80";
-            string pitchSSML = "default";
+            //string pitchSSML = "default";
             string rateSSML = "default";
             string nameValue = "en-US-JennyNeural";
             string langValue = "en-US";
-
             string localeName = "English (United States)";
             string DisplayName = "Jenny";
+            string? value = string.Empty;
             #endregion
+
             #region Parse the loaded document and acquire the desired values. Add try-catch...
-            XmlNamespaceManager nsMgr = new XmlNamespaceManager(SSMLDocument.NameTable);
+            XmlNamespaceManager nsMgr = new(SSMLDocument.NameTable);
             nsMgr.AddNamespace("speak", "http://www.w3.org/2001/10/synthesis");
             // Find the general default language of the entire document
-            XmlNode speakNode = SSMLDocument.SelectSingleNode("//speak:speak", nsMgr);
-            langValue = speakNode.Attributes["xml:lang"].Value;
+            XmlNode? speakNode = SSMLDocument.SelectSingleNode("//speak:speak", nsMgr);
+            value = speakNode?.Attributes["xml:lang"]?.Value;
+            langValue = string.IsNullOrEmpty(value) ? langValue : value;
             // Find the general default Voice of the entire document...
-            XmlNode voiceNode = SSMLDocument.SelectSingleNode("//speak:voice", nsMgr);
-            nameValue = voiceNode.Attributes["name"].Value;// Select the <voice> element and get its "name" attribute value. Need to extract name value from < voice name = "en-US-JennyNeural" >
+            XmlNode? voiceNode = SSMLDocument.SelectSingleNode("//speak:voice", nsMgr);
+            value = voiceNode?.Attributes["name"]?.Value;
+            nameValue = string.IsNullOrEmpty(value) ? nameValue : value; // Select the <voice> element and get its "name" attribute value. Need to extract name value from < voice name = "en-US-JennyNeural" >
             // ... and its the Locale name and Display name
             foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
             {
@@ -461,76 +456,44 @@ namespace _2022TextToSpeech
                 }
             }
             // Acquire the various attributes from Prosody such as... 
-            XmlNode prosodyNode = SSMLDocument.SelectSingleNode("//speak:prosody", nsMgr);
+            XmlNode? prosodyNode = SSMLDocument.SelectSingleNode("//speak:prosody", nsMgr);
             //  ... the voice style
-            styleSSML = prosodyNode.FirstChild.Attributes["style"]?.Value ?? "calm"; // if it cannot find the attribute, it returns the default "calm" string
+            styleSSML = prosodyNode?.FirstChild?.Attributes["style"]?.Value ?? "calm"; // if it cannot find the attribute, it returns the default "calm" string
             if (comboBox3.FindStringExact(styleSSML) == -1) { styleSSML = "calm"; }// if the style is not an option withinn the combo box, it sets it to the default "calm" string
-
             //  ... the rate
-            try
-            {
-
-                if (prosodyNode.Attributes["rate"] != null) { rateSSML = prosodyNode.Attributes["rate"].Value; } // For some reason, this cannot be handled by this generic try-catch                
-                /**/
-                rate = rateSSML;
-            }
-            catch { rateSSML = "default"; rate = "default"; }
-
+            rate = rateSSML = prosodyNode?.Attributes["rate"]?.Value ?? "default";
             //  ... the pitch 
-            try
-            {
-                if (prosodyNode.Attributes["pitch"] != null) { pitchSSML = prosodyNode.Attributes["pitch"].Value; } // For some reason, this cannot be handled by this generic try-catch                
-                /*pitchSSML = Regex.Replace(pitchSSML, "[^0-9-+]", "");
-                pitch = Int32.Parse(pitchSSML, NumberStyles.AllowLeadingSign);
-                if (pitch > 200) { pitch = 200; }  // replace with more abstract bounds
-                else if (pitch < -200) { pitch = -200; }*/
-                pitch = pitchSSML;
-            }
-            catch { pitchSSML = "default"; pitch = "default"; }
-
+            //pitch = pitchSSML = prosodyNode?.Attributes["pitch"]?.Value ?? "default";
+            pitch = prosodyNode?.Attributes["pitch"]?.Value ?? "default";
             //  ... the volume
-            try
+
+            if (prosodyNode.Attributes["volume"] is { Value: string _value })
             {
-                if (prosodyNode.Attributes["volume"] != null) { volumeSSML = prosodyNode.Attributes["volume"].Value; } // For some reason, this cannot be handled by this generic try-catch
-                volumeSSML = Regex.Replace(volumeSSML, "[^0-9-+]", "");  // remove any extra unit from the string, keeping solely the number
-                volume = Int32.Parse(volumeSSML, NumberStyles.AllowLeadingSign);
-                if (volume > 100) { volume = 100; }  // replace with more abstract bounds
-                else if (volume < 0) { volume = 0; }
+                volumeSSML = MyRegex().Replace(_value, "");
+                if (int.TryParse(volumeSSML, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int parsedVolume))
+                { volume = Math.Clamp(parsedVolume, 0, 100); }
             }
-            catch (Exception ex) when (ex is NullReferenceException || ex is FormatException) { volumeSSML = "80"; volume = 80; }
             #endregion
-            #region set the u.i. and config elements to the parsed values (which will be the default ones fow whatever has failed)
+
+            #region set the u.i. and config elements to the parsed values (which will be the default ones on whatever has failed)
 
             config.SpeechSynthesisVoiceName = nameValue;
             config.SpeechSynthesisLanguage = langValue; //  Set the Speech Language to whatever is first on the xml file, which is the general one of the entire file
 
-            this.comboBox1.SelectedItem = localeName;
-            this.comboBox2.SelectedItem = DisplayName;
+            comboBox1.SelectedItem = localeName;
+            comboBox2.SelectedItem = DisplayName;
+            comboBox3.SelectedItem = styleSSML;
 
-            this.comboBox3.SelectedItem = styleSSML;
-
-            if (comboBox5.Items.Contains(pitch)) { comboBox5.SelectedItem = pitch; }
-            else if (pitch.Contains("Hz"))
-            {
-                pitchSSML = Regex.Replace(pitchSSML, "[^0-9-+]", "");
-                int pitchInt = Int32.Parse(pitchSSML, NumberStyles.AllowLeadingSign);
-                if (pitchInt > 200) { pitchInt = 200; }  // replace with more abstract bounds
-                else if (pitchInt < -200) { pitchInt = -200; }
-                vScrollBar2.Value = pitchInt;
-            }
-            else { comboBox5.SelectedItem = "default"; }
+            if (comboBox5.Items.Contains(pitch)) { MessageBox.Show("Read pitch is : " + pitch); comboBox5.SelectedItem = pitch; }
+            else if (pitch.Contains("Hz") && Int32.TryParse(MyRegex().Replace(pitch, string.Empty), NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int pitchInt))
+            { MessageBox.Show("Read pitch is = " + pitchInt); vScrollBar2.Value = Math.Clamp(pitchInt, -200, 200); }
+            else { MessageBox.Show("Read pitch is DEFAULTED "); comboBox5.SelectedItem = pitch = "default"; }
 
             if (comboBox4.Items.Contains(rate)) { comboBox4.SelectedItem = rate; }
-            else if (rate.Contains("%"))
-            {
-                rateSSML = Regex.Replace(rateSSML, "[^0-9-+]", "");
-                int rateInt = Int32.Parse(rateSSML, NumberStyles.AllowLeadingSign);
-                if (rateInt > 50) { rateInt = 50; }  // replace with more abstract bounds
-                else if (rateInt < -50) { rateInt = -50; }
-                vScrollBar1.Value = rateInt;
-            }
-            else { comboBox4.SelectedItem = "default"; }
-            //hScrollBar1.Value = volume;  //  make a save clause to keep any value between [0, +100], trasnforming out-of-bounds values to bounds
+            else if (rate.Contains('%') && Int32.TryParse(MyRegex().Replace(rate, string.Empty), NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int rateInt))
+            { vScrollBar1.Value = Math.Clamp(rateInt, -50, 50); }
+            else { comboBox4.SelectedItem = rate = "default"; }
+
             vScrollBar3.Value = volume;
             #endregion
         }
@@ -551,7 +514,7 @@ namespace _2022TextToSpeech
         public static void soundPause() { synth?.StopSpeakingAsync(); }
 
         #region A string in XML format that is to be used, should the app not be able to download the Voices file
-        string VoicesBasic = @"<Voices>  
+        readonly string VoicesBasic = @"<Voices>  
                                   <Voice>
                                     <Name>Microsoft Server Speech Text to Speech Voice (el-GR, AthinaNeural)</Name>
                                     <DisplayName>Athina</DisplayName>
@@ -638,9 +601,7 @@ namespace _2022TextToSpeech
 
 
         private void cmbBx_SelectSavedSoundFormat_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            formatOutputSound = cmbBx_SelectSavedSoundFormat.SelectedItem?.ToString();
-        }
+        { formatOutputSound = cmbBx_SelectSavedSoundFormat?.SelectedItem?.ToString() ?? "None"; }
 
         #region the vertical ScrollBar's annotations ~ could make it abstract for horizontal scrollbar as well
         private void panel_Paint(object sender, PaintEventArgs e)
@@ -649,7 +610,7 @@ namespace _2022TextToSpeech
             int annotationWidth = SystemInformation.VerticalScrollBarWidth;
             int annotationHeight = (SystemInformation.VerticalScrollBarThumbHeight / 10);
             int barHeight = SystemInformation.VerticalScrollBarThumbHeight;
-            System.Windows.Forms.VScrollBar vScrollBar = null;
+            System.Windows.Forms.VScrollBar? vScrollBar = null;
             foreach (Control c in panel.Controls)
             {
                 if (c is VScrollBar)
@@ -688,13 +649,12 @@ namespace _2022TextToSpeech
         /// <summary> Draw a light blue rectangle as the text file's title background. </summary>
         private void label1_Paint(object sender, PaintEventArgs e)
         {
-            using (LinearGradientBrush brush = new(ClientRectangle, Color.LightBlue, Color.White, 0F))
-            {
-                e.Graphics.FillRectangle(brush, ClientRectangle);
-                TextRenderer.DrawText(e.Graphics, label1.Text, label1.Font, label1.ClientRectangle, label1.ForeColor, TextFormatFlags.Default);
-            }
+            using LinearGradientBrush brush = new(ClientRectangle, Color.LightBlue, Color.White, 0F);
+            e.Graphics.FillRectangle(brush, ClientRectangle);
+            TextRenderer.DrawText(e.Graphics, label1.Text, label1.Font, label1.ClientRectangle, label1.ForeColor, TextFormatFlags.Default);
         }
-        private void Form1_Resize(object sender, EventArgs e) { ReDrawEverything(); }
+
+        /// <summary> This is in order to make sure the panels are redrawn properly. Invalidate() any other control that is drawn uniquely. </summary>
         public void ReDrawEverything()
         {
             foreach (Control control in Controls)
@@ -705,9 +665,11 @@ namespace _2022TextToSpeech
                 label1.Invalidate();
             }
         }
-        /// <summary> This is in order to make sure the panels are redrawn properly. Invalidate() any other control that is drawn uniquely. </summary>
-        private void Form1_Paint(object sender, PaintEventArgs e) { ReDrawEverything(); }
+        private void Form1_Resize(object sender, EventArgs e) { ReDrawEverything(); }
+        private void Form1_Paint(object sender, PaintEventArgs e) { /*ReDrawEverything();*/ }
 
-
+        /// <summary> Remove any extra unit from the string, keeping solely the number </summary>
+        [GeneratedRegex("[^0-9-+]")]
+        private static partial Regex MyRegex();
     }
 }

@@ -236,7 +236,7 @@
             button12.BackColor = Color.Transparent;
             button12.Name = "button12";
             button12.UseVisualStyleBackColor = false;
-            button12.Click += button12_Click;
+            button12.Click += Button12_Click;
             // 
             // label10
             // 

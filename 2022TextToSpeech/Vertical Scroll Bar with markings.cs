@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace _2022TextToSpeech
-{
+{/// <summary> The custom control of a vertical Scrollbar with its values' marked on the side.</summary>
     public partial class Vertical_Scroll_Bar_with_markings : UserControl
     {
         /// <summary> The custom control of a vertical Scrollbar with its values' marked on the side.</summary>
@@ -18,6 +18,7 @@ namespace _2022TextToSpeech
             InitializeComponent();
         }
         private int _markerValue;
+        /// <summary> The marker values.</summary>
         public int MarkerValue
         {
             get { return _markerValue; }
@@ -27,7 +28,7 @@ namespace _2022TextToSpeech
                 Refresh();
             }
         }
-
+        /// <summary> What to do on the OnPaint event.</summary>
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
