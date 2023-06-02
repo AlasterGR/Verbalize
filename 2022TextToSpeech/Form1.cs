@@ -69,7 +69,7 @@ namespace _2022TextToSpeech
         private string formatOutputSound = "None";
         private static bool isSynthSpeaking = false;
         /// <summary> The dnamic XML of the document we are handling.</summary>
-        public static XmlDocument objectXML = new XmlDocument(); // the dynamic object which stores the proccessed ssml
+        public static XmlDocument VirtualSSMLDocument = new XmlDocument(); // the dynamic object which stores the proccessed ssml
 
         /// <summary>  The public class of the app's main Form, that is window. </summary>
         public Form1()
@@ -408,19 +408,16 @@ namespace _2022TextToSpeech
             return SSMLDocument;
         }
         /// <summary> Virtual object of our final XML document. Will be changed dynamically through the app and saved in the disk and loading from a disk's file.</summary>
-        static XmlDocument VirtualSSML(string text, bool _createORappend)
+        static XmlDocument InitializeSSMLDocument()
         {
-            #region Creation of the XML document and and its root element
+            #region Creation of the XML document and and its root element (called "Speak")
             XmlDocument SSMLDocument = new();
             XmlElement speak = SSMLDocument.CreateElement("speak");
             SSMLDocument.AppendChild(speak);
-            #endregion
-
-            #region XML declaration. Mandatory for XML 1.1 and SSML also requires this : https://www.w3.org/TR/speech-synthesis/#S2.1
+            // XML declaration. Mandatory for XML 1.1 and SSML also requires this : https://www.w3.org/TR/speech-synthesis/#S2.1
             XmlDeclaration xmlDeclaration = SSMLDocument.CreateXmlDeclaration("1.0", "UTF-8", null);
             SSMLDocument.InsertBefore(xmlDeclaration, speak);
             #endregion
-
             #region Assigning the XML's elements and using variables for the attributes. Reference : https://www.w3.org/TR/speech-synthesis/#S3.1.1         
             XmlAttribute version = SSMLDocument.CreateAttribute("version");  //  For some reason, version cannot be 1.1
             version.Value = "1.0";
@@ -440,6 +437,8 @@ namespace _2022TextToSpeech
             XmlAttribute onlangfailure = SSMLDocument.CreateAttribute("onlangfailure");
             onlangfailure.Value = "ignoretext ";
             speak.SetAttributeNode(onlangfailure);
+            #endregion
+            #region creating new Voice node using variables for the attributes. 
             XmlElement voice = SSMLDocument.CreateElement("voice");
             voice.SetAttribute("name", config.SpeechSynthesisVoiceName);
             XmlElement prosody = SSMLDocument.CreateElement("prosody");
@@ -454,10 +453,31 @@ namespace _2022TextToSpeech
             voice.AppendChild(prosody);
             speak.AppendChild(voice);
             #endregion
-            //  Entering the .txt file's text as the xml's main -inner- text
-            express.InnerText = text;
+            express.InnerText = string.Empty;
             return SSMLDocument;
         }
+        static XmlDocument AppendSSMLDocument(XmlDocument _VirtualSSMLDocument, string _text)
+        {
+            XmlDocument SSMLDocument = new();
+            #region creating new Voice node using variables for the attributes. 
+            XmlElement voice = SSMLDocument.CreateElement("voice");
+            voice.SetAttribute("name", config.SpeechSynthesisVoiceName);
+            XmlElement prosody = SSMLDocument.CreateElement("prosody");
+            prosody.SetAttribute("rate", rate);
+            prosody.SetAttribute("pitch", pitch);
+            prosody.SetAttribute("volume", (volume).ToString()); //  Might not work on this version of SSML
+            XmlElement express = SSMLDocument.CreateElement("mstts", "express-as", "http://www.w3.org/2001/mstts");
+            express.SetAttribute("style", style);
+            #endregion
+            #region Appending the XML elements to their parents
+            prosody.AppendChild(express);
+            voice.AppendChild(prosody);
+            //speak.AppendChild(voice);
+            #endregion
+            express.InnerText = string.Empty;
+            return SSMLDocument;
+        }
+
         /// <summary> The Save button </summary>
         private void button2_Click(object sender, EventArgs e)
         {
