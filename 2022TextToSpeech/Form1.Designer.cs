@@ -115,7 +115,7 @@
             resources.ApplyResources(label1, "label1");
             label1.BackColor = Color.Transparent;
             label1.Name = "label1";
-            label1.TextChanged += label1_TextChanged;
+            label1.TextChanged += Label1_TextChanged;
             label1.Paint += label1_Paint;
             // 
             // textBox1
@@ -255,7 +255,7 @@
             resources.ApplyResources(button1, "button1");
             button1.Name = "button1";
             button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            button1.Click += Button1_Click;
             // 
             // button4
             // 
@@ -269,7 +269,7 @@
             resources.ApplyResources(button5, "button5");
             button5.Name = "button5";
             button5.UseVisualStyleBackColor = true;
-            button5.Click += button5_Click;
+            button5.Click += Button5_Click;
             // 
             // cmbBx_SelectSavedSoundFormat
             // 
