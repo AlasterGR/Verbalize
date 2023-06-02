@@ -68,6 +68,7 @@ namespace _2022TextToSpeech
         private static SpeechSynthesizer? synth;
         private string formatOutputSound = "None";
         private static bool isSynthSpeaking = false;
+        public static XmlDocument objectXML = new XmlDocument(); // the dynamic object which stores the proccessed ssml
 
         /// <summary>  The public class of the app's main Form, that is window. </summary>
         public Form1()
@@ -484,15 +485,41 @@ namespace _2022TextToSpeech
             comboBox2.SelectedItem = DisplayName;
             comboBox3.SelectedItem = styleSSML;
 
-            if (comboBox5.Items.Contains(pitch)) { MessageBox.Show("Read pitch is : " + pitch); comboBox5.SelectedItem = pitch; }
+            if (comboBox5.Items.Contains(pitch))
+            {
+                comboBox5.SelectedItem = pitch;
+                label2.Text = "Pitch : " + pitch;
+            }
             else if (pitch.Contains("Hz") && Int32.TryParse(MyRegex().Replace(pitch, string.Empty), NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int pitchInt))
-            { MessageBox.Show("Read pitch is = " + pitchInt); vScrollBar2.Value = Math.Clamp(pitchInt, -200, 200); }
-            else { MessageBox.Show("Read pitch is DEFAULTED "); comboBox5.SelectedItem = pitch = "default"; }
+            {
+                vScrollBar2.Value = Math.Clamp(pitchInt, -200, 200);
+                comboBox5.SelectedItem = null;
+                label2.Text = "Pitch = " + pitchInt.ToString();
+            }
+            else
+            {
+                pitch = "default";
+                comboBox5.SelectedItem = null;
+                label2.Text = "Pitch : " + pitch;
+            }
 
-            if (comboBox4.Items.Contains(rate)) { comboBox4.SelectedItem = rate; }
+            if (comboBox4.Items.Contains(rate))
+            {
+                comboBox4.SelectedItem = rate;
+                label3.Text = "Rate : " + rate;
+            }
             else if (rate.Contains('%') && Int32.TryParse(MyRegex().Replace(rate, string.Empty), NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int rateInt))
-            { vScrollBar1.Value = Math.Clamp(rateInt, -50, 50); }
-            else { comboBox4.SelectedItem = rate = "default"; }
+            {
+                vScrollBar1.Value = Math.Clamp(rateInt, -50, 50);
+                label2.Text = "Rate = " + rateInt.ToString();
+                comboBox4.SelectedItem = null;
+            }
+            else
+            {
+                rate = "default";
+                label3.Text = "Rate : " + rate;
+                comboBox4.SelectedItem = null;
+            }
 
             vScrollBar3.Value = volume;
             #endregion
