@@ -14,6 +14,7 @@
 	  <PublishSingleFile>true</PublishSingleFile>
 	  <DebugType>embedded</DebugType>
 	  <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+	  <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
