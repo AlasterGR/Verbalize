@@ -1,6 +1,4 @@
-﻿using _2022TextToSpeech;
-
-namespace _2022TextToSpeech
+﻿namespace _2022TextToSpeech
 {
     partial class Form1
     {
