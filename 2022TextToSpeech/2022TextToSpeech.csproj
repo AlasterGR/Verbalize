@@ -23,7 +23,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Form1.resw" />
     <None Remove="Voices" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Form1.resw">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
