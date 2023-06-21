@@ -18,6 +18,8 @@ namespace _2022TextToSpeech
     using NAudio.Wave;  // for the audio conversion
     using NAudio.MediaFoundation;
     using System.Drawing.Drawing2D;
+    using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
+    using System.Xml.Linq;
 
     /// <summary>
     /// The main Form of the app
@@ -71,6 +73,17 @@ namespace _2022TextToSpeech
         /// <summary> The dnamic XML of the document we are handling.</summary>
         public static XmlDocument VirtualSSMLDocument = new XmlDocument(); // the dynamic object which stores the proccessed ssml
 
+        public ComboBox voiceStylesComboBox;
+        public ComboBox voicesComboBox;
+
+
+        public ComboBox soundtypesComboBox;
+        public bool soundTypeSelectorComboboxOrRadiogroup;
+        public System.Windows.Forms.RadioButton soundTypeRadioButtonMP3, soundTypeRadioButtonWAV, soundTypeRadioButtonNONE;
+        public System.Windows.Forms.RadioButton textTypeRadioButtonXML, textTypeRadioButtonTXT, textTypeRadioButtonNONE;
+
+        public TableLayoutPanel soundRadioGroupParentPanel, textRadioGroupParentPanel;
+
         /// <summary>  The public class of the app's main Form, that is window. </summary>
         public Form1()
         {
@@ -79,15 +92,38 @@ namespace _2022TextToSpeech
             //InitializeVoices();  Let's start with the basic voices first
             #endregion
             label11.Text = string.Empty;
+            voiceStylesComboBox = comboBox3; // set the voice style combo box
+            voicesComboBox = comboBox2;
+
+
+            soundtypesComboBox = cmbBx_SelectSavedSoundFormat;
+            soundTypeSelectorComboboxOrRadiogroup = false;
+
+            soundTypeRadioButtonMP3 = radioButton1;
+            soundTypeRadioButtonWAV = radioButton2;
+            soundTypeRadioButtonNONE = radioButton4;
+            soundRadioGroupParentPanel = tableLayoutPanel15;
+
+            textRadioGroupParentPanel = tableLayoutPanel14;
+            textTypeRadioButtonXML = radioButton3;
+            textTypeRadioButtonTXT = radioButton5;
+            textTypeRadioButtonNONE = radioButton6;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             label1.Visible = false;
             VoicesLoad();  //  Load the voices onto the combo boxes
-            cmbBx_SelectSavedSoundFormat.SelectedIndex = 0;
+
+
             button2.Enabled = button8.Enabled = button8.Visible = button9.Enabled = button9.Visible = false;
             vScrollBar3.Value = volume;
+
+            //Choosing how to offer sound type selection
+            soundtypesComboBox.Enabled = soundtypesComboBox.Visible = soundTypeSelectorComboboxOrRadiogroup;
+            soundtypesComboBox.SelectedIndex = 0;
+            soundTypeRadioButtonMP3.Checked = true;
+            textTypeRadioButtonXML.Checked = true;
         }
 
         private void Bttn3_LoadText_Click(object sender, EventArgs e)
@@ -114,8 +150,7 @@ namespace _2022TextToSpeech
                 #endregion               
             }
         }
-
-        private void button4_Click(object sender, EventArgs e) // Produce sound from a local file
+        private void button4_Click(object sender, EventArgs e) // Export sound from a local file
         {
             OpenFileDialog openFileDialog1 = new()
             {
@@ -125,11 +160,86 @@ namespace _2022TextToSpeech
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 string pathFileSelected = openFileDialog1.FileName;
-                formatOutputSound = cmbBx_SelectSavedSoundFormat?.SelectedItem?.ToString() ?? "None";
+                formatOutputSound = SetOutputSoundFormat();
                 _ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);  // "_= " is for discarding the result afterwards. Practically suppresses the warning.
             }
 
+
         }
+
+
+        private void button6_Click(object sender, EventArgs e) // The sound exporting button
+        {
+            formatOutputSound = SetOutputSoundFormat();
+
+            if (formatOutputSound != null && formatOutputSound != "None")
+            {
+                SaveFileDialog saveFileDialog1 = new() { Filter = "Sound|*." + formatOutputSound, Title = "Save the spoken text as a sound file in your disk." };
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    string text = textBox1.Text;
+                    XmlDocument SSMLDocument = CreateSSML(text);
+                    string pathFileSelected = saveFileDialog1.FileName;
+                    _ = SynthesizeAudioAsyncFromText(SSMLDocument, pathFileSelected, formatOutputSound, false);
+                }
+            }
+        }
+
+        /// <summary> The Update button </summary>
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //string pathFileSelected = locationLoadedFile;
+            //string text = this.textBox1.Text;
+            //XmlDocument SSMLDocument = CreateSSML(text);
+            //SSMLDocument.Save(pathFileSelected);// Save the XML document to a file
+            //formatOutputSound = SetOutputSoundFormat();
+            //_ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
+
+        }
+
+
+        /// <summary> The Save the text button </summary>
+        private void button7_Click(object sender, EventArgs e)
+        {
+            string outputTextFormat = SetOutputTextFormat();
+            SaveText(outputTextFormat);
+        }
+
+        private void SaveText(string outputTextFormat)
+        {
+            if (outputTextFormat == "xml")
+            {
+                SaveFileDialog saveFileDialog1 = new() { Filter = "XML|*.xml", Title = "Save the text box as a .xml file compliant to the SSML type." };
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    string pathFileSelected = saveFileDialog1.FileName;
+                    string text = textBox1.Text;
+                    XmlDocument SSMLDocument = CreateSSML(text);
+                    SSMLDocument.Save(pathFileSelected);  // Save the XML document to a file
+                    //formatOutputSound = SetOutputSoundFormat();
+                    //_ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
+                    locationLoadedFile = pathFileSelected;
+                    label1.Text = Path.GetFileNameWithoutExtension(pathFileSelected); // Show the loaded file's name                
+                }
+            }
+            else if (outputTextFormat == "txt")
+            {
+                SaveFileDialog saveFileDialog1 = new() { Filter = "Text|*.txt", Title = "Save the text box as a plain .txt file." };
+                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    string pathFileSelected = saveFileDialog1.FileName;
+                    string text = textBox1.Text;
+                    File.WriteAllText(pathFileSelected, text);
+                    //XmlDocument SSMLDocument = CreateSSML(text);
+                    //SSMLDocument.Save(pathFileSelected);  // Save the XML document to a file
+                    //formatOutputSound = SetOutputSoundFormat();
+                    //_ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
+                    locationLoadedFile = pathFileSelected;
+                    label1.Text = Path.GetFileNameWithoutExtension(pathFileSelected); // Show the loaded file's name                
+                }
+            }
+        }
+
         static async Task SynthesizeAudioAsync(string soundfile, string formatOutputSound, bool _audioOn)
         {
             #region Producing the sound data
@@ -141,10 +251,52 @@ namespace _2022TextToSpeech
             else { synth = new SpeechSynthesizer(config, null); }
             SpeechSynthesisResult result = await synth.SpeakSsmlAsync(ssmlText);
             #endregion
+
             #region Saving the sound data to the disk as a specific sound format
             string outputFile = Path.ChangeExtension(soundfile, "." + formatOutputSound);
             using Stream stream = new MemoryStream(result.AudioData);
-            if (formatOutputSound != "none" || formatOutputSound != null)
+            if (formatOutputSound != "None" || formatOutputSound != null)
+            {
+                switch (formatOutputSound)
+                {
+                    case "mp3":
+                        //outputFile = Path.ChangeExtension(outputFile, "."+formatOutputSound);
+                        MediaFoundationApi.Startup();
+                        var reader = new WaveFileReader(stream);  // Normally public WaveFileReader(Stream inputStream) ought to handle it properly but it does not accept it
+                        MediaFoundationEncoder.EncodeToMp3(reader, outputFile);
+                        break;
+
+                    case "wav":
+                        MediaFoundationApi.Startup();
+                        var reader1 = new WaveFileReader(stream);
+                        WaveFileWriter.CreateWaveFile(outputFile, reader1);
+                        break;
+
+                    case "ogg": // add an ogg vorbis encoder 
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            #endregion
+        }
+        static async Task SynthesizeAudioAsyncFromText(XmlDocument _xmlDoc, string soundfile, string formatOutputSound, bool _audioOn)
+        {
+            #region Producing the sound data
+            //XmlDocument xmlDoc = new();
+            //_xmlDoc.LoadXml(soundfile);
+            string ssmlText = _xmlDoc.OuterXml;
+            SoundPause();
+            if (!_audioOn) { synth = new SpeechSynthesizer(config, null); } // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
+            else { synth = new SpeechSynthesizer(config, null); }
+            SpeechSynthesisResult result = await synth.SpeakSsmlAsync(ssmlText);
+            #endregion
+
+            #region Saving the sound data to the disk as a specific sound format
+            string outputFile = Path.ChangeExtension(soundfile, "." + formatOutputSound);
+            using Stream stream = new MemoryStream(result.AudioData);
+            if (formatOutputSound != "None" || formatOutputSound != null)
             {
                 switch (formatOutputSound)
                 {
@@ -169,7 +321,36 @@ namespace _2022TextToSpeech
             }
             #endregion
         }
+        private string SetOutputSoundFormat()
+        {
+            if (soundTypeSelectorComboboxOrRadiogroup)
+            {
+                return soundtypesComboBox?.SelectedItem?.ToString() ?? "None";
+            }
+            else
+            {
+                foreach (Control control in soundRadioGroupParentPanel.Controls)
+                {
+                    if (control is System.Windows.Forms.RadioButton radioButton && radioButton.Checked)
+                    {
+                        return radioButton.Text;
+                    }
+                }
 
+                return null; // Return null if no radio button is selected in the group
+            }
+        }
+        private string SetOutputTextFormat()
+        {
+            foreach (Control control in textRadioGroupParentPanel.Controls)
+            {
+                if (control is System.Windows.Forms.RadioButton radioButton && radioButton.Checked)
+                {
+                    return radioButton.Text;
+                }
+            }
+            return "None"; // Return null if no radio button is selected in the group
+        }
         async void InitializeVoices()  //  See if it should be called from a button
         {
             try
@@ -238,7 +419,7 @@ namespace _2022TextToSpeech
                 }
             }
             else { VoicesXML.LoadXml(VoicesBasic); VoicesLoad(); }
-            comboBox3.SelectedItem = style;  //  Have the the default voice style preselected as default
+            voiceStylesComboBox.SelectedItem = style;  //  Have the the default voice style preselected as default
         }
         #endregion
 
@@ -279,7 +460,6 @@ namespace _2022TextToSpeech
         #region Voice actor combo box
         private void ComboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-
             foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
             {
                 string localName = node?.SelectSingleNode("DisplayName")?.InnerText ?? string.Empty;
@@ -289,10 +469,49 @@ namespace _2022TextToSpeech
                     config.SpeechSynthesisVoiceName = node.SelectSingleNode("ShortName").InnerText;  //  We store who our voice actor will be
                     label7.Text = " - " + node.SelectSingleNode("LocalName").InnerText + " (" + node.SelectSingleNode("Gender").InnerText + ")";
                 }
-
             }
+            PopulateVoiceStylesComboBox(voiceStylesComboBox, comboBox2.SelectedItem?.ToString()); // enter the combobox which holds the selected Voice's styles
         }
         #endregion
+
+        private void PopulateVoiceStylesComboBox(ComboBox _voiceStylesComboBox, string _selectedVoice)
+        {
+            // Clear the existing items in voiceStylesComboBox
+            _voiceStylesComboBox.Items.Clear();
+            _voiceStylesComboBox.Text = string.Empty; // needed in order to have the list appear visibly clear regardless of the fact we will be hiding it
+            // Find the corresponding node in the VoicesBasic XML
+            XmlDocument voicesBasicXml = new XmlDocument();
+            voicesBasicXml.LoadXml(VoicesBasic);
+            XmlNode voiceNode = voicesBasicXml.SelectSingleNode($"//Voice[DisplayName='{_selectedVoice}']");
+
+            if (voiceNode != null)
+            {
+                // Get the StyleList elements for the selected voice
+                XmlNodeList styleListNodes = voiceNode.SelectNodes("StyleList");
+
+                // Populate voiceStylesComboBox with the styles
+                foreach (XmlNode styleNode in styleListNodes)
+                {
+                    string style = styleNode.InnerText;
+                    _voiceStylesComboBox.Items.Add(style);
+                }
+            }
+            //How to handle the populating
+            int selectedIndex = _voiceStylesComboBox.Items.Count > 0 ? 0 : -1; // select proper index for the combo box
+            _voiceStylesComboBox.SelectedIndex = selectedIndex; // set the index on it
+            ShowOrHideVoiceStylesRow(tableLayoutPanel8, 2, selectedIndex == 0); // show or hide the row which has the styles
+        }
+        private void ShowOrHideVoiceStylesRow(TableLayoutPanel _tableLayoutPanel, int _StylesRow, bool _showOrHide)
+        {
+            for (int columnIndex = 0; columnIndex < _tableLayoutPanel.ColumnCount; columnIndex++)
+            {
+                Control control = _tableLayoutPanel.GetControlFromPosition(columnIndex, _StylesRow);
+                if (control != null)
+                {
+                    control.Visible = _showOrHide;
+                }
+            }
+        }
 
         private static void SSML_JSONtoXMLConvert(string TextJSONFile)
         {
@@ -340,22 +559,11 @@ namespace _2022TextToSpeech
             label2.Text = "Pitch : " + pitch;
         }
         /// <summary> Voice Style selection </summary>
-        private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
-        { style = comboBox3?.SelectedItem?.ToString() ?? "calm"; }
-        /// <summary> The Save button </summary>
-        private void button7_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog saveFileDialog1 = new() { Filter = "XML|*.xml", Title = "Save the text box as a .xml file compliant to the SSML type." };
-            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                string pathFileSelected = saveFileDialog1.FileName;
-                string text = textBox1.Text;
-                XmlDocument SSMLDocument = CreateSSML(text);
-                SSMLDocument.Save(pathFileSelected);  // Save the XML document to a file
-                _ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
-                label1.Text = Path.GetFileNameWithoutExtension(pathFileSelected); // Show the loaded file's name
-            }
-        }
+        private void voiceStylesComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        { style = voiceStylesComboBox?.SelectedItem?.ToString() ?? "calm"; }
+
+
+
 
         static XmlDocument CreateSSML(string text)
         {
@@ -478,15 +686,6 @@ namespace _2022TextToSpeech
             return SSMLDocument;
         }
 
-        /// <summary> The Save button </summary>
-        private void button2_Click(object sender, EventArgs e)
-        {
-            string pathFileSelected = locationLoadedFile;
-            string text = this.textBox1.Text;
-            XmlDocument SSMLDocument = CreateSSML(text);
-            SSMLDocument.Save(pathFileSelected);// Save the XML document to a file
-            _ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
-        }
 
         //  Speak the selected text from the textbox
         private void Button12_Click(object sender, EventArgs e)
@@ -534,7 +733,7 @@ namespace _2022TextToSpeech
             XmlNode? prosodyNode = SSMLDocument.SelectSingleNode("//speak:prosody", nsMgr);
             //  ... the voice style
             styleSSML = prosodyNode?.FirstChild?.Attributes["style"]?.Value ?? "calm"; // if it cannot find the attribute, it returns the default "calm" string
-            if (comboBox3.FindStringExact(styleSSML) == -1) { styleSSML = "calm"; }// if the style is not an option withinn the combo box, it sets it to the default "calm" string
+            if (voiceStylesComboBox.FindStringExact(styleSSML) == -1) { styleSSML = "calm"; }// if the style is not an option withinn the combo box, it sets it to the default "calm" string
             //  ... the rate
             rate = rateSSML = prosodyNode?.Attributes["rate"]?.Value ?? "default";
             //  ... the pitch 
@@ -557,7 +756,7 @@ namespace _2022TextToSpeech
 
             comboBox1.SelectedItem = localeName;
             comboBox2.SelectedItem = DisplayName;
-            comboBox3.SelectedItem = styleSSML;
+            voiceStylesComboBox.SelectedItem = styleSSML;
 
             if (comboBox5.Items.Contains(pitch))
             {
@@ -566,9 +765,11 @@ namespace _2022TextToSpeech
             }
             else if (pitch.Contains("Hz") && Int32.TryParse(MyRegex().Replace(pitch, string.Empty), NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int pitchInt))
             {
-                vScrollBar2.Value = Math.Clamp(pitchInt, -200, 200);
+                //vScrollBar2.Value = Math.Clamp(pitchInt, -30, 30); // try with scrollbar maxes - mins
+                vScrollBar2.Value = Math.Clamp(pitchInt, vScrollBar2.Minimum, vScrollBar2.Maximum);
                 comboBox5.SelectedItem = null;
-                label2.Text = "Pitch = " + pitchInt.ToString();
+                //label2.Text = "Pitch = " + pitchInt.ToString();
+                label2.Text = "Pitch = " + vScrollBar2.Value.ToString();
             }
             else
             {
@@ -584,8 +785,10 @@ namespace _2022TextToSpeech
             }
             else if (rate.Contains('%') && Int32.TryParse(MyRegex().Replace(rate, string.Empty), NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int rateInt))
             {
-                vScrollBar1.Value = Math.Clamp(rateInt, -50, 50);
-                label2.Text = "Rate = " + rateInt.ToString();
+                //vScrollBar1.Value = Math.Clamp(rateInt, -30, 30);
+                vScrollBar1.Value = Math.Clamp(rateInt, vScrollBar1.Minimum, vScrollBar1.Maximum);
+                //label3.Text = "Rate = " + rateInt.ToString();
+                label3.Text = "Rate = " + vScrollBar1.Value.ToString();
                 comboBox4.SelectedItem = null;
             }
             else
@@ -600,7 +803,10 @@ namespace _2022TextToSpeech
         }
         /// <summary> Check if we have loaded a file and have the file name and update button accordingly visible.</summary>
         private void Label1_TextChanged(object sender, EventArgs e)
-        { button2.Enabled = !string.IsNullOrEmpty(label1.Text); }
+        {
+            //button2.Enabled = !string.IsNullOrEmpty(label1.Text);// enable back when complete the code
+            label1.Visible = true;
+        }
         /// <summary> Clears the Textbox and loaded file.</summary>
         private void Button1_Click(object sender, EventArgs e)
         {
@@ -642,6 +848,24 @@ namespace _2022TextToSpeech
                                     <Gender>Female</Gender>
                                     <Locale>en-US</Locale>
                                     <LocaleName>English (United States)</LocaleName>
+                                    <StyleList>assistant</StyleList>
+                                    <StyleList>chat</StyleList>
+                                    <StyleList>customerservice</StyleList>
+                                    <StyleList>newscast</StyleList>
+                                    <StyleList>angry</StyleList>
+                                    <StyleList>cheerful</StyleList>
+                                    <StyleList>sad</StyleList>
+                                    <StyleList>excited</StyleList>
+                                    <StyleList>friendly</StyleList>
+                                    <StyleList>terrified</StyleList>
+                                    <StyleList>shouting</StyleList>
+                                    <StyleList>unfriendly</StyleList>
+                                    <StyleList>whispering</StyleList>
+                                    <StyleList>hopeful</StyleList>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>152</WordsPerMinute>
                                   </Voice>
                                   <Voice>
                                     <Name>Microsoft Server Speech Text to Speech Voice (en-US, JennyMultilingualNeural)</Name>
@@ -651,6 +875,23 @@ namespace _2022TextToSpeech
                                     <Gender>Female</Gender>
                                     <Locale>en-US</Locale>
                                     <LocaleName>English (United States)</LocaleName>
+                                    <SecondaryLocaleList>de-DE</SecondaryLocaleList>
+                                    <SecondaryLocaleList>en-AU</SecondaryLocaleList>
+                                    <SecondaryLocaleList>en-CA</SecondaryLocaleList>
+                                    <SecondaryLocaleList>en-GB</SecondaryLocaleList>
+                                    <SecondaryLocaleList>es-ES</SecondaryLocaleList>
+                                    <SecondaryLocaleList>es-MX</SecondaryLocaleList>
+                                    <SecondaryLocaleList>fr-CA</SecondaryLocaleList>
+                                    <SecondaryLocaleList>fr-FR</SecondaryLocaleList>
+                                    <SecondaryLocaleList>it-IT</SecondaryLocaleList>
+                                    <SecondaryLocaleList>ja-JP</SecondaryLocaleList>
+                                    <SecondaryLocaleList>ko-KR</SecondaryLocaleList>
+                                    <SecondaryLocaleList>pt-BR</SecondaryLocaleList>
+                                    <SecondaryLocaleList>zh-CN</SecondaryLocaleList>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>190</WordsPerMinute>
                                   </Voice>
                                   <Voice>
                                     <Name>Microsoft Server Speech Text to Speech Voice (en-US, GuyNeural)</Name>
@@ -660,6 +901,384 @@ namespace _2022TextToSpeech
                                     <Gender>Male</Gender>
                                     <Locale>en-US</Locale>
                                     <LocaleName>English (United States)</LocaleName>
+                                    <StyleList>newscast</StyleList>
+                                    <StyleList>angry</StyleList>
+                                    <StyleList>cheerful</StyleList>
+                                    <StyleList>sad</StyleList>
+                                    <StyleList>excited</StyleList>
+                                    <StyleList>friendly</StyleList>
+                                    <StyleList>terrified</StyleList>
+                                    <StyleList>shouting</StyleList>
+                                    <StyleList>unfriendly</StyleList>
+                                    <StyleList>whispering</StyleList>
+                                    <StyleList>hopeful</StyleList>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>215</WordsPerMinute>
+                                  </Voice>
+                                <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, AmberNeural)</Name>
+                                    <DisplayName>Amber</DisplayName>
+                                    <LocalName>Amber</LocalName>
+                                    <ShortName>en-US-AmberNeural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>152</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, AnaNeural)</Name>
+                                    <DisplayName>Ana</DisplayName>
+                                    <LocalName>Ana</LocalName>
+                                    <ShortName>en-US-AnaNeural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>135</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, AriaNeural)</Name>
+                                    <DisplayName>Aria</DisplayName>
+                                    <LocalName>Aria</LocalName>
+                                    <ShortName>en-US-AriaNeural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <StyleList>chat</StyleList>
+                                    <StyleList>customerservice</StyleList>
+                                    <StyleList>narration-professional</StyleList>
+                                    <StyleList>newscast-casual</StyleList>
+                                    <StyleList>newscast-formal</StyleList>
+                                    <StyleList>cheerful</StyleList>
+                                    <StyleList>empathetic</StyleList>
+                                    <StyleList>angry</StyleList>
+                                    <StyleList>sad</StyleList>
+                                    <StyleList>excited</StyleList>
+                                    <StyleList>friendly</StyleList>
+                                    <StyleList>terrified</StyleList>
+                                    <StyleList>shouting</StyleList>
+                                    <StyleList>unfriendly</StyleList>
+                                    <StyleList>whispering</StyleList>
+                                    <StyleList>hopeful</StyleList>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>150</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, AshleyNeural)</Name>
+                                    <DisplayName>Ashley</DisplayName>
+                                    <LocalName>Ashley</LocalName>
+                                    <ShortName>en-US-AshleyNeural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>149</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, BrandonNeural)</Name>
+                                    <DisplayName>Brandon</DisplayName>
+                                    <LocalName>Brandon</LocalName>
+                                    <ShortName>en-US-BrandonNeural</ShortName>
+                                    <Gender>Male</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>156</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, ChristopherNeural)</Name>
+                                    <DisplayName>Christopher</DisplayName>
+                                    <LocalName>Christopher</LocalName>
+                                    <ShortName>en-US-ChristopherNeural</ShortName>
+                                    <Gender>Male</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>149</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, CoraNeural)</Name>
+                                    <DisplayName>Cora</DisplayName>
+                                    <LocalName>Cora</LocalName>
+                                    <ShortName>en-US-CoraNeural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>146</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, DavisNeural)</Name>
+                                    <DisplayName>Davis</DisplayName>
+                                    <LocalName>Davis</LocalName>
+                                    <ShortName>en-US-DavisNeural</ShortName>
+                                    <Gender>Male</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <StyleList>chat</StyleList>
+                                    <StyleList>angry</StyleList>
+                                    <StyleList>cheerful</StyleList>
+                                    <StyleList>excited</StyleList>
+                                    <StyleList>friendly</StyleList>
+                                    <StyleList>hopeful</StyleList>
+                                    <StyleList>sad</StyleList>
+                                    <StyleList>shouting</StyleList>
+                                    <StyleList>terrified</StyleList>
+                                    <StyleList>unfriendly</StyleList>
+                                    <StyleList>whispering</StyleList>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>154</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, ElizabethNeural)</Name>
+                                    <DisplayName>Elizabeth</DisplayName>
+                                    <LocalName>Elizabeth</LocalName>
+                                    <ShortName>en-US-ElizabethNeural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>152</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, EricNeural)</Name>
+                                    <DisplayName>Eric</DisplayName>
+                                    <LocalName>Eric</LocalName>
+                                    <ShortName>en-US-EricNeural</ShortName>
+                                    <Gender>Male</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>147</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, JacobNeural)</Name>
+                                    <DisplayName>Jacob</DisplayName>
+                                    <LocalName>Jacob</LocalName>
+                                    <ShortName>en-US-JacobNeural</ShortName>
+                                    <Gender>Male</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>154</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, JaneNeural)</Name>
+                                    <DisplayName>Jane</DisplayName>
+                                    <LocalName>Jane</LocalName>
+                                    <ShortName>en-US-JaneNeural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <StyleList>angry</StyleList>
+                                    <StyleList>cheerful</StyleList>
+                                    <StyleList>excited</StyleList>
+                                    <StyleList>friendly</StyleList>
+                                    <StyleList>hopeful</StyleList>
+                                    <StyleList>sad</StyleList>
+                                    <StyleList>shouting</StyleList>
+                                    <StyleList>terrified</StyleList>
+                                    <StyleList>unfriendly</StyleList>
+                                    <StyleList>whispering</StyleList>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>154</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, JasonNeural)</Name>
+                                    <DisplayName>Jason</DisplayName>
+                                    <LocalName>Jason</LocalName>
+                                    <ShortName>en-US-JasonNeural</ShortName>
+                                    <Gender>Male</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <StyleList>angry</StyleList>
+                                    <StyleList>cheerful</StyleList>
+                                    <StyleList>excited</StyleList>
+                                    <StyleList>friendly</StyleList>
+                                    <StyleList>hopeful</StyleList>
+                                    <StyleList>sad</StyleList>
+                                    <StyleList>shouting</StyleList>
+                                    <StyleList>terrified</StyleList>
+                                    <StyleList>unfriendly</StyleList>
+                                    <StyleList>whispering</StyleList>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>156</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, MichelleNeural)</Name>
+                                    <DisplayName>Michelle</DisplayName>
+                                    <LocalName>Michelle</LocalName>
+                                    <ShortName>en-US-MichelleNeural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>154</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, MonicaNeural)</Name>
+                                    <DisplayName>Monica</DisplayName>
+                                    <LocalName>Monica</LocalName>
+                                    <ShortName>en-US-MonicaNeural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>145</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, NancyNeural)</Name>
+                                    <DisplayName>Nancy</DisplayName>
+                                    <LocalName>Nancy</LocalName>
+                                    <ShortName>en-US-NancyNeural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <StyleList>angry</StyleList>
+                                    <StyleList>cheerful</StyleList>
+                                    <StyleList>excited</StyleList>
+                                    <StyleList>friendly</StyleList>
+                                    <StyleList>hopeful</StyleList>
+                                    <StyleList>sad</StyleList>
+                                    <StyleList>shouting</StyleList>
+                                    <StyleList>terrified</StyleList>
+                                    <StyleList>unfriendly</StyleList>
+                                    <StyleList>whispering</StyleList>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>149</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, SaraNeural)</Name>
+                                    <DisplayName>Sara</DisplayName>
+                                    <LocalName>Sara</LocalName>
+                                    <ShortName>en-US-SaraNeural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <StyleList>angry</StyleList>
+                                    <StyleList>cheerful</StyleList>
+                                    <StyleList>excited</StyleList>
+                                    <StyleList>friendly</StyleList>
+                                    <StyleList>hopeful</StyleList>
+                                    <StyleList>sad</StyleList>
+                                    <StyleList>shouting</StyleList>
+                                    <StyleList>terrified</StyleList>
+                                    <StyleList>unfriendly</StyleList>
+                                    <StyleList>whispering</StyleList>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>157</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, SteffanNeural)</Name>
+                                    <DisplayName>Steffan</DisplayName>
+                                    <LocalName>Steffan</LocalName>
+                                    <ShortName>en-US-SteffanNeural</ShortName>
+                                    <Gender>Male</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>154</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, TonyNeural)</Name>
+                                    <DisplayName>Tony</DisplayName>
+                                    <LocalName>Tony</LocalName>
+                                    <ShortName>en-US-TonyNeural</ShortName>
+                                    <Gender>Male</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <StyleList>angry</StyleList>
+                                    <StyleList>cheerful</StyleList>
+                                    <StyleList>excited</StyleList>
+                                    <StyleList>friendly</StyleList>
+                                    <StyleList>hopeful</StyleList>
+                                    <StyleList>sad</StyleList>
+                                    <StyleList>shouting</StyleList>
+                                    <StyleList>terrified</StyleList>
+                                    <StyleList>unfriendly</StyleList>
+                                    <StyleList>whispering</StyleList>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>GA</Status>
+                                    <WordsPerMinute>156</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, AIGenerate1Neural)</Name>
+                                    <DisplayName>AIGenerate1</DisplayName>
+                                    <LocalName>AIGenerate1</LocalName>
+                                    <ShortName>en-US-AIGenerate1Neural</ShortName>
+                                    <Gender>Male</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>Preview</Status>
+                                    <WordsPerMinute>135</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, AIGenerate2Neural)</Name>
+                                    <DisplayName>AIGenerate2</DisplayName>
+                                    <LocalName>AIGenerate2</LocalName>
+                                    <ShortName>en-US-AIGenerate2Neural</ShortName>
+                                    <Gender>Female</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>Preview</Status>
+                                    <WordsPerMinute>140</WordsPerMinute>
+                                  </Voice>
+                                  <Voice>
+                                    <Name>Microsoft Server Speech Text to Speech Voice (en-US, RogerNeural)</Name>
+                                    <DisplayName>Roger</DisplayName>
+                                    <LocalName>Roger</LocalName>
+                                    <ShortName>en-US-RogerNeural</ShortName>
+                                    <Gender>Male</Gender>
+                                    <Locale>en-US</Locale>
+                                    <LocaleName>English (United States)</LocaleName>
+                                    <SampleRateHertz>48000</SampleRateHertz>
+                                    <VoiceType>Neural</VoiceType>
+                                    <Status>Preview</Status>
+                                    <WordsPerMinute>143</WordsPerMinute>
                                   </Voice>
                                   <Voice>
                                     <Name>Microsoft Server Speech Text to Speech Voice (sk-SK, LukasNeural)</Name>
@@ -701,8 +1320,8 @@ namespace _2022TextToSpeech
         #endregion
 
 
-        private void cmbBx_SelectSavedSoundFormat_SelectedIndexChanged(object sender, EventArgs e)
-        { formatOutputSound = cmbBx_SelectSavedSoundFormat?.SelectedItem?.ToString() ?? "None"; }
+        private void soundtypesComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        { formatOutputSound = soundtypesComboBox?.SelectedItem?.ToString() ?? "None"; }
 
         #region the vertical ScrollBar's annotations ~ could make it abstract for horizontal scrollbar as well
         private void panel_Paint(object sender, PaintEventArgs e)
@@ -723,9 +1342,10 @@ namespace _2022TextToSpeech
             int annotationX = vScrollBar.Right;
             int ceiling = vScrollBar.Top + vScrollBar.Margin.Top + barHeight + barHeight / 2;  //  the highest point, within the control, from which the annontations are drawn - will be the 1st one as well             
             int floor = vScrollBar.Bottom - vScrollBar.Margin.Bottom - barHeight - barHeight / 2;
-            int stepMath = 10;// the mathematical step between the annontations
+            int stepMath = 12;// the mathematical step between the annontations
             int stepGraphic = (floor - ceiling) / stepMath; // the graphical step between the annontations
-            int annotationYOffset = 5; // A small offset so that the lines are always drawn at the middle of the Thumb.
+            int annotationYOffset = 0; // A small offset so that the lines are drawn at a distance fromt he scrollbar.
+            int annotationXOffset = -5; // A small offset so that the lines are always drawn at the middle of the Thumb.
             int stepAnontations = Math.Abs(vScrollBar.Maximum - vScrollBar.Minimum) / stepMath; // this nis how much will be added in the annontations, effectively showcasing the scrollbar's value at their point
             int i = 0;  //  this is our step. There will be 10-increment steps
             int value = vScrollBar.Minimum;
@@ -735,13 +1355,13 @@ namespace _2022TextToSpeech
                 {
                     e.Graphics.FillRectangle(Brushes.Black, new Rectangle(annotationX, annotationY, annotationWidth, annotationHeight));
 
-                    e.Graphics.DrawString(value.ToString("+#;-#"), Font, Brushes.Black, new Point(annotationX + annotationWidth + annotationYOffset, annotationY - barHeight / 2));  //  Would rather draw the strings of the scrollbar's actual value
+                    e.Graphics.DrawString(value.ToString("+#;-#") + " %", Font, Brushes.Black, new Point(annotationX + annotationWidth + annotationYOffset, annotationY - barHeight / 2 + annotationXOffset));  //  Would rather draw the strings of the scrollbar's actual value
                 }
                 i += stepMath;
                 value += stepAnontations;
             }
             e.Graphics.FillRectangle(Brushes.Red, new Rectangle(annotationX, vScrollBar.Height / 2, annotationWidth * 2, annotationHeight));
-            e.Graphics.DrawString("0", Font, Brushes.Black, new Point(annotationX + annotationWidth * 2 + annotationYOffset / 2, ((vScrollBar.Height / 2) - barHeight / 2)));
+            e.Graphics.DrawString("0", Font, Brushes.Black, new Point(annotationX + annotationWidth * 2 + annotationYOffset / 2, ((vScrollBar.Height / 2) - barHeight / 2 + annotationXOffset)));
         }
         #endregion
 
@@ -772,5 +1392,6 @@ namespace _2022TextToSpeech
         /// <summary> Remove any extra unit from the string, keeping solely the number </summary>
         [GeneratedRegex("[^0-9-+]")]
         private static partial Regex MyRegex();
+
     }
 }
