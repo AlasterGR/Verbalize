@@ -5,6 +5,7 @@ namespace _2022TextToSpeech
     using System;
     using System.Drawing;
     using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Windows.Forms;
     using Microsoft.CognitiveServices.Speech;
@@ -18,8 +19,6 @@ namespace _2022TextToSpeech
     using NAudio.Wave;  // for the audio conversion
     using NAudio.MediaFoundation;
     using System.Drawing.Drawing2D;
-    using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
-    using System.Xml.Linq;
 
     /// <summary>
     /// The main Form of the app
@@ -66,9 +65,11 @@ namespace _2022TextToSpeech
         private static string shortName = string.Empty;
         /// <summary>  The path of the loaded file.</summary>
         private static string locationLoadedFile = string.Empty;
-        private static Task<SpeechSynthesisResult>? spokenTextSoundResult;
-        private static SpeechSynthesizer? synth;
-        private string formatOutputSound = "None";
+        public static Task<SpeechSynthesisResult>? spokenTextSoundResult;
+        public static CancellationTokenSource synthesisCancellationToken;
+        public static SpeechSynthesisResult speechSynthesisResult = null;
+        private static SpeechSynthesizer speechSynthesizer;
+        private string formatOutputSound = "mp3";
         private static bool isSynthSpeaking = false;
         /// <summary> The dnamic XML of the document we are handling.</summary>
         public static XmlDocument VirtualSSMLDocument = new XmlDocument(); // the dynamic object which stores the proccessed ssml
@@ -84,6 +85,12 @@ namespace _2022TextToSpeech
 
         public TableLayoutPanel soundRadioGroupParentPanel, textRadioGroupParentPanel;
 
+        public float attributesColumnInitialWidth;
+        public float attributesColumnCurrentWidth = 451f;
+        public SizeType attributesColumnInitialSizeType;
+        public System.Drawing.Size attributesColumnInitialMinimumSize;
+        public Button btnAttrColumnExpRec;
+        public Image buttonAttrColumnExpImage, buttonAttrColumnRecImage;
         /// <summary>  The public class of the app's main Form, that is window. </summary>
         public Form1()
         {
@@ -94,7 +101,6 @@ namespace _2022TextToSpeech
             label11.Text = string.Empty;
             voiceStylesComboBox = comboBox3; // set the voice style combo box
             voicesComboBox = comboBox2;
-
 
             soundtypesComboBox = cmbBx_SelectSavedSoundFormat;
             soundTypeSelectorComboboxOrRadiogroup = false;
@@ -124,6 +130,22 @@ namespace _2022TextToSpeech
             soundtypesComboBox.SelectedIndex = 0;
             soundTypeRadioButtonMP3.Checked = true;
             textTypeRadioButtonXML.Checked = true;
+
+            //Speech Synthesis objects
+            // Initialize your synthesizer and other components
+            speechSynthesizer = new SpeechSynthesizer(config);
+            synthesisCancellationToken = new CancellationTokenSource();
+
+
+            btnAttrColumnExpRec = button10;
+            buttonAttrColumnExpImage = (Image)Properties.Resources.ResourceManager.GetObject("Triangle_Left");
+            buttonAttrColumnRecImage = (Image)Properties.Resources.ResourceManager.GetObject("Triangle_Right");
+            btnAttrColumnExpRec.BackgroundImage = buttonAttrColumnRecImage;
+            //btnAttrColumnExpRec.BackColor = Color.FromArgb(82, 198, 222); //Set the button10's background colour to ARphy's
+
+            attributesColumnInitialWidth = attributesColumnCurrentWidth;
+            attributesColumnInitialSizeType = tableLayoutPanel11.ColumnStyles[2].SizeType; // store the Attributes columnn's sizetype
+            attributesColumnInitialMinimumSize = tableLayoutPanel7.MinimumSize;
         }
 
         private void Bttn3_LoadText_Click(object sender, EventArgs e)
@@ -163,12 +185,8 @@ namespace _2022TextToSpeech
                 formatOutputSound = SetOutputSoundFormat();
                 _ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);  // "_= " is for discarding the result afterwards. Practically suppresses the warning.
             }
-
-
         }
-
-
-        private void button6_Click(object sender, EventArgs e) // The sound exporting button
+        private void button6_Click(object sender, EventArgs e) // Export sound
         {
             formatOutputSound = SetOutputSoundFormat();
 
@@ -186,7 +204,7 @@ namespace _2022TextToSpeech
         }
 
         /// <summary> The Update button </summary>
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             //string pathFileSelected = locationLoadedFile;
             //string text = this.textBox1.Text;
@@ -194,12 +212,9 @@ namespace _2022TextToSpeech
             //SSMLDocument.Save(pathFileSelected);// Save the XML document to a file
             //formatOutputSound = SetOutputSoundFormat();
             //_ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
-
         }
-
-
         /// <summary> The Save the text button </summary>
-        private void button7_Click(object sender, EventArgs e)
+        private void Button7_Click(object sender, EventArgs e)
         {
             string outputTextFormat = SetOutputTextFormat();
             SaveText(outputTextFormat);
@@ -239,7 +254,10 @@ namespace _2022TextToSpeech
                 }
             }
         }
-
+        //public async SpeechSynthesisResult GetSpeechSynthesisResult(SpeechSynthesisResult _speechSynthesisResult, String _text )
+        //{
+        //    return _speechSynthesisResult = await synthesizer.SpeakSsmlAsync(_text);
+        //}
         static async Task SynthesizeAudioAsync(string soundfile, string formatOutputSound, bool _audioOn)
         {
             #region Producing the sound data
@@ -247,14 +265,14 @@ namespace _2022TextToSpeech
             xmlDoc.Load(soundfile);
             string ssmlText = xmlDoc.OuterXml;
             SoundPause();
-            if (!_audioOn) { synth = new SpeechSynthesizer(config, null); } // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
-            else { synth = new SpeechSynthesizer(config, null); }
-            SpeechSynthesisResult result = await synth.SpeakSsmlAsync(ssmlText);
+            if (!_audioOn) { speechSynthesizer = new SpeechSynthesizer(config, null); } // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
+            else { speechSynthesizer = new SpeechSynthesizer(config, null); }
+            speechSynthesisResult = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
+            //SpeechSynthesisResult speechSynthesisResult = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
             #endregion
-
             #region Saving the sound data to the disk as a specific sound format
             string outputFile = Path.ChangeExtension(soundfile, "." + formatOutputSound);
-            using Stream stream = new MemoryStream(result.AudioData);
+            using Stream stream = new MemoryStream(speechSynthesisResult.AudioData);
             if (formatOutputSound != "None" || formatOutputSound != null)
             {
                 switch (formatOutputSound)
@@ -288,11 +306,10 @@ namespace _2022TextToSpeech
             //_xmlDoc.LoadXml(soundfile);
             string ssmlText = _xmlDoc.OuterXml;
             SoundPause();
-            if (!_audioOn) { synth = new SpeechSynthesizer(config, null); } // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
-            else { synth = new SpeechSynthesizer(config, null); }
-            SpeechSynthesisResult result = await synth.SpeakSsmlAsync(ssmlText);
+            if (!_audioOn) { speechSynthesizer = new SpeechSynthesizer(config, null); } // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
+            else { speechSynthesizer = new SpeechSynthesizer(config, null); }
+            SpeechSynthesisResult result = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
             #endregion
-
             #region Saving the sound data to the disk as a specific sound format
             string outputFile = Path.ChangeExtension(soundfile, "." + formatOutputSound);
             using Stream stream = new MemoryStream(result.AudioData);
@@ -531,12 +548,12 @@ namespace _2022TextToSpeech
         {
             pitch = vScrollBar2.Value.ToString() + "Hz";
             label2.Text = "Pitch = " + pitch;
-
+            comboBox5.SelectedItem = null;
         }
         /// <summary> Voice Rate slider </summary>
         private void vScrollBar1_ValueChanged(object sender, EventArgs e)
         {
-            //rate = vScrollBar1.Value.ToString() + "%";
+            rate = vScrollBar1.Value.ToString() + "%";
             label3.Text = "Rate = " + vScrollBar1.Value.ToString() + "%";
             comboBox4.SelectedItem = null;
         }
@@ -691,8 +708,27 @@ namespace _2022TextToSpeech
         private void Button12_Click(object sender, EventArgs e)
         {
             SoundPause();
-            synth = new SpeechSynthesizer(config);
-            spokenTextSoundResult = synth.SpeakSsmlAsync(CreateSSML(string.IsNullOrEmpty(textBox1.SelectedText) ? textBox1.Text : textBox1.SelectedText).OuterXml); // Create SSML from textbox's either selected text or entire text (whichever is nonempty) and feed it to the syntesizer
+            speechSynthesizer = new SpeechSynthesizer(config);
+            spokenTextSoundResult = speechSynthesizer.SpeakSsmlAsync(CreateSSML(string.IsNullOrEmpty(textBox1.SelectedText) ? textBox1.Text : textBox1.SelectedText).OuterXml); // Create SSML from textbox's either selected text or entire text (whichever is nonempty) and feed it to the syntesizer
+
+        }
+        public static void SoundPause()
+        {
+            if (spokenTextSoundResult != null && !spokenTextSoundResult.IsCompleted) // Check if there's an ongoing synthesis
+            {
+                try
+                {
+                    speechSynthesizer?.StopSpeakingAsync();
+                    speechSynthesizer?.Dispose();
+                    //spokenTextSoundResult = null; // Reset the ongoing task
+                    spokenTextSoundResult?.Dispose();
+                }
+                catch (Exception ex)
+                {
+
+                }
+                //implement exception
+            }
         }
 
         private void LoadXMLtoApp(XmlDocument SSMLDocument) // Load all the markup of the XML onto the u.i.
@@ -818,7 +854,7 @@ namespace _2022TextToSpeech
         /// <summary> The Mute button.</summary>
         private async void Button5_Click(object sender, EventArgs e) { SoundPause(); }
         /// <summary> Stop the sound if it is already playing.</summary>
-        public static void SoundPause() { synth?.StopSpeakingAsync(); }
+
 
         #region A string in XML format that is to be used, should the app not be able to download the Voices file
         readonly string VoicesBasic = @"<Voices>  
@@ -1392,6 +1428,27 @@ namespace _2022TextToSpeech
         /// <summary> Remove any extra unit from the string, keeping solely the number </summary>
         [GeneratedRegex("[^0-9-+]")]
         private static partial Regex MyRegex();
+
+        private void Button10_Click(object sender, EventArgs e)
+        {
+            tableLayoutPanel11.ColumnStyles[2].SizeType = SizeType.Absolute;
+            if (tableLayoutPanel11.ColumnStyles[2].Width > 0)
+            {
+                tableLayoutPanel11.ColumnStyles[2].Width = 0;
+                btnAttrColumnExpRec.BackgroundImage = buttonAttrColumnExpImage;
+            }
+            else
+            {
+                //MessageBox.Show("attributesColumnInitialWidth = " + attributesColumnInitialWidth);
+                tableLayoutPanel11.ColumnStyles[2].Width = attributesColumnInitialWidth;
+                //MessageBox.Show("tableLayoutPanel11.ColumnStyles[2].Width = " + tableLayoutPanel11.ColumnStyles[2].Width);
+                tableLayoutPanel11.ColumnStyles[2].SizeType = attributesColumnInitialSizeType;
+                // MessageBox.Show("attributesColumnInitialSizeType : " + attributesColumnInitialSizeType.ToString());
+                btnAttrColumnExpRec.BackgroundImage = buttonAttrColumnRecImage;
+            }
+            attributesColumnCurrentWidth = tableLayoutPanel11.ColumnStyles[2].Width;
+            //MessageBox.Show("attributesColumnCurrentWidth = " + attributesColumnCurrentWidth.ToString());
+        }
 
     }
 }

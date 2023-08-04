@@ -18,12 +18,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Resources\**" />
-    <EmbeddedResource Remove="Resources\**" />
-    <None Remove="Resources\**" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <None Remove="Resources\ARPhymedesLogo.png" />
+    <None Remove="Resources\ARPhymedesPlusLogo.png" />
+    <None Remove="Resources\Clear.png" />
+    <None Remove="Resources\exit_512px.png" />
+    <None Remove="Resources\intro_background_2048px-01.png" />
+    <None Remove="Resources\logo_icon_512px-01.png" />
+    <None Remove="Resources\talking-icon_No.png" />
+    <None Remove="Resources\Triangle_Left.png" />
+    <None Remove="Resources\Triangle_Right.png" />
+    <None Remove="Resources\Voices" />
+    <None Remove="Resources\Voices - Copy" />
     <None Remove="Voices" />
   </ItemGroup>
 
@@ -36,7 +41,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Properties\Resources\" />
+    <Folder Include="Properties\Resources\Icons\" />
+    <Folder Include="Resources\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,6 +60,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Properties\Resources\Triangle_Left.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Properties\Resources\Triangle_Right.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

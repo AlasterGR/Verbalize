@@ -62,8 +62,6 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             tableLayoutPanel13 = new TableLayoutPanel();
             label13 = new Label();
-            tableLayoutPanel6 = new TableLayoutPanel();
-            label15 = new Label();
             label14 = new Label();
             tableLayoutPanel2 = new TableLayoutPanel();
             tableLayoutPanel15 = new TableLayoutPanel();
@@ -71,7 +69,6 @@
             radioButton1 = new RadioButton();
             radioButton2 = new RadioButton();
             button6 = new Button();
-            button4 = new Button();
             tableLayoutPanel16 = new TableLayoutPanel();
             label16 = new Label();
             tableLayoutPanel14 = new TableLayoutPanel();
@@ -79,6 +76,9 @@
             radioButton5 = new RadioButton();
             radioButton6 = new RadioButton();
             button7 = new Button();
+            button4 = new Button();
+            panel5 = new Panel();
+            button10 = new Button();
             tableLayoutPanel3 = new TableLayoutPanel();
             tableLayoutPanel12 = new TableLayoutPanel();
             label12 = new Label();
@@ -101,6 +101,7 @@
             tableLayoutPanel15.SuspendLayout();
             tableLayoutPanel16.SuspendLayout();
             tableLayoutPanel14.SuspendLayout();
+            panel5.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
             tableLayoutPanel12.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
@@ -140,7 +141,7 @@
             label1.Location = new Point(4, 4);
             label1.Margin = new Padding(0);
             label1.Name = "label1";
-            label1.Size = new Size(385, 51);
+            label1.Size = new Size(350, 51);
             label1.TabIndex = 3;
             label1.Text = "Selected File name";
             label1.TextAlign = ContentAlignment.MiddleLeft;
@@ -159,7 +160,7 @@
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
             textBox1.ScrollBars = ScrollBars.Both;
-            textBox1.Size = new Size(385, 680);
+            textBox1.Size = new Size(350, 677);
             textBox1.TabIndex = 8;
             // 
             // vScrollBar1
@@ -170,7 +171,7 @@
             vScrollBar1.Maximum = 30;
             vScrollBar1.Minimum = -30;
             vScrollBar1.Name = "vScrollBar1";
-            vScrollBar1.Size = new Size(86, 415);
+            vScrollBar1.Size = new Size(86, 412);
             vScrollBar1.TabIndex = 11;
             vScrollBar1.ValueChanged += vScrollBar1_ValueChanged;
             // 
@@ -182,7 +183,7 @@
             vScrollBar2.Maximum = 30;
             vScrollBar2.Minimum = -30;
             vScrollBar2.Name = "vScrollBar2";
-            vScrollBar2.Size = new Size(86, 415);
+            vScrollBar2.Size = new Size(86, 412);
             vScrollBar2.TabIndex = 12;
             vScrollBar2.ValueChanged += vScrollBar2_ValueChanged;
             // 
@@ -190,10 +191,10 @@
             // 
             label2.Dock = DockStyle.Fill;
             label2.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label2.Location = new Point(175, 4);
+            label2.Location = new Point(174, 4);
             label2.Margin = new Padding(0);
             label2.Name = "label2";
-            label2.Size = new Size(171, 29);
+            label2.Size = new Size(170, 29);
             label2.TabIndex = 13;
             label2.Text = "Pitch";
             label2.TextAlign = ContentAlignment.MiddleCenter;
@@ -205,7 +206,7 @@
             label3.Location = new Point(4, 4);
             label3.Margin = new Padding(0);
             label3.Name = "label3";
-            label3.Size = new Size(171, 29);
+            label3.Size = new Size(170, 29);
             label3.TabIndex = 14;
             label3.Text = "Rate";
             label3.TextAlign = ContentAlignment.MiddleCenter;
@@ -244,7 +245,7 @@
             comboBox1.Location = new Point(76, 4);
             comboBox1.Margin = new Padding(0);
             comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(196, 27);
+            comboBox1.Size = new Size(195, 27);
             comboBox1.TabIndex = 17;
             comboBox1.SelectedIndexChanged += ComboBox1_SelectedIndexChanged;
             // 
@@ -256,7 +257,7 @@
             comboBox2.Location = new Point(76, 53);
             comboBox2.Margin = new Padding(0);
             comboBox2.Name = "comboBox2";
-            comboBox2.Size = new Size(196, 27);
+            comboBox2.Size = new Size(195, 27);
             comboBox2.TabIndex = 18;
             comboBox2.SelectedIndexChanged += ComboBox2_SelectedIndexChanged;
             // 
@@ -266,7 +267,7 @@
             button8.Location = new Point(8, 190);
             button8.Margin = new Padding(4);
             button8.Name = "button8";
-            button8.Size = new Size(80, 200);
+            button8.Size = new Size(80, 199);
             button8.TabIndex = 20;
             button8.Text = "Download Voices list";
             button8.UseVisualStyleBackColor = true;
@@ -275,10 +276,10 @@
             // button9
             // 
             button9.Dock = DockStyle.Fill;
-            button9.Location = new Point(8, 398);
+            button9.Location = new Point(8, 397);
             button9.Margin = new Padding(4);
             button9.Name = "button9";
-            button9.Size = new Size(80, 200);
+            button9.Size = new Size(80, 199);
             button9.TabIndex = 21;
             button9.Text = "Populate the combo boxes";
             button9.UseVisualStyleBackColor = true;
@@ -289,7 +290,7 @@
             label6.AutoSize = true;
             label6.Dock = DockStyle.Fill;
             label6.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label6.Location = new Point(283, 4);
+            label6.Location = new Point(282, 4);
             label6.Margin = new Padding(11, 0, 11, 0);
             label6.MaximumSize = new Size(348, 0);
             label6.Name = "label6";
@@ -302,7 +303,7 @@
             label7.AutoSize = true;
             label7.Dock = DockStyle.Fill;
             label7.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label7.Location = new Point(283, 53);
+            label7.Location = new Point(282, 53);
             label7.Margin = new Padding(11, 0, 11, 0);
             label7.MaximumSize = new Size(348, 0);
             label7.Name = "label7";
@@ -319,7 +320,7 @@
             comboBox3.Location = new Point(76, 102);
             comboBox3.Margin = new Padding(0);
             comboBox3.Name = "comboBox3";
-            comboBox3.Size = new Size(196, 27);
+            comboBox3.Size = new Size(195, 27);
             comboBox3.TabIndex = 25;
             comboBox3.SelectedIndexChanged += voiceStylesComboBox_SelectedIndexChanged;
             // 
@@ -341,26 +342,26 @@
             button2.Dock = DockStyle.Fill;
             button2.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
             button2.ImeMode = ImeMode.NoControl;
-            button2.Location = new Point(4, 699);
+            button2.Location = new Point(4, 696);
             button2.Margin = new Padding(4);
             button2.Name = "button2";
-            button2.Size = new Size(436, 36);
+            button2.Size = new Size(435, 36);
             button2.TabIndex = 28;
             button2.Text = "&Update this file";
             button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            button2.Click += Button2_Click;
             // 
             // button12
             // 
             button12.BackColor = Color.Transparent;
             button12.Dock = DockStyle.Fill;
             button12.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            button12.Location = new Point(0, 165);
-            button12.Margin = new Padding(0);
+            button12.Location = new Point(7, 128);
             button12.Name = "button12";
-            button12.Size = new Size(444, 41);
+            button12.Padding = new Padding(3);
+            button12.Size = new Size(107, 35);
             button12.TabIndex = 30;
-            button12.Text = "Sp&eak selected text";
+            button12.Text = "Sp&eak";
             button12.UseVisualStyleBackColor = false;
             button12.Click += Button12_Click;
             // 
@@ -370,10 +371,10 @@
             label10.BackColor = Color.Transparent;
             label10.Dock = DockStyle.Fill;
             label10.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label10.Location = new Point(346, 4);
+            label10.Location = new Point(344, 4);
             label10.Margin = new Padding(0);
             label10.Name = "label10";
-            label10.Size = new Size(86, 29);
+            label10.Size = new Size(87, 29);
             label10.TabIndex = 33;
             label10.Text = "Volume";
             label10.TextAlign = ContentAlignment.MiddleCenter;
@@ -384,10 +385,10 @@
             label11.BackColor = Color.Transparent;
             label11.Dock = DockStyle.Fill;
             label11.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label11.Location = new Point(346, 33);
+            label11.Location = new Point(344, 33);
             label11.Margin = new Padding(0);
             label11.Name = "label11";
-            label11.Size = new Size(86, 29);
+            label11.Size = new Size(87, 29);
             label11.TabIndex = 34;
             label11.Text = "100";
             label11.TextAlign = ContentAlignment.MiddleCenter;
@@ -415,7 +416,7 @@
             button5.Location = new Point(4, 4);
             button5.Margin = new Padding(4);
             button5.Name = "button5";
-            button5.Size = new Size(97, 85);
+            button5.Size = new Size(97, 80);
             button5.TabIndex = 37;
             button5.Text = " ";
             button5.UseVisualStyleBackColor = true;
@@ -443,7 +444,7 @@
             panel1.Location = new Point(4, 62);
             panel1.Margin = new Padding(0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(171, 415);
+            panel1.Size = new Size(170, 412);
             panel1.TabIndex = 40;
             panel1.Paint += panel_Paint;
             // 
@@ -453,10 +454,10 @@
             panel2.Controls.Add(vScrollBar2);
             panel2.Dock = DockStyle.Fill;
             panel2.Font = new Font("Calibri", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            panel2.Location = new Point(175, 62);
+            panel2.Location = new Point(174, 62);
             panel2.Margin = new Padding(0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(171, 415);
+            panel2.Size = new Size(170, 412);
             panel2.TabIndex = 41;
             panel2.Paint += panel_Paint;
             // 
@@ -469,7 +470,7 @@
             comboBox4.Location = new Point(11, 33);
             comboBox4.Margin = new Padding(7, 0, 7, 0);
             comboBox4.Name = "comboBox4";
-            comboBox4.Size = new Size(157, 27);
+            comboBox4.Size = new Size(156, 27);
             comboBox4.TabIndex = 42;
             comboBox4.SelectedIndexChanged += comboBox4_SelectedIndexChanged;
             // 
@@ -479,10 +480,10 @@
             comboBox5.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
             comboBox5.FormattingEnabled = true;
             comboBox5.Items.AddRange(new object[] { "x-low", "low", "medium", "high", "x-high", "default" });
-            comboBox5.Location = new Point(182, 33);
+            comboBox5.Location = new Point(181, 33);
             comboBox5.Margin = new Padding(7, 0, 7, 0);
             comboBox5.Name = "comboBox5";
-            comboBox5.Size = new Size(157, 27);
+            comboBox5.Size = new Size(156, 27);
             comboBox5.TabIndex = 43;
             comboBox5.SelectedIndexChanged += comboBox5_SelectedIndexChanged;
             // 
@@ -505,29 +506,26 @@
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.Controls.Add(tableLayoutPanel13, 0, 0);
-            tableLayoutPanel1.Controls.Add(label15, 0, 1);
-            tableLayoutPanel1.Controls.Add(label14, 0, 2);
-            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 3);
-            tableLayoutPanel1.Controls.Add(button4, 0, 5);
-            tableLayoutPanel1.Controls.Add(tableLayoutPanel16, 0, 4);
+            tableLayoutPanel1.Controls.Add(button12, 0, 1);
+            tableLayoutPanel1.Controls.Add(label14, 0, 3);
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 4);
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel16, 0, 5);
+            tableLayoutPanel1.Controls.Add(button4, 0, 6);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(960, 4);
             tableLayoutPanel1.Margin = new Padding(4);
             tableLayoutPanel1.MinimumSize = new Size(121, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.Padding = new Padding(4);
-            tableLayoutPanel1.RowCount = 6;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 145F));
+            tableLayoutPanel1.RowCount = 7;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 121F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 41F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 52F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 54F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 256F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 171F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 81F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 14F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 8F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 39F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new Size(121, 739);
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 194F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 58F));
+            tableLayoutPanel1.Size = new Size(121, 736);
             tableLayoutPanel1.TabIndex = 45;
             // 
             // tableLayoutPanel13
@@ -537,16 +535,15 @@
             tableLayoutPanel13.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel13.Controls.Add(label13, 0, 1);
             tableLayoutPanel13.Controls.Add(button5, 0, 0);
-            tableLayoutPanel13.Controls.Add(tableLayoutPanel6, 0, 2);
             tableLayoutPanel13.Dock = DockStyle.Fill;
             tableLayoutPanel13.Location = new Point(8, 8);
             tableLayoutPanel13.Margin = new Padding(4);
             tableLayoutPanel13.Name = "tableLayoutPanel13";
-            tableLayoutPanel13.RowCount = 3;
-            tableLayoutPanel13.RowStyles.Add(new RowStyle(SizeType.Absolute, 93F));
+            tableLayoutPanel13.RowCount = 2;
+            tableLayoutPanel13.RowStyles.Add(new RowStyle(SizeType.Absolute, 88F));
             tableLayoutPanel13.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel13.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel13.Size = new Size(105, 137);
+            tableLayoutPanel13.Size = new Size(105, 113);
             tableLayoutPanel13.TabIndex = 1;
             // 
             // label13
@@ -555,39 +552,14 @@
             label13.Dock = DockStyle.Fill;
             label13.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
             label13.ImeMode = ImeMode.NoControl;
-            label13.Location = new Point(4, 97);
+            label13.Location = new Point(4, 92);
             label13.Margin = new Padding(4);
             label13.Name = "label13";
             label13.RightToLeft = RightToLeft.No;
-            label13.Size = new Size(97, 16);
+            label13.Size = new Size(97, 17);
             label13.TabIndex = 38;
             label13.Text = "&Mute";
             label13.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // tableLayoutPanel6
-            // 
-            tableLayoutPanel6.ColumnCount = 2;
-            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel6.Location = new Point(3, 120);
-            tableLayoutPanel6.Name = "tableLayoutPanel6";
-            tableLayoutPanel6.RowCount = 2;
-            tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel6.Size = new Size(99, 14);
-            tableLayoutPanel6.TabIndex = 39;
-            // 
-            // label15
-            // 
-            label15.AutoSize = true;
-            label15.BackColor = Color.White;
-            label15.Dock = DockStyle.Fill;
-            label15.Location = new Point(8, 153);
-            label15.Margin = new Padding(4);
-            label15.Name = "label15";
-            label15.Padding = new Padding(4);
-            label15.Size = new Size(105, 18);
-            label15.TabIndex = 48;
             // 
             // label14
             // 
@@ -596,10 +568,10 @@
             label14.Dock = DockStyle.Fill;
             label14.Font = new Font("Calibri", 12F, FontStyle.Bold, GraphicsUnit.Point);
             label14.ImeMode = ImeMode.NoControl;
-            label14.Location = new Point(8, 179);
+            label14.Location = new Point(8, 174);
             label14.Margin = new Padding(4);
             label14.Name = "label14";
-            label14.Size = new Size(105, 44);
+            label14.Size = new Size(105, 46);
             label14.TabIndex = 47;
             label14.Text = "Export spoken text";
             label14.TextAlign = ContentAlignment.MiddleCenter;
@@ -614,7 +586,7 @@
             tableLayoutPanel2.Controls.Add(tableLayoutPanel15, 0, 2);
             tableLayoutPanel2.Controls.Add(button6, 0, 3);
             tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(4, 227);
+            tableLayoutPanel2.Location = new Point(4, 224);
             tableLayoutPanel2.Margin = new Padding(0);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.Padding = new Padding(4);
@@ -623,6 +595,7 @@
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 107F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 32F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             tableLayoutPanel2.Size = new Size(113, 256);
             tableLayoutPanel2.TabIndex = 46;
             // 
@@ -687,20 +660,6 @@
             button6.UseVisualStyleBackColor = true;
             button6.Click += button6_Click;
             // 
-            // button4
-            // 
-            button4.Dock = DockStyle.Fill;
-            button4.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            button4.ImeMode = ImeMode.NoControl;
-            button4.Location = new Point(8, 658);
-            button4.Margin = new Padding(4);
-            button4.Name = "button4";
-            button4.Size = new Size(105, 73);
-            button4.TabIndex = 36;
-            button4.Text = "Export audio from a local file";
-            button4.UseVisualStyleBackColor = true;
-            button4.Click += button4_Click;
-            // 
             // tableLayoutPanel16
             // 
             tableLayoutPanel16.ColumnCount = 1;
@@ -709,13 +668,13 @@
             tableLayoutPanel16.Controls.Add(tableLayoutPanel14, 0, 1);
             tableLayoutPanel16.Controls.Add(button7, 0, 2);
             tableLayoutPanel16.Dock = DockStyle.Fill;
-            tableLayoutPanel16.Location = new Point(7, 486);
+            tableLayoutPanel16.Location = new Point(7, 483);
             tableLayoutPanel16.Name = "tableLayoutPanel16";
             tableLayoutPanel16.RowCount = 3;
             tableLayoutPanel16.RowStyles.Add(new RowStyle(SizeType.Percent, 23F));
             tableLayoutPanel16.RowStyles.Add(new RowStyle(SizeType.Percent, 77F));
             tableLayoutPanel16.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-            tableLayoutPanel16.Size = new Size(107, 165);
+            tableLayoutPanel16.Size = new Size(107, 188);
             tableLayoutPanel16.TabIndex = 50;
             // 
             // label16
@@ -726,7 +685,7 @@
             label16.Margin = new Padding(3);
             label16.Name = "label16";
             label16.Padding = new Padding(3);
-            label16.Size = new Size(101, 22);
+            label16.Size = new Size(101, 28);
             label16.TabIndex = 0;
             label16.Text = "Textfile type :";
             // 
@@ -738,13 +697,13 @@
             tableLayoutPanel14.Controls.Add(radioButton5, 0, 1);
             tableLayoutPanel14.Controls.Add(radioButton6, 0, 2);
             tableLayoutPanel14.Dock = DockStyle.Fill;
-            tableLayoutPanel14.Location = new Point(3, 31);
+            tableLayoutPanel14.Location = new Point(3, 37);
             tableLayoutPanel14.Name = "tableLayoutPanel14";
             tableLayoutPanel14.RowCount = 3;
             tableLayoutPanel14.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel14.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel14.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanel14.Size = new Size(101, 90);
+            tableLayoutPanel14.Size = new Size(101, 107);
             tableLayoutPanel14.TabIndex = 49;
             // 
             // radioButton3
@@ -761,7 +720,7 @@
             // radioButton5
             // 
             radioButton5.AutoSize = true;
-            radioButton5.Location = new Point(3, 33);
+            radioButton5.Location = new Point(3, 38);
             radioButton5.Name = "radioButton5";
             radioButton5.Size = new Size(44, 23);
             radioButton5.TabIndex = 1;
@@ -772,7 +731,7 @@
             // radioButton6
             // 
             radioButton6.AutoSize = true;
-            radioButton6.Location = new Point(3, 63);
+            radioButton6.Location = new Point(3, 73);
             radioButton6.Name = "radioButton6";
             radioButton6.Size = new Size(61, 23);
             radioButton6.TabIndex = 2;
@@ -786,14 +745,53 @@
             button7.Dock = DockStyle.Fill;
             button7.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
             button7.ImeMode = ImeMode.NoControl;
-            button7.Location = new Point(4, 128);
+            button7.Location = new Point(4, 151);
             button7.Margin = new Padding(4);
             button7.Name = "button7";
             button7.Size = new Size(99, 33);
             button7.TabIndex = 24;
             button7.Text = "Export Text";
             button7.UseVisualStyleBackColor = false;
-            button7.Click += button7_Click;
+            button7.Click += Button7_Click;
+            // 
+            // button4
+            // 
+            button4.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            button4.ImeMode = ImeMode.NoControl;
+            button4.Location = new Point(8, 678);
+            button4.Margin = new Padding(4);
+            button4.Name = "button4";
+            button4.Size = new Size(105, 49);
+            button4.TabIndex = 36;
+            button4.Text = "Export audio from a local file";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
+            // 
+            // panel5
+            // 
+            panel5.BackColor = Color.White;
+            panel5.Controls.Add(button10);
+            panel5.Dock = DockStyle.Fill;
+            panel5.Location = new Point(924, 3);
+            panel5.Name = "panel5";
+            panel5.Padding = new Padding(1);
+            panel5.Size = new Size(29, 738);
+            panel5.TabIndex = 51;
+            // 
+            // button10
+            // 
+            button10.BackColor = Color.FromArgb(82, 198, 222);
+            button10.BackgroundImage = (Image)resources.GetObject("button10.BackgroundImage");
+            button10.BackgroundImageLayout = ImageLayout.Zoom;
+            button10.Dock = DockStyle.Fill;
+            button10.Location = new Point(1, 1);
+            button10.Name = "button10";
+            button10.Padding = new Padding(3);
+            button10.Size = new Size(27, 736);
+            button10.TabIndex = 0;
+            button10.TextAlign = ContentAlignment.TopCenter;
+            button10.UseVisualStyleBackColor = false;
+            button10.Click += Button10_Click;
             // 
             // tableLayoutPanel3
             // 
@@ -817,7 +815,7 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 132F));
-            tableLayoutPanel3.Size = new Size(96, 739);
+            tableLayoutPanel3.Size = new Size(96, 736);
             tableLayoutPanel3.TabIndex = 47;
             // 
             // tableLayoutPanel12
@@ -828,13 +826,13 @@
             tableLayoutPanel12.Controls.Add(label12, 0, 1);
             tableLayoutPanel12.Controls.Add(button3, 0, 0);
             tableLayoutPanel12.Dock = DockStyle.Fill;
-            tableLayoutPanel12.Location = new Point(4, 602);
+            tableLayoutPanel12.Location = new Point(4, 600);
             tableLayoutPanel12.Margin = new Padding(0);
             tableLayoutPanel12.Name = "tableLayoutPanel12";
             tableLayoutPanel12.RowCount = 2;
             tableLayoutPanel12.RowStyles.Add(new RowStyle(SizeType.Absolute, 89F));
             tableLayoutPanel12.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel12.Size = new Size(88, 133);
+            tableLayoutPanel12.Size = new Size(88, 132);
             tableLayoutPanel12.TabIndex = 1;
             // 
             // label12
@@ -847,7 +845,7 @@
             label12.Margin = new Padding(4);
             label12.Name = "label12";
             label12.Padding = new Padding(4);
-            label12.Size = new Size(80, 36);
+            label12.Size = new Size(80, 35);
             label12.TabIndex = 37;
             label12.Text = "Exit";
             label12.TextAlign = ContentAlignment.MiddleCenter;
@@ -886,7 +884,7 @@
             tableLayoutPanel4.RowCount = 2;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 51F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel4.Size = new Size(393, 739);
+            tableLayoutPanel4.Size = new Size(358, 736);
             tableLayoutPanel4.TabIndex = 48;
             // 
             // tableLayoutPanel5
@@ -914,16 +912,16 @@
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 29F));
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 29F));
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel5.Size = new Size(436, 481);
+            tableLayoutPanel5.Size = new Size(435, 478);
             tableLayoutPanel5.TabIndex = 49;
             // 
             // vScrollBar3
             // 
             vScrollBar3.Dock = DockStyle.Fill;
             vScrollBar3.LargeChange = 1;
-            vScrollBar3.Location = new Point(346, 62);
+            vScrollBar3.Location = new Point(344, 62);
             vScrollBar3.Name = "vScrollBar3";
-            vScrollBar3.Size = new Size(86, 415);
+            vScrollBar3.Size = new Size(87, 412);
             vScrollBar3.TabIndex = 44;
             vScrollBar3.Value = 100;
             vScrollBar3.ValueChanged += vScrollBar3_ValueChanged;
@@ -931,24 +929,23 @@
             // tableLayoutPanel7
             // 
             tableLayoutPanel7.AutoSize = true;
+            tableLayoutPanel7.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel7.BackColor = Color.White;
             tableLayoutPanel7.ColumnCount = 1;
-            tableLayoutPanel7.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 444F));
+            tableLayoutPanel7.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 1F));
             tableLayoutPanel7.Controls.Add(tableLayoutPanel8, 0, 0);
-            tableLayoutPanel7.Controls.Add(button12, 0, 1);
             tableLayoutPanel7.Controls.Add(tableLayoutPanel5, 0, 2);
             tableLayoutPanel7.Controls.Add(button2, 0, 3);
             tableLayoutPanel7.Dock = DockStyle.Fill;
-            tableLayoutPanel7.Location = new Point(509, 4);
+            tableLayoutPanel7.Location = new Point(474, 4);
             tableLayoutPanel7.Margin = new Padding(4);
-            tableLayoutPanel7.MinimumSize = new Size(400, 0);
             tableLayoutPanel7.Name = "tableLayoutPanel7";
             tableLayoutPanel7.RowCount = 4;
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Absolute, 165F));
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Absolute, 41F));
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Absolute, 44F));
-            tableLayoutPanel7.Size = new Size(443, 739);
+            tableLayoutPanel7.Size = new Size(443, 736);
             tableLayoutPanel7.TabIndex = 51;
             // 
             // tableLayoutPanel8
@@ -976,7 +973,7 @@
             tableLayoutPanel8.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33333F));
             tableLayoutPanel8.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel8.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanel8.Size = new Size(436, 157);
+            tableLayoutPanel8.Size = new Size(435, 157);
             tableLayoutPanel8.TabIndex = 52;
             // 
             // panel4
@@ -984,7 +981,7 @@
             panel4.BackColor = Color.White;
             panel4.BackgroundImageLayout = ImageLayout.Stretch;
             panel4.Dock = DockStyle.Fill;
-            panel4.Location = new Point(11, 834);
+            panel4.Location = new Point(11, 831);
             panel4.Margin = new Padding(11, 12, 11, 12);
             panel4.Name = "panel4";
             panel4.Size = new Size(1070, 1);
@@ -1005,7 +1002,7 @@
             tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Absolute, 67F));
             tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Absolute, 22F));
-            tableLayoutPanel10.Size = new Size(1092, 844);
+            tableLayoutPanel10.Size = new Size(1092, 841);
             tableLayoutPanel10.TabIndex = 0;
             // 
             // tableLayoutPanel9
@@ -1040,22 +1037,24 @@
             // 
             tableLayoutPanel11.AutoSize = true;
             tableLayoutPanel11.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel11.ColumnCount = 4;
+            tableLayoutPanel11.ColumnCount = 5;
             tableLayoutPanel11.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 104F));
             tableLayoutPanel11.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel11.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 451F));
+            tableLayoutPanel11.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 35F));
             tableLayoutPanel11.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 128F));
             tableLayoutPanel11.Controls.Add(tableLayoutPanel3, 0, 0);
             tableLayoutPanel11.Controls.Add(tableLayoutPanel4, 1, 0);
             tableLayoutPanel11.Controls.Add(tableLayoutPanel7, 2, 0);
-            tableLayoutPanel11.Controls.Add(tableLayoutPanel1, 3, 0);
+            tableLayoutPanel11.Controls.Add(panel5, 3, 0);
+            tableLayoutPanel11.Controls.Add(tableLayoutPanel1, 4, 0);
             tableLayoutPanel11.Dock = DockStyle.Fill;
             tableLayoutPanel11.Location = new Point(4, 71);
             tableLayoutPanel11.Margin = new Padding(4);
             tableLayoutPanel11.Name = "tableLayoutPanel11";
             tableLayoutPanel11.RowCount = 1;
             tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel11.Size = new Size(1084, 747);
+            tableLayoutPanel11.Size = new Size(1084, 744);
             tableLayoutPanel11.TabIndex = 53;
             // 
             // Form1
@@ -1064,11 +1063,11 @@
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
             BackColor = Color.White;
-            ClientSize = new Size(1092, 844);
+            ClientSize = new Size(1092, 841);
             Controls.Add(tableLayoutPanel10);
             Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
             Margin = new Padding(11, 12, 11, 12);
-            MinimumSize = new Size(1108, 777);
+            MinimumSize = new Size(1108, 880);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Text to Speech by Diadrasis";
@@ -1089,6 +1088,7 @@
             tableLayoutPanel16.PerformLayout();
             tableLayoutPanel14.ResumeLayout(false);
             tableLayoutPanel14.PerformLayout();
+            panel5.ResumeLayout(false);
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel12.ResumeLayout(false);
             tableLayoutPanel12.PerformLayout();
@@ -1157,11 +1157,9 @@
         private Label label13;
         private VScrollBar vScrollBar3;
         private Label label14;
-        private Label label15;
         private RadioButton radioButton1;
         private RadioButton radioButton2;
         private RadioButton radioButton4;
-        private TableLayoutPanel tableLayoutPanel6;
         private TableLayoutPanel tableLayoutPanel15;
         private Button button6;
         private TableLayoutPanel tableLayoutPanel16;
@@ -1172,5 +1170,7 @@
         private RadioButton radioButton6;
         private Button button7;
         private Button button4;
+        private Panel panel5;
+        private Button button10;
     }
 }
