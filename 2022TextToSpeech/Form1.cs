@@ -84,6 +84,10 @@ namespace _2022TextToSpeech
 
         public TableLayoutPanel soundRadioGroupParentPanel, textRadioGroupParentPanel;
 
+        public float attributesColumnInitialWidth;
+        public float attributesColumnCurrentWidth = 451f;
+        public SizeType attributesColumnInitialSizeType;
+        public System.Drawing.Size attributesColumnInitialMinimumSize;
         /// <summary>  The public class of the app's main Form, that is window. </summary>
         public Form1()
         {
@@ -94,7 +98,6 @@ namespace _2022TextToSpeech
             label11.Text = string.Empty;
             voiceStylesComboBox = comboBox3; // set the voice style combo box
             voicesComboBox = comboBox2;
-
 
             soundtypesComboBox = cmbBx_SelectSavedSoundFormat;
             soundTypeSelectorComboboxOrRadiogroup = false;
@@ -124,6 +127,10 @@ namespace _2022TextToSpeech
             soundtypesComboBox.SelectedIndex = 0;
             soundTypeRadioButtonMP3.Checked = true;
             textTypeRadioButtonXML.Checked = true;
+
+
+            attributesColumnInitialSizeType = tableLayoutPanel11.ColumnStyles[2].SizeType; // store the Attributes columnn's sizetype
+            attributesColumnInitialMinimumSize = tableLayoutPanel7.MinimumSize;
         }
 
         private void Bttn3_LoadText_Click(object sender, EventArgs e)
@@ -163,11 +170,7 @@ namespace _2022TextToSpeech
                 formatOutputSound = SetOutputSoundFormat();
                 _ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);  // "_= " is for discarding the result afterwards. Practically suppresses the warning.
             }
-
-
         }
-
-
         private void button6_Click(object sender, EventArgs e) // The sound exporting button
         {
             formatOutputSound = SetOutputSoundFormat();
@@ -186,7 +189,7 @@ namespace _2022TextToSpeech
         }
 
         /// <summary> The Update button </summary>
-        private void button2_Click(object sender, EventArgs e)
+        private void Button2_Click(object sender, EventArgs e)
         {
             //string pathFileSelected = locationLoadedFile;
             //string text = this.textBox1.Text;
@@ -194,12 +197,9 @@ namespace _2022TextToSpeech
             //SSMLDocument.Save(pathFileSelected);// Save the XML document to a file
             //formatOutputSound = SetOutputSoundFormat();
             //_ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
-
         }
-
-
         /// <summary> The Save the text button </summary>
-        private void button7_Click(object sender, EventArgs e)
+        private void Button7_Click(object sender, EventArgs e)
         {
             string outputTextFormat = SetOutputTextFormat();
             SaveText(outputTextFormat);
@@ -1393,5 +1393,22 @@ namespace _2022TextToSpeech
         [GeneratedRegex("[^0-9-+]")]
         private static partial Regex MyRegex();
 
+        private void Button10_Click(object sender, EventArgs e)
+        {
+            tableLayoutPanel11.ColumnStyles[2].SizeType = SizeType.Absolute;
+            if (tableLayoutPanel11.ColumnStyles[2].Width > 0)
+            {
+                //tableLayoutPanel7.MinimumSize = (Width = 0, Height = 0);
+                //MessageBox.Show(tableLayoutPanel7.MinimumSize.ToString());
+                tableLayoutPanel11.ColumnStyles[2].Width = 0;
+            }
+            else
+            {
+                tableLayoutPanel11.ColumnStyles[2].Width = attributesColumnInitialWidth;
+                tableLayoutPanel11.ColumnStyles[2].SizeType = attributesColumnInitialSizeType;
+                //tableLayoutPanel7.MinimumSize = attributesColumnInitialMinimumSize;
+            }
+            attributesColumnCurrentWidth = tableLayoutPanel11.ColumnStyles[2].Width;
+        }
     }
 }
