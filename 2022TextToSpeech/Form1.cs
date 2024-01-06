@@ -29,12 +29,12 @@ namespace _2022TextToSpeech
         // If, at some point, MS changes Cognitive Services authorization protocols, https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech provides the methods used
         /// <summary>  Azure Speech Service Location </summary>
         public static string serverLocation = "westeurope";
-        readonly static string subscriptionKeyGiannis1 = "4b3dc697810e47fc845f076f446a62da";
-        readonly static string subscriptionKeyGiannis2 = "120f1e685b4244d8b1260b5bbc28f9ee";
+        //readonly static string subscriptionKeyGiannis1 = "4b3dc697810e47fc845f076f446a62da";
+        //readonly static string subscriptionKeyGiannis2 = "120f1e685b4244d8b1260b5bbc28f9ee";
         readonly static string subscriptionKeyAlex1 = "5521b17037c34b96aa88e1ab83b34fb3";
         readonly static string subscriptionKeyAlex2 = "1491bf9d70da4dedab0f0f375beae896";
         /// <summary>  This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis </summary>
-        private static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyGiannis1, serverLocation);
+        private static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyAlex1, serverLocation);
         #region The Prosody and assorted elements of speech
         // As per : https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice. The https://www.w3.org/TR/speech-synthesis11/ is irrelevant so far.
         /// <summary>  Pitch is expressed in 3 ways. Here, for now, we are using just the absolute value from the range [-200, +200]</summary>
@@ -397,7 +397,7 @@ namespace _2022TextToSpeech
         async Task VoicesRetrieve()  // need to make it wait until it is finished
         {
             var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKeyGiannis1);
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKeyAlex1);
             string listVoicesLocationURL = "https://" + serverLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
             HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
             if (response.IsSuccessStatusCode)
