@@ -29,10 +29,7 @@ namespace _2022TextToSpeech
         // If, at some point, MS changes Cognitive Services authorization protocols, https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech provides the methods used
         /// <summary>  Azure Speech Service Location </summary>
         public static string serverLocation = "westeurope";
-        //readonly static string subscriptionKeyGiannis1 = "4b3dc697810e47fc845f076f446a62da";
-        //readonly static string subscriptionKeyGiannis2 = "120f1e685b4244d8b1260b5bbc28f9ee";
         readonly static string subscriptionKeyAlex1 = "5521b17037c34b96aa88e1ab83b34fb3";
-        readonly static string subscriptionKeyAlex2 = "1491bf9d70da4dedab0f0f375beae896";
         /// <summary>  This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis </summary>
         private static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyAlex1, serverLocation);
         #region The Prosody and assorted elements of speech
@@ -71,6 +68,10 @@ namespace _2022TextToSpeech
         private static SpeechSynthesizer speechSynthesizer;
         private string formatOutputSound = "mp3";
         private static bool isSynthSpeaking = false;
+        /// <summary> What type of seperator, if any, we want to have on the title
+        private static string title_fileExtention_seperator = ".";
+        /// <summary> The app's name</summary>
+        private static string applicationBrandName = "Verbalize";
         /// <summary> The dnamic XML of the document we are handling.</summary>
         public static XmlDocument VirtualSSMLDocument = new XmlDocument(); // the dynamic object which stores the proccessed ssml
 
@@ -154,6 +155,7 @@ namespace _2022TextToSpeech
             {
                 locationLoadedFile = openFileDialog1.FileName;
                 label1.Text = Path.GetFileNameWithoutExtension(locationLoadedFile); // Show the loaded file's name
+                Form1.ActiveForm.Text = applicationBrandName + " : " + label1.Text /*+ Path.GetFileNameWithoutExtension(locationLoadedFile) + Path.GetExtension(locationLoadedFile)*/;
                 label1.Visible = true;
                 string fileContents = string.Empty;
                 //  Search further for advantages on using a rich text box instead. So far none found.
@@ -1401,8 +1403,6 @@ namespace _2022TextToSpeech
         }
         #endregion
 
-        /// <summary> The app's Quit button. </summary>
-        private void button3_Click(object sender, EventArgs e) { Application.Exit(); }
         /// <summary> Draw a light blue rectangle as the text file's title background. </summary>
         private void label1_Paint(object sender, PaintEventArgs e)
         {
