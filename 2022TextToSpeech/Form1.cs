@@ -29,7 +29,7 @@ namespace _2022TextToSpeech
         //static string regionService = Environment.GetEnvironmentVariable("westeurope");
         // If, at some point, MS changes Cognitive Services authorization protocols, https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech provides the methods used
         /// <summary>  Azure Speech Service Location </summary>
-        public static string serverLocation = "westeurope";
+        public static string serverLocation = ConfigurationManager.AppSettings["serverLocationWestEurope"];
         readonly static string subscriptionKeyAlex1 = ConfigurationManager.AppSettings["subscriptionKeyAlex1"];
         /// <summary>  This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis </summary>
         private static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyAlex1, serverLocation);

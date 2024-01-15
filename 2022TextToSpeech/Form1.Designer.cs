@@ -967,7 +967,7 @@
             tableLayoutPanel9.BackColor = Color.White;
             tableLayoutPanel9.BackgroundImageLayout = ImageLayout.Zoom;
             tableLayoutPanel9.ColumnCount = 2;
-            tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 67F));
+            tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 50F));
             tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel9.Controls.Add(panel3, 0, 0);
             tableLayoutPanel9.Dock = DockStyle.Fill;
@@ -981,12 +981,13 @@
             // 
             // panel3
             // 
+            panel3.BackgroundImage = (Image)resources.GetObject("panel3.BackgroundImage");
             panel3.BackgroundImageLayout = ImageLayout.Zoom;
             panel3.Dock = DockStyle.Fill;
             panel3.Location = new Point(0, 0);
             panel3.Margin = new Padding(0);
             panel3.Name = "panel3";
-            panel3.Size = new Size(67, 51);
+            panel3.Size = new Size(50, 51);
             panel3.TabIndex = 0;
             // 
             // tableLayoutPanel11
