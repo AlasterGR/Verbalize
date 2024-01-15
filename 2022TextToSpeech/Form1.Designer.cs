@@ -1016,8 +1016,8 @@
             // Form1
             // 
             AllowDrop = true;
-            AutoScaleDimensions = new SizeF(8F, 19F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             AutoScroll = true;
             BackColor = Color.White;
             ClientSize = new Size(1264, 681);

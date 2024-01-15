@@ -19,6 +19,7 @@ namespace _2022TextToSpeech
     using NAudio.Wave;  // for the audio conversion
     using NAudio.MediaFoundation;
     using System.Drawing.Drawing2D;
+    using System.Configuration;
 
     /// <summary>
     /// The main Form of the app
@@ -29,7 +30,7 @@ namespace _2022TextToSpeech
         // If, at some point, MS changes Cognitive Services authorization protocols, https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech provides the methods used
         /// <summary>  Azure Speech Service Location </summary>
         public static string serverLocation = "westeurope";
-        readonly static string subscriptionKeyAlex1 = "5521b17037c34b96aa88e1ab83b34fb3";
+        readonly static string subscriptionKeyAlex1 = ConfigurationManager.AppSettings["subscriptionKeyAlex1"];
         /// <summary>  This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis </summary>
         private static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyAlex1, serverLocation);
         #region The Prosody and assorted elements of speech
