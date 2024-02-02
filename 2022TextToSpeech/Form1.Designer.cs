@@ -1044,25 +1044,25 @@
             // saveToolStripMenuItem
             // 
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new Size(136, 28);
+            saveToolStripMenuItem.Size = new Size(180, 28);
             saveToolStripMenuItem.Text = "Save";
             // 
             // loadToolStripMenuItem
             // 
             loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            loadToolStripMenuItem.Size = new Size(136, 28);
+            loadToolStripMenuItem.Size = new Size(180, 28);
             loadToolStripMenuItem.Text = "Load";
             // 
             // updateToolStripMenuItem
             // 
             updateToolStripMenuItem.Name = "updateToolStripMenuItem";
-            updateToolStripMenuItem.Size = new Size(136, 28);
+            updateToolStripMenuItem.Size = new Size(180, 28);
             updateToolStripMenuItem.Text = "Update";
             // 
             // deleteToolStripMenuItem
             // 
             deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            deleteToolStripMenuItem.Size = new Size(136, 28);
+            deleteToolStripMenuItem.Size = new Size(180, 28);
             deleteToolStripMenuItem.Text = "Delete";
             // 
             // exportToolStripMenuItem
@@ -1075,19 +1075,19 @@
             // soundToolStripMenuItem
             // 
             soundToolStripMenuItem.Name = "soundToolStripMenuItem";
-            soundToolStripMenuItem.Size = new Size(170, 28);
+            soundToolStripMenuItem.Size = new Size(180, 28);
             soundToolStripMenuItem.Text = "Sound";
             // 
             // textToolStripMenuItem
             // 
             textToolStripMenuItem.Name = "textToolStripMenuItem";
-            textToolStripMenuItem.Size = new Size(170, 28);
+            textToolStripMenuItem.Size = new Size(180, 28);
             textToolStripMenuItem.Text = "Text";
             // 
             // batchAudioToolStripMenuItem
             // 
             batchAudioToolStripMenuItem.Name = "batchAudioToolStripMenuItem";
-            batchAudioToolStripMenuItem.Size = new Size(170, 28);
+            batchAudioToolStripMenuItem.Size = new Size(180, 28);
             batchAudioToolStripMenuItem.Text = "Batch audio";
             // 
             // viewToolStripMenuItem
@@ -1114,6 +1114,7 @@
             fullScreenToolStripMenuItem.Name = "fullScreenToolStripMenuItem";
             fullScreenToolStripMenuItem.Size = new Size(195, 28);
             fullScreenToolStripMenuItem.Text = "Full Screen";
+            fullScreenToolStripMenuItem.Click += fullScreenToolStripMenuItem_Click;
             // 
             // colourSchemeToolStripMenuItem
             // 

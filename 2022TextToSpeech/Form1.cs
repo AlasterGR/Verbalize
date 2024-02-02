@@ -1465,20 +1465,33 @@ namespace _2022TextToSpeech
 
         private void Maximize_btn_Click(object sender, EventArgs e)
         {
+            Screen_Maximize();
+        }
+        private void button13_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void fullScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Screen_Maximize();
+        }
+        /// <summary>
+        /// This is the function which changes the form fullscreen -- normalscreen
+        /// </summary>
+        public void Screen_Maximize()
+        {
             if (WindowState == FormWindowState.Maximized)
             {
                 WindowState = FormWindowState.Normal;
-                Size = new Size(1278, 718);
+                Size = new Size(1278, 718);  //This is the minimum size as set at the editor. Will change this to remember the size while in normal screen and revert to that
+                fullScreenToolStripMenuItem.Text = "Full Screen";
             }
             else if (WindowState == FormWindowState.Normal)
             {
                 WindowState = FormWindowState.Maximized;
+                fullScreenToolStripMenuItem.Text = "Normal Screen";
             }
-        }
-
-        private void button13_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
         }
     }
 }
