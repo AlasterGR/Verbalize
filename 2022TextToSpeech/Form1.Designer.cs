@@ -89,6 +89,31 @@
             tableLayoutPanel10 = new TableLayoutPanel();
             tableLayoutPanel9 = new TableLayoutPanel();
             panel3 = new Panel();
+            menuStrip1 = new MenuStrip();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            saveToolStripMenuItem = new ToolStripMenuItem();
+            loadToolStripMenuItem = new ToolStripMenuItem();
+            updateToolStripMenuItem = new ToolStripMenuItem();
+            deleteToolStripMenuItem = new ToolStripMenuItem();
+            exportToolStripMenuItem = new ToolStripMenuItem();
+            soundToolStripMenuItem = new ToolStripMenuItem();
+            textToolStripMenuItem = new ToolStripMenuItem();
+            batchAudioToolStripMenuItem = new ToolStripMenuItem();
+            viewToolStripMenuItem = new ToolStripMenuItem();
+            menuBarToolStripMenuItem = new ToolStripMenuItem();
+            appGUIToolStripMenuItem = new ToolStripMenuItem();
+            fullScreenToolStripMenuItem = new ToolStripMenuItem();
+            colourSchemeToolStripMenuItem = new ToolStripMenuItem();
+            optionsToolStripMenuItem = new ToolStripMenuItem();
+            downloadVoicesListToolStripMenuItem = new ToolStripMenuItem();
+            populateTheComboBoxesToolStripMenuItem = new ToolStripMenuItem();
+            presetLanguageToolStripMenuItem = new ToolStripMenuItem();
+            label12 = new Label();
+            tableLayoutPanel6 = new TableLayoutPanel();
+            button13 = new Button();
+            Maximize_btn = new Button();
+            button3 = new Button();
+            button14 = new Button();
             tableLayoutPanel11 = new TableLayoutPanel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -106,6 +131,8 @@
             tableLayoutPanel8.SuspendLayout();
             tableLayoutPanel10.SuspendLayout();
             tableLayoutPanel9.SuspendLayout();
+            menuStrip1.SuspendLayout();
+            tableLayoutPanel6.SuspendLayout();
             tableLayoutPanel11.SuspendLayout();
             SuspendLayout();
             // 
@@ -155,7 +182,7 @@
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
             textBox1.ScrollBars = ScrollBars.Both;
-            textBox1.Size = new Size(519, 504);
+            textBox1.Size = new Size(533, 540);
             textBox1.TabIndex = 8;
             // 
             // vScrollBar1
@@ -166,7 +193,7 @@
             vScrollBar1.Maximum = 30;
             vScrollBar1.Minimum = -30;
             vScrollBar1.Name = "vScrollBar1";
-            vScrollBar1.Size = new Size(86, 238);
+            vScrollBar1.Size = new Size(86, 274);
             vScrollBar1.TabIndex = 11;
             vScrollBar1.ValueChanged += vScrollBar1_ValueChanged;
             // 
@@ -178,7 +205,7 @@
             vScrollBar2.Maximum = 30;
             vScrollBar2.Minimum = -30;
             vScrollBar2.Name = "vScrollBar2";
-            vScrollBar2.Size = new Size(86, 238);
+            vScrollBar2.Size = new Size(86, 274);
             vScrollBar2.TabIndex = 12;
             vScrollBar2.ValueChanged += vScrollBar2_ValueChanged;
             // 
@@ -262,7 +289,7 @@
             button8.Location = new Point(10, 140);
             button8.Margin = new Padding(5, 4, 5, 4);
             button8.Name = "button8";
-            button8.Size = new Size(71, 137);
+            button8.Size = new Size(71, 155);
             button8.TabIndex = 20;
             button8.Text = "Download Voices list";
             button8.UseVisualStyleBackColor = true;
@@ -271,10 +298,10 @@
             // button9
             // 
             button9.Dock = DockStyle.Fill;
-            button9.Location = new Point(10, 285);
+            button9.Location = new Point(10, 303);
             button9.Margin = new Padding(5, 4, 5, 4);
             button9.Name = "button9";
-            button9.Size = new Size(71, 137);
+            button9.Size = new Size(71, 155);
             button9.TabIndex = 21;
             button9.Text = "Populate the combo boxes";
             button9.UseVisualStyleBackColor = true;
@@ -337,7 +364,7 @@
             button2.Dock = DockStyle.Fill;
             button2.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
             button2.ImeMode = ImeMode.NoControl;
-            button2.Location = new Point(5, 523);
+            button2.Location = new Point(5, 559);
             button2.Margin = new Padding(5, 4, 5, 4);
             button2.Name = "button2";
             button2.Size = new Size(433, 36);
@@ -440,7 +467,7 @@
             panel1.Location = new Point(5, 62);
             panel1.Margin = new Padding(0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(167, 238);
+            panel1.Size = new Size(167, 274);
             panel1.TabIndex = 40;
             panel1.Paint += panel_Paint;
             // 
@@ -453,7 +480,7 @@
             panel2.Location = new Point(172, 62);
             panel2.Margin = new Padding(0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(167, 238);
+            panel2.Size = new Size(167, 274);
             panel2.TabIndex = 41;
             panel2.Paint += panel_Paint;
             // 
@@ -508,7 +535,7 @@
             tableLayoutPanel1.Controls.Add(tableLayoutPanel16, 0, 4);
             tableLayoutPanel1.Controls.Add(button4, 0, 5);
             tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(1131, 4);
+            tableLayoutPanel1.Location = new Point(1145, 4);
             tableLayoutPanel1.Margin = new Padding(5, 4, 5, 4);
             tableLayoutPanel1.MinimumSize = new Size(121, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -520,7 +547,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 207F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 175F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 13F));
-            tableLayoutPanel1.Size = new Size(121, 563);
+            tableLayoutPanel1.Size = new Size(121, 599);
             tableLayoutPanel1.TabIndex = 45;
             // 
             // tableLayoutPanel13
@@ -777,11 +804,11 @@
             panel5.BackColor = Color.White;
             panel5.Controls.Add(button10);
             panel5.Dock = DockStyle.Fill;
-            panel5.Location = new Point(1088, 4);
+            panel5.Location = new Point(1102, 4);
             panel5.Margin = new Padding(3, 4, 3, 4);
             panel5.Name = "panel5";
             panel5.Padding = new Padding(1);
-            panel5.Size = new Size(35, 563);
+            panel5.Size = new Size(35, 599);
             panel5.TabIndex = 51;
             // 
             // button10
@@ -794,7 +821,7 @@
             button10.Margin = new Padding(3, 4, 3, 4);
             button10.Name = "button10";
             button10.Padding = new Padding(3, 4, 3, 4);
-            button10.Size = new Size(33, 561);
+            button10.Size = new Size(33, 597);
             button10.TabIndex = 0;
             button10.TextAlign = ContentAlignment.TopCenter;
             button10.UseVisualStyleBackColor = false;
@@ -821,7 +848,7 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 132F));
-            tableLayoutPanel3.Size = new Size(91, 563);
+            tableLayoutPanel3.Size = new Size(91, 599);
             tableLayoutPanel3.TabIndex = 47;
             // 
             // tableLayoutPanel4
@@ -841,7 +868,7 @@
             tableLayoutPanel4.RowCount = 2;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 51F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel4.Size = new Size(529, 563);
+            tableLayoutPanel4.Size = new Size(543, 599);
             tableLayoutPanel4.TabIndex = 48;
             // 
             // tableLayoutPanel5
@@ -869,7 +896,7 @@
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 29F));
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 29F));
             tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel5.Size = new Size(433, 304);
+            tableLayoutPanel5.Size = new Size(433, 340);
             tableLayoutPanel5.TabIndex = 49;
             // 
             // vScrollBar3
@@ -878,7 +905,7 @@
             vScrollBar3.LargeChange = 1;
             vScrollBar3.Location = new Point(339, 62);
             vScrollBar3.Name = "vScrollBar3";
-            vScrollBar3.Size = new Size(89, 238);
+            vScrollBar3.Size = new Size(89, 274);
             vScrollBar3.TabIndex = 44;
             vScrollBar3.Value = 100;
             vScrollBar3.ValueChanged += vScrollBar3_ValueChanged;
@@ -894,7 +921,7 @@
             tableLayoutPanel7.Controls.Add(tableLayoutPanel5, 0, 2);
             tableLayoutPanel7.Controls.Add(button2, 0, 3);
             tableLayoutPanel7.Dock = DockStyle.Fill;
-            tableLayoutPanel7.Location = new Point(645, 4);
+            tableLayoutPanel7.Location = new Point(659, 4);
             tableLayoutPanel7.Margin = new Padding(5, 4, 5, 4);
             tableLayoutPanel7.Name = "tableLayoutPanel7";
             tableLayoutPanel7.RowCount = 4;
@@ -902,7 +929,7 @@
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Absolute, 42F));
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel7.RowStyles.Add(new RowStyle(SizeType.Absolute, 44F));
-            tableLayoutPanel7.Size = new Size(435, 563);
+            tableLayoutPanel7.Size = new Size(435, 599);
             tableLayoutPanel7.TabIndex = 51;
             // 
             // tableLayoutPanel8
@@ -938,10 +965,10 @@
             panel4.BackColor = Color.White;
             panel4.BackgroundImageLayout = ImageLayout.Stretch;
             panel4.Dock = DockStyle.Fill;
-            panel4.Location = new Point(11, 643);
+            panel4.Location = new Point(11, 663);
             panel4.Margin = new Padding(11, 13, 11, 13);
             panel4.Name = "panel4";
-            panel4.Size = new Size(1242, 25);
+            panel4.Size = new Size(1256, 25);
             panel4.TabIndex = 47;
             // 
             // tableLayoutPanel10
@@ -956,27 +983,32 @@
             tableLayoutPanel10.Margin = new Padding(0);
             tableLayoutPanel10.Name = "tableLayoutPanel10";
             tableLayoutPanel10.RowCount = 3;
-            tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Absolute, 51F));
+            tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Absolute, 35F));
             tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel10.RowStyles.Add(new RowStyle(SizeType.Absolute, 51F));
-            tableLayoutPanel10.Size = new Size(1264, 681);
+            tableLayoutPanel10.Size = new Size(1278, 701);
             tableLayoutPanel10.TabIndex = 0;
             // 
             // tableLayoutPanel9
             // 
             tableLayoutPanel9.BackColor = Color.White;
             tableLayoutPanel9.BackgroundImageLayout = ImageLayout.Zoom;
-            tableLayoutPanel9.ColumnCount = 2;
+            tableLayoutPanel9.ColumnCount = 4;
             tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 50F));
             tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 463F));
+            tableLayoutPanel9.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 156F));
             tableLayoutPanel9.Controls.Add(panel3, 0, 0);
+            tableLayoutPanel9.Controls.Add(menuStrip1, 1, 0);
+            tableLayoutPanel9.Controls.Add(label12, 2, 0);
+            tableLayoutPanel9.Controls.Add(tableLayoutPanel6, 3, 0);
             tableLayoutPanel9.Dock = DockStyle.Fill;
             tableLayoutPanel9.Location = new Point(0, 0);
             tableLayoutPanel9.Margin = new Padding(0);
             tableLayoutPanel9.Name = "tableLayoutPanel9";
             tableLayoutPanel9.RowCount = 1;
             tableLayoutPanel9.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel9.Size = new Size(1264, 51);
+            tableLayoutPanel9.Size = new Size(1278, 35);
             tableLayoutPanel9.TabIndex = 54;
             // 
             // panel3
@@ -987,8 +1019,209 @@
             panel3.Location = new Point(0, 0);
             panel3.Margin = new Padding(0);
             panel3.Name = "panel3";
-            panel3.Size = new Size(50, 51);
+            panel3.Size = new Size(50, 35);
             panel3.TabIndex = 0;
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.BackColor = Color.Transparent;
+            menuStrip1.Dock = DockStyle.Fill;
+            menuStrip1.Font = new Font("Calibri", 14F, FontStyle.Regular, GraphicsUnit.Point);
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, exportToolStripMenuItem, viewToolStripMenuItem, optionsToolStripMenuItem });
+            menuStrip1.Location = new Point(50, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(609, 35);
+            menuStrip1.TabIndex = 1;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveToolStripMenuItem, loadToolStripMenuItem, updateToolStripMenuItem, deleteToolStripMenuItem });
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(48, 31);
+            fileToolStripMenuItem.Text = "File";
+            // 
+            // saveToolStripMenuItem
+            // 
+            saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            saveToolStripMenuItem.Size = new Size(136, 28);
+            saveToolStripMenuItem.Text = "Save";
+            // 
+            // loadToolStripMenuItem
+            // 
+            loadToolStripMenuItem.Name = "loadToolStripMenuItem";
+            loadToolStripMenuItem.Size = new Size(136, 28);
+            loadToolStripMenuItem.Text = "Load";
+            // 
+            // updateToolStripMenuItem
+            // 
+            updateToolStripMenuItem.Name = "updateToolStripMenuItem";
+            updateToolStripMenuItem.Size = new Size(136, 28);
+            updateToolStripMenuItem.Text = "Update";
+            // 
+            // deleteToolStripMenuItem
+            // 
+            deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            deleteToolStripMenuItem.Size = new Size(136, 28);
+            deleteToolStripMenuItem.Text = "Delete";
+            // 
+            // exportToolStripMenuItem
+            // 
+            exportToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { soundToolStripMenuItem, textToolStripMenuItem, batchAudioToolStripMenuItem });
+            exportToolStripMenuItem.Name = "exportToolStripMenuItem";
+            exportToolStripMenuItem.Size = new Size(72, 31);
+            exportToolStripMenuItem.Text = "Export";
+            // 
+            // soundToolStripMenuItem
+            // 
+            soundToolStripMenuItem.Name = "soundToolStripMenuItem";
+            soundToolStripMenuItem.Size = new Size(170, 28);
+            soundToolStripMenuItem.Text = "Sound";
+            // 
+            // textToolStripMenuItem
+            // 
+            textToolStripMenuItem.Name = "textToolStripMenuItem";
+            textToolStripMenuItem.Size = new Size(170, 28);
+            textToolStripMenuItem.Text = "Text";
+            // 
+            // batchAudioToolStripMenuItem
+            // 
+            batchAudioToolStripMenuItem.Name = "batchAudioToolStripMenuItem";
+            batchAudioToolStripMenuItem.Size = new Size(170, 28);
+            batchAudioToolStripMenuItem.Text = "Batch audio";
+            // 
+            // viewToolStripMenuItem
+            // 
+            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { menuBarToolStripMenuItem, appGUIToolStripMenuItem, fullScreenToolStripMenuItem, colourSchemeToolStripMenuItem });
+            viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            viewToolStripMenuItem.Size = new Size(60, 31);
+            viewToolStripMenuItem.Text = "View";
+            // 
+            // menuBarToolStripMenuItem
+            // 
+            menuBarToolStripMenuItem.Name = "menuBarToolStripMenuItem";
+            menuBarToolStripMenuItem.Size = new Size(195, 28);
+            menuBarToolStripMenuItem.Text = "Menu bar";
+            // 
+            // appGUIToolStripMenuItem
+            // 
+            appGUIToolStripMenuItem.Name = "appGUIToolStripMenuItem";
+            appGUIToolStripMenuItem.Size = new Size(195, 28);
+            appGUIToolStripMenuItem.Text = "App GUI";
+            // 
+            // fullScreenToolStripMenuItem
+            // 
+            fullScreenToolStripMenuItem.Name = "fullScreenToolStripMenuItem";
+            fullScreenToolStripMenuItem.Size = new Size(195, 28);
+            fullScreenToolStripMenuItem.Text = "Full Screen";
+            // 
+            // colourSchemeToolStripMenuItem
+            // 
+            colourSchemeToolStripMenuItem.Name = "colourSchemeToolStripMenuItem";
+            colourSchemeToolStripMenuItem.Size = new Size(195, 28);
+            colourSchemeToolStripMenuItem.Text = "Colour Scheme";
+            // 
+            // optionsToolStripMenuItem
+            // 
+            optionsToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { downloadVoicesListToolStripMenuItem, populateTheComboBoxesToolStripMenuItem, presetLanguageToolStripMenuItem });
+            optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            optionsToolStripMenuItem.Size = new Size(84, 31);
+            optionsToolStripMenuItem.Text = "Options";
+            // 
+            // downloadVoicesListToolStripMenuItem
+            // 
+            downloadVoicesListToolStripMenuItem.Name = "downloadVoicesListToolStripMenuItem";
+            downloadVoicesListToolStripMenuItem.Size = new Size(282, 28);
+            downloadVoicesListToolStripMenuItem.Text = "Download Voices list";
+            // 
+            // populateTheComboBoxesToolStripMenuItem
+            // 
+            populateTheComboBoxesToolStripMenuItem.Name = "populateTheComboBoxesToolStripMenuItem";
+            populateTheComboBoxesToolStripMenuItem.Size = new Size(282, 28);
+            populateTheComboBoxesToolStripMenuItem.Text = "Populate the combo boxes";
+            // 
+            // presetLanguageToolStripMenuItem
+            // 
+            presetLanguageToolStripMenuItem.Name = "presetLanguageToolStripMenuItem";
+            presetLanguageToolStripMenuItem.Size = new Size(282, 28);
+            presetLanguageToolStripMenuItem.Text = "Preset Language";
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Dock = DockStyle.Fill;
+            label12.Font = new Font("Calibri", 14F, FontStyle.Bold, GraphicsUnit.Point);
+            label12.Location = new Point(662, 0);
+            label12.Name = "label12";
+            label12.Size = new Size(457, 35);
+            label12.TabIndex = 2;
+            label12.Text = "label12";
+            label12.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // tableLayoutPanel6
+            // 
+            tableLayoutPanel6.ColumnCount = 4;
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            tableLayoutPanel6.Controls.Add(button13, 3, 0);
+            tableLayoutPanel6.Controls.Add(Maximize_btn, 2, 0);
+            tableLayoutPanel6.Controls.Add(button3, 1, 0);
+            tableLayoutPanel6.Controls.Add(button14, 0, 0);
+            tableLayoutPanel6.Location = new Point(1125, 3);
+            tableLayoutPanel6.Name = "tableLayoutPanel6";
+            tableLayoutPanel6.RowCount = 1;
+            tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel6.Size = new Size(150, 29);
+            tableLayoutPanel6.TabIndex = 3;
+            // 
+            // button13
+            // 
+            button13.Dock = DockStyle.Fill;
+            button13.Font = new Font("Calibri", 14F, FontStyle.Regular, GraphicsUnit.Point);
+            button13.Location = new Point(114, 3);
+            button13.Name = "button13";
+            button13.Size = new Size(33, 23);
+            button13.TabIndex = 2;
+            button13.Text = "X";
+            button13.UseVisualStyleBackColor = true;
+            button13.Click += button13_Click;
+            // 
+            // Maximize_btn
+            // 
+            Maximize_btn.Dock = DockStyle.Fill;
+            Maximize_btn.Font = new Font("Calibri", 14F, FontStyle.Regular, GraphicsUnit.Point);
+            Maximize_btn.Location = new Point(77, 3);
+            Maximize_btn.Name = "Maximize_btn";
+            Maximize_btn.Size = new Size(31, 23);
+            Maximize_btn.TabIndex = 1;
+            Maximize_btn.Text = "+";
+            Maximize_btn.UseVisualStyleBackColor = true;
+            Maximize_btn.Click += Maximize_btn_Click;
+            // 
+            // button3
+            // 
+            button3.Dock = DockStyle.Fill;
+            button3.Font = new Font("Calibri", 14F, FontStyle.Regular, GraphicsUnit.Point);
+            button3.Location = new Point(40, 3);
+            button3.Name = "button3";
+            button3.Size = new Size(31, 23);
+            button3.TabIndex = 0;
+            button3.Text = "-";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
+            // button14
+            // 
+            button14.Dock = DockStyle.Fill;
+            button14.Font = new Font("Calibri", 14F, FontStyle.Regular, GraphicsUnit.Point);
+            button14.Location = new Point(3, 3);
+            button14.Name = "button14";
+            button14.Size = new Size(31, 23);
+            button14.TabIndex = 3;
+            button14.Text = "?";
+            button14.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel11
             // 
@@ -1006,12 +1239,12 @@
             tableLayoutPanel11.Controls.Add(panel5, 3, 0);
             tableLayoutPanel11.Controls.Add(tableLayoutPanel1, 4, 0);
             tableLayoutPanel11.Dock = DockStyle.Fill;
-            tableLayoutPanel11.Location = new Point(5, 55);
+            tableLayoutPanel11.Location = new Point(5, 39);
             tableLayoutPanel11.Margin = new Padding(5, 4, 5, 4);
             tableLayoutPanel11.Name = "tableLayoutPanel11";
             tableLayoutPanel11.RowCount = 1;
             tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel11.Size = new Size(1254, 571);
+            tableLayoutPanel11.Size = new Size(1268, 607);
             tableLayoutPanel11.TabIndex = 53;
             // 
             // Form1
@@ -1021,10 +1254,13 @@
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoScroll = true;
             BackColor = Color.White;
-            ClientSize = new Size(1264, 681);
+            ClientSize = new Size(1278, 701);
             Controls.Add(tableLayoutPanel10);
             Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             HelpButton = true;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MainMenuStrip = menuStrip1;
             Margin = new Padding(11, 13, 11, 13);
             MinimumSize = new Size(1278, 718);
             Name = "Form1";
@@ -1059,6 +1295,10 @@
             tableLayoutPanel10.ResumeLayout(false);
             tableLayoutPanel10.PerformLayout();
             tableLayoutPanel9.ResumeLayout(false);
+            tableLayoutPanel9.PerformLayout();
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
+            tableLayoutPanel6.ResumeLayout(false);
             tableLayoutPanel11.ResumeLayout(false);
             tableLayoutPanel11.PerformLayout();
             ResumeLayout(false);
@@ -1126,5 +1366,30 @@
         private Button button4;
         private Panel panel5;
         private Button button10;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem fileToolStripMenuItem;
+        private ToolStripMenuItem saveToolStripMenuItem;
+        private ToolStripMenuItem loadToolStripMenuItem;
+        private ToolStripMenuItem exportToolStripMenuItem;
+        private ToolStripMenuItem viewToolStripMenuItem;
+        private ToolStripMenuItem optionsToolStripMenuItem;
+        private ToolStripMenuItem updateToolStripMenuItem;
+        private ToolStripMenuItem deleteToolStripMenuItem;
+        private ToolStripMenuItem soundToolStripMenuItem;
+        private ToolStripMenuItem textToolStripMenuItem;
+        private ToolStripMenuItem batchAudioToolStripMenuItem;
+        private ToolStripMenuItem menuBarToolStripMenuItem;
+        private ToolStripMenuItem appGUIToolStripMenuItem;
+        private ToolStripMenuItem fullScreenToolStripMenuItem;
+        private ToolStripMenuItem colourSchemeToolStripMenuItem;
+        private ToolStripMenuItem downloadVoicesListToolStripMenuItem;
+        private ToolStripMenuItem populateTheComboBoxesToolStripMenuItem;
+        private ToolStripMenuItem presetLanguageToolStripMenuItem;
+        private Label label12;
+        private TableLayoutPanel tableLayoutPanel6;
+        private Button button3;
+        private Button Maximize_btn;
+        private Button button13;
+        private Button button14;
     }
 }

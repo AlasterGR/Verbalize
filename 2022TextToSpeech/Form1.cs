@@ -20,6 +20,7 @@ namespace _2022TextToSpeech
     using NAudio.MediaFoundation;
     using System.Drawing.Drawing2D;
     using System.Configuration;
+    using System.Reflection.Emit;
 
     /// <summary>
     /// The main Form of the app
@@ -121,6 +122,7 @@ namespace _2022TextToSpeech
         private void Form1_Load(object sender, EventArgs e)
         {
             label1.Visible = false;
+            label12.Visible = false;
             VoicesLoad();  //  Load the voices onto the combo boxes
 
 
@@ -155,9 +157,14 @@ namespace _2022TextToSpeech
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 locationLoadedFile = openFileDialog1.FileName;
-                label1.Text = Path.GetFileNameWithoutExtension(locationLoadedFile); // Show the loaded file's name
+                label1.Text = Path.GetFileName(locationLoadedFile); // Show the loaded file's name                
+                //label1.Font = new Font(Label.DefaultFont, FontStyle.Bold);
                 Form1.ActiveForm.Text = applicationBrandName + " : " + label1.Text /*+ Path.GetFileNameWithoutExtension(locationLoadedFile) + Path.GetExtension(locationLoadedFile)*/;
+
+                label12.Visible = true;
                 label1.Visible = true;
+
+                label12.Text = label1.Text;
                 string fileContents = string.Empty;
                 //  Search further for advantages on using a rich text box instead. So far none found.
                 #region Parse the selected file's contents and save its speakable text to the textbox ~ it will acquire only the inner texts, should the selected file have an xml format.
@@ -587,7 +594,7 @@ namespace _2022TextToSpeech
 
         static XmlDocument CreateSSML(string text)
         {
-            #region Creation of the XML document and and its root element
+            #region Creation of the XML document and its root element
             XmlDocument SSMLDocument = new();
             XmlElement speak = SSMLDocument.CreateElement("speak");
             SSMLDocument.AppendChild(speak);
@@ -1451,5 +1458,27 @@ namespace _2022TextToSpeech
             //MessageBox.Show("attributesColumnCurrentWidth = " + attributesColumnCurrentWidth.ToString());
         }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
+        }
+
+        private void Maximize_btn_Click(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Maximized)
+            {
+                WindowState = FormWindowState.Normal;
+                Size = new Size(1278, 718);
+            }
+            else if (WindowState == FormWindowState.Normal)
+            {
+                WindowState = FormWindowState.Maximized;
+            }
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
