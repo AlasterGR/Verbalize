@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "2022TextToSpeech": {
+    "Verbalize": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualBasic.Devices;
 
-namespace _2022TextToSpeech
+namespace _Verbalize
 {
     using System;
     using System.Drawing;
@@ -20,7 +20,7 @@ namespace _2022TextToSpeech
     using NAudio.MediaFoundation;
     using System.Drawing.Drawing2D;
     using System.Configuration;
-    using System.Reflection.Emit;
+    //using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
     /// <summary>
     /// The main Form of the app
@@ -33,33 +33,33 @@ namespace _2022TextToSpeech
         public static string serverLocation = ConfigurationManager.AppSettings["serverLocationWestEurope"];
         readonly static string subscriptionKeyAlex1 = ConfigurationManager.AppSettings["subscriptionKeyAlex1"];
         /// <summary>  This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis </summary>
-        private static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyAlex1, serverLocation);
+        public static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyAlex1, serverLocation);
         #region The Prosody and assorted elements of speech
         // As per : https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice. The https://www.w3.org/TR/speech-synthesis11/ is irrelevant so far.
         /// <summary>  Pitch is expressed in 3 ways. Here, for now, we are using just the absolute value from the range [-200, +200]</summary>
-        private static string pitch = "default";
+        public static string pitch = "default";
         /// <summary>  Rate is expressed in 2 ways, an absolute value (string) and a relative (as a number) one. For now, we will use it only as a number (-50% - +50%), I will incoroprate it as a string later </summary>
-        private static string rate = "default";
+        public static string rate = "default";
         /// <summary>  Defaults in 80. </summary>
-        private static int volume = 80;
+        public static int volume = 80;
         /// <summary>  The Voice's style. Defaults to "calm" </summary>
-        private static string style = "calm";
+        public static string style = "calm";
         //  Integrate the rest of the speech elements, such as pitch contour, pitch range
         #endregion
         /// <summary>  The app's Resources folder from which it will draw some info.</summary>
-        readonly static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
+        //readonly static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
         /// <summary>  The Voice Language's selected locale.</summary>
         private static string selectedLocale = string.Empty;
         /// <summary>  A file that needs to be used throughout the entire app. Might put it within the VoicesLoad() nethod if possible.</summary>
         private static XmlDocument VoicesXML = new();
         /// <summary>  Change this to the desired file name and extension.</summary>
-        private static string voicesSSMLFileName = "Voices";
+        //private static string voicesSSMLFileName = "Voices";
         /// <summary>  The file in which we store the downloaded Voices list.</summary>
-        private static string locationFileResponse = Path.Combine(folderResources, voicesSSMLFileName);
+        //private static string locationFileResponse = Path.Combine(folderResources, voicesSSMLFileName);
         /// <summary>  Backup voices file. Change this to the desired file name and extension.</summary>
         private static string voicesSSMLFileNameBackup = "Voices_[orig].xml";
         /// <summary>  Backup voices file. The file in which we store them.</summary>
-        private static string locationFileResponseBackup = Path.Combine(folderResources, voicesSSMLFileNameBackup);
+        //private static string locationFileResponseBackup = Path.Combine(folderResources, voicesSSMLFileNameBackup);
         /// <summary>  The "short name" of a Voice.</summary>
         private static string shortName = string.Empty;
         /// <summary>  The path of the loaded file.</summary>
@@ -80,13 +80,14 @@ namespace _2022TextToSpeech
         public ComboBox voiceStylesComboBox;
         public ComboBox voicesComboBox;
 
+        public static TextBox mainSingleTextBox;
 
         public ComboBox soundtypesComboBox;
         public bool soundTypeSelectorComboboxOrRadiogroup;
         public System.Windows.Forms.RadioButton soundTypeRadioButtonMP3, soundTypeRadioButtonWAV, soundTypeRadioButtonNONE;
         public System.Windows.Forms.RadioButton textTypeRadioButtonXML, textTypeRadioButtonTXT, textTypeRadioButtonNONE;
 
-        public TableLayoutPanel soundRadioGroupParentPanel, textRadioGroupParentPanel;
+        public static TableLayoutPanel soundRadioGroupParentPanel, textRadioGroupParentPanel;
 
         public float attributesColumnInitialWidth;
         public float attributesColumnCurrentWidth = 451f;
@@ -117,6 +118,8 @@ namespace _2022TextToSpeech
             textTypeRadioButtonXML = radioButton3;
             textTypeRadioButtonTXT = radioButton5;
             textTypeRadioButtonNONE = radioButton6;
+
+            mainSingleTextBox = textBox1;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -157,6 +160,7 @@ namespace _2022TextToSpeech
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 locationLoadedFile = openFileDialog1.FileName;
+                // make it into an event so that it gets automatically changed
                 label1.Text = Path.GetFileName(locationLoadedFile); // Show the loaded file's name                
                 //label1.Font = new Font(Label.DefaultFont, FontStyle.Bold);
                 Form1.ActiveForm.Text = applicationBrandName + " : " + label1.Text /*+ Path.GetFileNameWithoutExtension(locationLoadedFile) + Path.GetExtension(locationLoadedFile)*/;
@@ -206,7 +210,7 @@ namespace _2022TextToSpeech
                 if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     string text = textBox1.Text;
-                    XmlDocument SSMLDocument = CreateSSML(text);
+                    XmlDocument SSMLDocument = DataHandling.CreateSSML(text);
                     string pathFileSelected = saveFileDialog1.FileName;
                     _ = SynthesizeAudioAsyncFromText(SSMLDocument, pathFileSelected, formatOutputSound, false);
                 }
@@ -226,44 +230,14 @@ namespace _2022TextToSpeech
         /// <summary> The Save the text button </summary>
         private void Button7_Click(object sender, EventArgs e)
         {
+            btn_ExportText();
+        }
+        public void btn_ExportText()
+        {
             string outputTextFormat = SetOutputTextFormat();
-            SaveText(outputTextFormat);
+            FileHandling.SaveText(outputTextFormat, mainSingleTextBox);
         }
 
-        private void SaveText(string outputTextFormat)
-        {
-            if (outputTextFormat == "xml")
-            {
-                SaveFileDialog saveFileDialog1 = new() { Filter = "XML|*.xml", Title = "Save the text box as a .xml file compliant to the SSML type." };
-                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    string pathFileSelected = saveFileDialog1.FileName;
-                    string text = textBox1.Text;
-                    XmlDocument SSMLDocument = CreateSSML(text);
-                    SSMLDocument.Save(pathFileSelected);  // Save the XML document to a file
-                    //formatOutputSound = SetOutputSoundFormat();
-                    //_ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
-                    locationLoadedFile = pathFileSelected;
-                    label1.Text = Path.GetFileNameWithoutExtension(pathFileSelected); // Show the loaded file's name                
-                }
-            }
-            else if (outputTextFormat == "txt")
-            {
-                SaveFileDialog saveFileDialog1 = new() { Filter = "Text|*.txt", Title = "Save the text box as a plain .txt file." };
-                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    string pathFileSelected = saveFileDialog1.FileName;
-                    string text = textBox1.Text;
-                    File.WriteAllText(pathFileSelected, text);
-                    //XmlDocument SSMLDocument = CreateSSML(text);
-                    //SSMLDocument.Save(pathFileSelected);  // Save the XML document to a file
-                    //formatOutputSound = SetOutputSoundFormat();
-                    //_ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
-                    locationLoadedFile = pathFileSelected;
-                    label1.Text = Path.GetFileNameWithoutExtension(pathFileSelected); // Show the loaded file's name                
-                }
-            }
-        }
         //public async SpeechSynthesisResult GetSpeechSynthesisResult(SpeechSynthesisResult _speechSynthesisResult, String _text )
         //{
         //    return _speechSynthesisResult = await synthesizer.SpeakSsmlAsync(_text);
@@ -382,17 +356,17 @@ namespace _2022TextToSpeech
         {
             try
             {
-                VoicesXML.Load(locationFileResponse);
+                VoicesXML.Load(FileHandling.locationFileResponse);
             }
             catch (Exception)
             {
                 try
                 {
-                    VoicesXML.Load(locationFileResponseBackup);
+                    VoicesXML.Load(FileHandling.locationFileResponseBackup);
                 }
                 catch
                 {
-                    System.IO.Directory.CreateDirectory(folderResources);
+                    System.IO.Directory.CreateDirectory(FileHandling.folderResources);
                     await VoicesRetrieve();
                 }
             }
@@ -417,7 +391,7 @@ namespace _2022TextToSpeech
                     using (StreamReader reader = new(responseStream))
                     {
                         string responseData = reader.ReadToEnd();
-                        SSML_JSONtoXMLConvert(responseData);
+                        DataHandling.SSML_JSONtoXMLConvert(responseData);
                     }
                 }
             }
@@ -455,7 +429,7 @@ namespace _2022TextToSpeech
         {
             try
             {
-                VoicesXML.Load(Path.Combine(locationFileResponse)); // Use Load because LoadXML command produces error
+                VoicesXML.Load(Path.Combine(FileHandling.locationFileResponse)); // Use Load because LoadXML command produces error
             }
             catch (Exception)
             {
@@ -540,18 +514,6 @@ namespace _2022TextToSpeech
             }
         }
 
-        private static void SSML_JSONtoXMLConvert(string TextJSONFile)
-        {
-            string rootName = voicesSSMLFileName;  //  Change to whatever we need to have as root
-            string mainElementsName = "\"Voice\":";
-            string textJSONFile = "{ " + mainElementsName + TextJSONFile + "}";
-            XmlDocument xmlDoc = JsonConvert.DeserializeXmlNode(textJSONFile, rootName);
-            /*  Create an XML declaration and then add it to the xml document  */
-            XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", null);
-            xmlDoc.InsertBefore(xmldecl, xmlDoc.DocumentElement);
-            /*  Save the xml file but with no extention */
-            xmlDoc.Save(Path.Combine(folderResources, rootName));
-        }
 
         /// <summary> Voice Pitch slider </summary>
         private void vScrollBar2_ValueChanged(object sender, EventArgs e)
@@ -589,59 +551,6 @@ namespace _2022TextToSpeech
         private void voiceStylesComboBox_SelectedIndexChanged(object sender, EventArgs e)
         { style = voiceStylesComboBox?.SelectedItem?.ToString() ?? "calm"; }
 
-
-
-
-        static XmlDocument CreateSSML(string text)
-        {
-            #region Creation of the XML document and its root element
-            XmlDocument SSMLDocument = new();
-            XmlElement speak = SSMLDocument.CreateElement("speak");
-            SSMLDocument.AppendChild(speak);
-            #endregion
-
-            #region XML declaration. Mandatory for XML 1.1 and SSML also requires this : https://www.w3.org/TR/speech-synthesis/#S2.1
-            XmlDeclaration xmlDeclaration = SSMLDocument.CreateXmlDeclaration("1.0", "UTF-8", null);
-            SSMLDocument.InsertBefore(xmlDeclaration, speak);
-            #endregion
-
-            #region Assigning the XML's elements and using variables for the attributes. Reference : https://www.w3.org/TR/speech-synthesis/#S3.1.1         
-            XmlAttribute version = SSMLDocument.CreateAttribute("version");  //  For some reason, version cannot be 1.1
-            version.Value = "1.0";
-            speak.SetAttributeNode(version);
-            XmlAttribute xmlns = SSMLDocument.CreateAttribute("xmlns");
-            xmlns.Value = "http://www.w3.org/2001/10/synthesis";
-            speak.SetAttributeNode(xmlns);
-            XmlAttribute mstts = SSMLDocument.CreateAttribute("xmlns:mstts");
-            mstts.Value = "http://www.w3.org/2001/mstts";
-            speak.SetAttributeNode(mstts);
-            XmlAttribute emo = SSMLDocument.CreateAttribute("xmlns:emo");
-            emo.Value = "http://www.w3.org/2009/10/emotionml";
-            speak.SetAttributeNode(emo);
-            XmlAttribute lang = SSMLDocument.CreateAttribute("xml:lang");
-            lang.Value = config.SpeechSynthesisLanguage;
-            speak.SetAttributeNode(lang);
-            XmlAttribute onlangfailure = SSMLDocument.CreateAttribute("onlangfailure");
-            onlangfailure.Value = "ignoretext ";
-            speak.SetAttributeNode(onlangfailure);
-            XmlElement voice = SSMLDocument.CreateElement("voice");
-            voice.SetAttribute("name", config.SpeechSynthesisVoiceName);
-            XmlElement prosody = SSMLDocument.CreateElement("prosody");
-            prosody.SetAttribute("rate", rate);
-            prosody.SetAttribute("pitch", pitch);
-            prosody.SetAttribute("volume", (volume).ToString()); //  Might not work on this version of SSML
-            XmlElement express = SSMLDocument.CreateElement("mstts", "express-as", "http://www.w3.org/2001/mstts");
-            express.SetAttribute("style", style);
-            #endregion
-            #region Appending the XML elements to their parents
-            prosody.AppendChild(express);
-            voice.AppendChild(prosody);
-            speak.AppendChild(voice);
-            #endregion
-            //  Entering the .txt file's text as the xml's main -inner- text
-            express.InnerText = text;
-            return SSMLDocument;
-        }
         /// <summary> Virtual object of our final XML document. Will be changed dynamically through the app and saved in the disk and loading from a disk's file.</summary>
         static XmlDocument InitializeSSMLDocument()
         {
@@ -719,7 +628,7 @@ namespace _2022TextToSpeech
         {
             SoundPause();
             speechSynthesizer = new SpeechSynthesizer(config);
-            spokenTextSoundResult = speechSynthesizer.SpeakSsmlAsync(CreateSSML(string.IsNullOrEmpty(textBox1.SelectedText) ? textBox1.Text : textBox1.SelectedText).OuterXml); // Create SSML from textbox's either selected text or entire text (whichever is nonempty) and feed it to the syntesizer
+            spokenTextSoundResult = speechSynthesizer.SpeakSsmlAsync(DataHandling.CreateSSML(string.IsNullOrEmpty(textBox1.SelectedText) ? textBox1.Text : textBox1.SelectedText).OuterXml); // Create SSML from textbox's either selected text or entire text (whichever is nonempty) and feed it to the syntesizer
 
         }
         public static void SoundPause()

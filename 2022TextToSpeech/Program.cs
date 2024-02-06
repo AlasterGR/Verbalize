@@ -1,4 +1,4 @@
-namespace _2022TextToSpeech
+namespace _Verbalize
 {
     internal static class Program
     {

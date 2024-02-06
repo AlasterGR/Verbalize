@@ -1,4 +1,4 @@
-﻿namespace _2022TextToSpeech
+﻿namespace _Verbalize
 {
     partial class Vertical_Scroll_Bar_with_markings
     {
