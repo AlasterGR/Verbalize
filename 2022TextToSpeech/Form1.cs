@@ -73,12 +73,11 @@ namespace _Verbalize
         /// <summary> What type of seperator, if any, we want to have on the title
         private static string title_fileExtention_seperator = ".";
         /// <summary> The app's name</summary>
-        private static string applicationBrandName = "Verbalize";
+        public static string applicationBrandName = "Verbalize";
         /// <summary> The dnamic XML of the document we are handling.</summary>
         public static XmlDocument VirtualSSMLDocument = new XmlDocument(); // the dynamic object which stores the proccessed ssml
 
-        public ComboBox voiceStylesComboBox;
-        public ComboBox voicesComboBox;
+        public static ComboBox languagesComboBox, voicesComboBox, voiceStylesComboBox, rateComboBox, pitchComboBox;
 
         public static TextBox mainSingleTextBox;
 
@@ -88,6 +87,8 @@ namespace _Verbalize
         public System.Windows.Forms.RadioButton textTypeRadioButtonXML, textTypeRadioButtonTXT, textTypeRadioButtonNONE;
 
         public static TableLayoutPanel soundRadioGroupParentPanel, textRadioGroupParentPanel;
+        public static Label label_FileName, label_FileName_in_menustrip, label_rate, label_pitch;
+        public static VScrollBar vScrollBar_rate, vScrollBar_pitch, vScrollBar_volume;
 
         public float attributesColumnInitialWidth;
         public float attributesColumnCurrentWidth = 451f;
@@ -103,7 +104,6 @@ namespace _Verbalize
             //InitializeVoices();  Let's start with the basic voices first
             #endregion
             label11.Text = string.Empty;
-            voiceStylesComboBox = comboBox3; // set the voice style combo box
             voicesComboBox = comboBox2;
 
             soundtypesComboBox = cmbBx_SelectSavedSoundFormat;
@@ -120,17 +120,29 @@ namespace _Verbalize
             textTypeRadioButtonNONE = radioButton6;
 
             mainSingleTextBox = textBox1;
+            label_FileName = label1;
+            label_FileName_in_menustrip = label12;
+            languagesComboBox = comboBox1;
+            voicesComboBox = comboBox2;
+            voiceStylesComboBox = comboBox3;
+            rateComboBox = comboBox4;
+            pitchComboBox = comboBox5;
+            label_rate = label3;
+            label_pitch = label2;
+            vScrollBar_rate = vScrollBar1;
+            vScrollBar_pitch = vScrollBar2;
+            vScrollBar_volume = vScrollBar3;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            label1.Visible = false;
-            label12.Visible = false;
+            label_FileName.Visible = false;
+            label_FileName_in_menustrip.Visible = false;
             VoicesLoad();  //  Load the voices onto the combo boxes
 
 
             button2.Enabled = button8.Enabled = button8.Visible = button9.Enabled = button9.Visible = false;
-            vScrollBar3.Value = volume;
+            vScrollBar_volume.Value = volume;
 
             //Choosing how to offer sound type selection
             soundtypesComboBox.Enabled = soundtypesComboBox.Visible = soundTypeSelectorComboboxOrRadiogroup;
@@ -157,35 +169,9 @@ namespace _Verbalize
 
         private void Bttn3_LoadText_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                locationLoadedFile = openFileDialog1.FileName;
-                // make it into an event so that it gets automatically changed
-                label1.Text = Path.GetFileName(locationLoadedFile); // Show the loaded file's name                
-                //label1.Font = new Font(Label.DefaultFont, FontStyle.Bold);
-                Form1.ActiveForm.Text = applicationBrandName + " : " + label1.Text /*+ Path.GetFileNameWithoutExtension(locationLoadedFile) + Path.GetExtension(locationLoadedFile)*/;
-
-                label12.Visible = true;
-                label1.Visible = true;
-
-                label12.Text = label1.Text;
-                string fileContents = string.Empty;
-                //  Search further for advantages on using a rich text box instead. So far none found.
-                #region Parse the selected file's contents and save its speakable text to the textbox ~ it will acquire only the inner texts, should the selected file have an xml format.
-                XmlDocument SSMLDocument = new();
-                try
-                {
-                    SSMLDocument.Load(locationLoadedFile);
-                    XmlNodeList? nodes = SSMLDocument?.SelectNodes("//text()[normalize-space()]");
-                    if (nodes?.Count > 0) { foreach (XmlNode node in nodes) { fileContents = node.InnerText; } }  // might need to put append instead of =, in order to support various voices within the text
-                    if (SSMLDocument != null) { LoadXMLtoApp(SSMLDocument); }
-                }
-                catch (XmlException)
-                { fileContents = File.ReadAllText(locationLoadedFile); }  // File.ReadAllText locks the file
-                this.textBox1.Text = fileContents;
-                #endregion               
-            }
+            FileHandling.Load_Text();            
         }
+        
         private void button4_Click(object sender, EventArgs e) // Export sound from a local file
         {
             OpenFileDialog openFileDialog1 = new()
@@ -222,7 +208,7 @@ namespace _Verbalize
         {
             //string pathFileSelected = locationLoadedFile;
             //string text = this.textBox1.Text;
-            //XmlDocument SSMLDocument = CreateSSML(text);
+            //XmlDocument SSMLDocument = DataHandling.CreateSSML(text);
             //SSMLDocument.Save(pathFileSelected);// Save the XML document to a file
             //formatOutputSound = SetOutputSoundFormat();
             //_ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
@@ -373,7 +359,13 @@ namespace _Verbalize
         }
 
         #region Retrieve the list of voices from speech.microsoft.com and reload the voices into the boxes
-        private async void button8_Click(object sender, EventArgs e)
+        private async void Button8_Click(object sender, EventArgs e)
+        {
+            //await VoicesRetrieve();
+            //VoicesLoad();
+            RetrieveVoicesAndReload();
+        }
+        public async void RetrieveVoicesAndReload()
         {
             await VoicesRetrieve();
             VoicesLoad();
@@ -404,7 +396,7 @@ namespace _Verbalize
             if (VoicesXML.DocumentElement != null)  //  To make sure it has been downloaded and loaded
             {
                 List<string> uniqueLocales = new();  //  List that will contain only the unique values of Locale, for reference, to populate the combo box with unique elements only
-                comboBox1.Items.Clear();
+                languagesComboBox.Items.Clear();
                 foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice")) //Expression "//Voice" works as well
                 {
                     string? locale = node?.SelectSingleNode("Locale")?.InnerText;
@@ -412,11 +404,11 @@ namespace _Verbalize
                     {
                         uniqueLocales.Add(locale);
                         string? localeName = node?.SelectSingleNode("LocaleName")?.InnerText;
-                        comboBox1.Items.Add(localeName);
+                        languagesComboBox.Items.Add(localeName);
                     }
                     string? localName = node?.SelectSingleNode("LocalName")?.InnerText ?? "N/A";
                     string? gender = node?.SelectSingleNode("Gender")?.InnerText ?? "N/A";
-                    comboBox1.SelectedIndex = 0;
+                    languagesComboBox.SelectedIndex = 0;
                 }
             }
             else { VoicesXML.LoadXml(VoicesBasic); VoicesLoad(); }
@@ -439,10 +431,10 @@ namespace _Verbalize
         }
         #endregion
         #region Language combo box
-        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void languagesComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             List<string> displayNames = new();
-            string selectedLocaleName = comboBox1?.SelectedItem?.ToString() ?? string.Empty;  // comboBox1.SelectedItem.ToString() is not a string that can be handled within the next if()
+            string selectedLocaleName = languagesComboBox?.SelectedItem?.ToString() ?? string.Empty;  // languagesComboBox.SelectedItem.ToString() is not a string that can be handled within the next if()
 
             foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
             {
@@ -454,24 +446,24 @@ namespace _Verbalize
                     config.SpeechSynthesisLanguage = node.SelectSingleNode("Locale").InnerText;
                 }
             }
-            comboBox2.DataSource = displayNames;
-            try { comboBox2.SelectedIndex = 0; } catch { } //  This clause is for when pressing to populate the boxes but with the basic Voices loaded
+            voicesComboBox.DataSource = displayNames;
+            try { voicesComboBox.SelectedIndex = 0; } catch { } //  This clause is for when pressing to populate the boxes but with the basic Voices loaded
         }
         #endregion
         #region Voice actor combo box
-        private void ComboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        private void VoicesComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
             {
                 string localName = node?.SelectSingleNode("DisplayName")?.InnerText ?? string.Empty;
-                string selectedDisplayName = comboBox2?.SelectedItem?.ToString() ?? string.Empty;
+                string selectedDisplayName = voicesComboBox?.SelectedItem?.ToString() ?? string.Empty;
                 if (localName == selectedDisplayName)
                 {
                     config.SpeechSynthesisVoiceName = node.SelectSingleNode("ShortName").InnerText;  //  We store who our voice actor will be
                     label7.Text = " - " + node.SelectSingleNode("LocalName").InnerText + " (" + node.SelectSingleNode("Gender").InnerText + ")";
                 }
             }
-            PopulateVoiceStylesComboBox(voiceStylesComboBox, comboBox2.SelectedItem?.ToString()); // enter the combobox which holds the selected Voice's styles
+            PopulateVoiceStylesComboBox(voiceStylesComboBox, voicesComboBox.SelectedItem?.ToString()); // enter the combobox which holds the selected Voice's styles
         }
         #endregion
 
@@ -516,36 +508,36 @@ namespace _Verbalize
 
 
         /// <summary> Voice Pitch slider </summary>
-        private void vScrollBar2_ValueChanged(object sender, EventArgs e)
+        private void vScrollBar_pitch_ValueChanged(object sender, EventArgs e)
         {
-            pitch = vScrollBar2.Value.ToString() + "Hz";
-            label2.Text = "Pitch = " + pitch;
-            comboBox5.SelectedItem = null;
+            pitch = vScrollBar_pitch.Value.ToString() + "Hz";
+            label_pitch.Text = "Pitch = " + pitch;
+            pitchComboBox.SelectedItem = null;
         }
         /// <summary> Voice Rate slider </summary>
-        private void vScrollBar1_ValueChanged(object sender, EventArgs e)
+        private void vScrollBar_rate_ValueChanged(object sender, EventArgs e)
         {
-            rate = vScrollBar1.Value.ToString() + "%";
-            label3.Text = "Rate = " + vScrollBar1.Value.ToString() + "%";
-            comboBox4.SelectedItem = null;
+            rate = vScrollBar_rate.Value.ToString() + "%";
+            label_rate.Text = "Rate = " + vScrollBar_rate.Value.ToString() + "%";
+            rateComboBox.SelectedItem = null;
         }
         /// <summary> Voice Volume slider </summary>
-        private void vScrollBar3_ValueChanged(object sender, EventArgs e)
+        private void vScrollBar_volume_ValueChanged(object sender, EventArgs e)
         {
-            volume = vScrollBar3.Value;
+            volume = vScrollBar_volume.Value;
             label11.Text = volume.ToString();
         }
         /// <summary> Voice Rate selection </summary>
-        private void comboBox4_SelectedIndexChanged(object sender, EventArgs e)
+        private void rateComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            rate = comboBox4?.SelectedItem?.ToString() ?? "Default";
-            label3.Text = "Rate : " + rate;
+            rate = rateComboBox?.SelectedItem?.ToString() ?? "Default";
+            label_rate.Text = "Rate : " + rate;
         }
         /// <summary> Voice Pitch selection </summary>
-        private void comboBox5_SelectedIndexChanged(object sender, EventArgs e)
+        private void pitchComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            pitch = comboBox5?.SelectedItem?.ToString() ?? "Default";
-            label2.Text = "Pitch : " + pitch;
+            pitch = pitchComboBox?.SelectedItem?.ToString() ?? "Default";
+            label_pitch.Text = "Pitch : " + pitch;
         }
         /// <summary> Voice Style selection </summary>
         private void voiceStylesComboBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -650,7 +642,7 @@ namespace _Verbalize
             }
         }
 
-        private void LoadXMLtoApp(XmlDocument SSMLDocument) // Load all the markup of the XML onto the u.i.
+        public static void LoadXMLtoApp(XmlDocument SSMLDocument) // Load all the markup of the XML onto the u.i.
         {
             #region Initialize every mark to its default values
             string styleSSML = "calm";
@@ -709,66 +701,66 @@ namespace _Verbalize
             config.SpeechSynthesisVoiceName = nameValue;
             config.SpeechSynthesisLanguage = langValue; //  Set the Speech Language to whatever is first on the xml file, which is the general one of the entire file
 
-            comboBox1.SelectedItem = localeName;
-            comboBox2.SelectedItem = DisplayName;
+            languagesComboBox.SelectedItem = localeName;
+            voicesComboBox.SelectedItem = DisplayName;
             voiceStylesComboBox.SelectedItem = styleSSML;
 
-            if (comboBox5.Items.Contains(pitch))
+            if (pitchComboBox.Items.Contains(pitch))
             {
-                comboBox5.SelectedItem = pitch;
-                label2.Text = "Pitch : " + pitch;
+                pitchComboBox.SelectedItem = pitch;
+                label_pitch.Text = "Pitch : " + pitch;
             }
             else if (pitch.Contains("Hz") && Int32.TryParse(MyRegex().Replace(pitch, string.Empty), NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int pitchInt))
             {
-                //vScrollBar2.Value = Math.Clamp(pitchInt, -30, 30); // try with scrollbar maxes - mins
-                vScrollBar2.Value = Math.Clamp(pitchInt, vScrollBar2.Minimum, vScrollBar2.Maximum);
-                comboBox5.SelectedItem = null;
-                //label2.Text = "Pitch = " + pitchInt.ToString();
-                label2.Text = "Pitch = " + vScrollBar2.Value.ToString();
+                //vScrollBar_pitch.Value = Math.Clamp(pitchInt, -30, 30); // try with scrollbar maxes - mins
+                vScrollBar_pitch.Value = Math.Clamp(pitchInt, vScrollBar_pitch.Minimum, vScrollBar_pitch.Maximum);
+                pitchComboBox.SelectedItem = null;
+                //label_pitch.Text = "Pitch = " + pitchInt.ToString();
+                label_pitch.Text = "Pitch = " + vScrollBar_pitch.Value.ToString();
             }
             else
             {
                 pitch = "default";
-                comboBox5.SelectedItem = null;
-                label2.Text = "Pitch : " + pitch;
+                pitchComboBox.SelectedItem = null;
+                label_pitch.Text = "Pitch : " + pitch;
             }
 
-            if (comboBox4.Items.Contains(rate))
+            if (rateComboBox.Items.Contains(rate))
             {
-                comboBox4.SelectedItem = rate;
-                label3.Text = "Rate : " + rate;
+                rateComboBox.SelectedItem = rate;
+                label_rate.Text = "Rate : " + rate;
             }
             else if (rate.Contains('%') && Int32.TryParse(MyRegex().Replace(rate, string.Empty), NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int rateInt))
             {
-                //vScrollBar1.Value = Math.Clamp(rateInt, -30, 30);
-                vScrollBar1.Value = Math.Clamp(rateInt, vScrollBar1.Minimum, vScrollBar1.Maximum);
+                //vScrollBar_rate.Value = Math.Clamp(rateInt, -30, 30);
+                vScrollBar_rate.Value = Math.Clamp(rateInt, vScrollBar_rate.Minimum, vScrollBar_rate.Maximum);
                 //label3.Text = "Rate = " + rateInt.ToString();
-                label3.Text = "Rate = " + vScrollBar1.Value.ToString();
-                comboBox4.SelectedItem = null;
+                label_rate.Text = "Rate = " + vScrollBar_rate.Value.ToString();
+                rateComboBox.SelectedItem = null;
             }
             else
             {
                 rate = "default";
-                label3.Text = "Rate : " + rate;
-                comboBox4.SelectedItem = null;
+                label_rate.Text = "Rate : " + rate;
+                rateComboBox.SelectedItem = null;
             }
 
-            vScrollBar3.Value = volume;
+            vScrollBar_volume.Value = volume;
             #endregion
         }
         /// <summary> Check if we have loaded a file and have the file name and update button accordingly visible.</summary>
-        private void Label1_TextChanged(object sender, EventArgs e)
+        private void label_FileName_TextChanged(object sender, EventArgs e)
         {
-            //button2.Enabled = !string.IsNullOrEmpty(label1.Text);// enable back when complete the code
-            label1.Visible = true;
+            //button2.Enabled = !string.IsNullOrEmpty(label_filename.Text);// enable back when complete the code
+            label_FileName.Visible = true;
         }
         /// <summary> Clears the Textbox and loaded file.</summary>
         private void Button1_Click(object sender, EventArgs e)
         {
             locationLoadedFile = string.Empty;
             textBox1.Clear();
-            this.label1.Text = string.Empty;
-            this.label1.Visible = false;
+            label_FileName.Text = string.Empty;
+            label_FileName.Visible = false;
         }
         /// <summary> The Mute button.</summary>
         private async void Button5_Click(object sender, EventArgs e) { SoundPause(); }
@@ -1321,11 +1313,11 @@ namespace _Verbalize
         #endregion
 
         /// <summary> Draw a light blue rectangle as the text file's title background. </summary>
-        private void label1_Paint(object sender, PaintEventArgs e)
+        private void label_FileName_Paint(object sender, PaintEventArgs e)
         {
             using LinearGradientBrush brush = new(ClientRectangle, Color.LightBlue, Color.White, 0F);
             e.Graphics.FillRectangle(brush, ClientRectangle);
-            TextRenderer.DrawText(e.Graphics, label1.Text, label1.Font, label1.ClientRectangle, label1.ForeColor, TextFormatFlags.Default);
+            TextRenderer.DrawText(e.Graphics, label_FileName.Text, label_FileName.Font, label_FileName.ClientRectangle, label_FileName.ForeColor, TextFormatFlags.Default);
         }
 
         /// <summary> This is in order to make sure the panels are redrawn properly. Invalidate() any other control that is drawn uniquely. </summary>
@@ -1336,7 +1328,9 @@ namespace _Verbalize
                 panel1.Invalidate();
                 panel2.Invalidate();
                 control.Invalidate();
-                label1.Invalidate();
+                label_FileName = label1;// need to fix this, so that it gets called as the below
+                label_FileName.Invalidate();
+
             }
         }
         private void Form1_Resize(object sender, EventArgs e) { ReDrawEverything(); }
@@ -1401,6 +1395,11 @@ namespace _Verbalize
                 WindowState = FormWindowState.Maximized;
                 fullScreenToolStripMenuItem.Text = "Normal Screen";
             }
+        }
+
+        private void downloadVoicesListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RetrieveVoicesAndReload();
         }
     }
 }
