@@ -167,7 +167,7 @@
             label1.TabIndex = 3;
             label1.Text = "Selected File name";
             label1.TextAlign = ContentAlignment.MiddleLeft;
-            label1.TextChanged += label_FileName_TextChanged;
+            label1.TextChanged += Label_FileName_TextChanged;
             label1.Paint += label_FileName_Paint;
             // 
             // textBox1
@@ -195,7 +195,7 @@
             vScrollBar1.Name = "vScrollBar1";
             vScrollBar1.Size = new Size(86, 274);
             vScrollBar1.TabIndex = 11;
-            vScrollBar1.ValueChanged += vScrollBar_rate_ValueChanged;
+            vScrollBar1.ValueChanged += ScrollBar_Rate_ValueChanged;
             // 
             // vScrollBar2
             // 
@@ -207,7 +207,7 @@
             vScrollBar2.Name = "vScrollBar2";
             vScrollBar2.Size = new Size(86, 274);
             vScrollBar2.TabIndex = 12;
-            vScrollBar2.ValueChanged += vScrollBar_pitch_ValueChanged;
+            vScrollBar2.ValueChanged += ScrollBar_Pitch_ValueChanged;
             // 
             // label2
             // 
@@ -269,7 +269,7 @@
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(191, 27);
             comboBox1.TabIndex = 17;
-            comboBox1.SelectedIndexChanged += languagesComboBox_SelectedIndexChanged;
+            comboBox1.SelectedIndexChanged += LanguagesComboBox_SelectedIndexChanged;
             // 
             // comboBox2
             // 
@@ -281,7 +281,7 @@
             comboBox2.Name = "comboBox2";
             comboBox2.Size = new Size(191, 27);
             comboBox2.TabIndex = 18;
-            comboBox2.SelectedIndexChanged += VoicesComboBox_SelectedIndexChanged;
+            comboBox2.SelectedIndexChanged += ComboBox_Voices_SelectedIndexChanged;
             // 
             // button8
             // 
@@ -344,7 +344,7 @@
             comboBox3.Name = "comboBox3";
             comboBox3.Size = new Size(191, 27);
             comboBox3.TabIndex = 25;
-            comboBox3.SelectedIndexChanged += voiceStylesComboBox_SelectedIndexChanged;
+            comboBox3.SelectedIndexChanged += ComboBox_VoiceStyles_SelectedIndexChanged;
             // 
             // label8
             // 
@@ -386,7 +386,7 @@
             button12.TabIndex = 30;
             button12.Text = "Sp&eak";
             button12.UseVisualStyleBackColor = false;
-            button12.Click += Button12_Click;
+            button12.Click += Bttn_Speak_Click;
             // 
             // label10
             // 
@@ -429,7 +429,7 @@
             button1.TabIndex = 35;
             button1.Text = "&Clear";
             button1.UseVisualStyleBackColor = true;
-            button1.Click += Button1_Click;
+            button1.Click += Bttn_ClearTextBoxAndLoadedFile_Click;
             // 
             // button5
             // 
@@ -456,7 +456,7 @@
             cmbBx_SelectSavedSoundFormat.Name = "cmbBx_SelectSavedSoundFormat";
             cmbBx_SelectSavedSoundFormat.Size = new Size(91, 31);
             cmbBx_SelectSavedSoundFormat.TabIndex = 39;
-            cmbBx_SelectSavedSoundFormat.SelectedIndexChanged += soundtypesComboBox_SelectedIndexChanged;
+            cmbBx_SelectSavedSoundFormat.SelectedIndexChanged += ComboBox_SoundTypes_SelectedIndexChanged;
             // 
             // panel1
             // 
@@ -495,7 +495,7 @@
             comboBox4.Name = "comboBox4";
             comboBox4.Size = new Size(153, 27);
             comboBox4.TabIndex = 42;
-            comboBox4.SelectedIndexChanged += rateComboBox_SelectedIndexChanged;
+            comboBox4.SelectedIndexChanged += ComboBox_Rate_SelectedIndexChanged;
             // 
             // comboBox5
             // 
@@ -508,7 +508,7 @@
             comboBox5.Name = "comboBox5";
             comboBox5.Size = new Size(153, 27);
             comboBox5.TabIndex = 43;
-            comboBox5.SelectedIndexChanged += pitchComboBox_SelectedIndexChanged;
+            comboBox5.SelectedIndexChanged += ComboBox_Pitch_SelectedIndexChanged;
             // 
             // label9
             // 
@@ -797,7 +797,7 @@
             button4.TabIndex = 36;
             button4.Text = "Export audio from a local file";
             button4.UseVisualStyleBackColor = true;
-            button4.Click += button4_Click;
+            button4.Click += Bttn_CreateAudioFromTextFile_Click;
             // 
             // panel5
             // 
@@ -908,7 +908,7 @@
             vScrollBar3.Size = new Size(89, 274);
             vScrollBar3.TabIndex = 44;
             vScrollBar3.Value = 100;
-            vScrollBar3.ValueChanged += vScrollBar_volume_ValueChanged;
+            vScrollBar3.ValueChanged += ScrollBar_Volume_ValueChanged;
             // 
             // tableLayoutPanel7
             // 
@@ -1052,6 +1052,7 @@
             loadToolStripMenuItem.Name = "loadToolStripMenuItem";
             loadToolStripMenuItem.Size = new Size(136, 28);
             loadToolStripMenuItem.Text = "Load";
+            loadToolStripMenuItem.Click += LoadToolStripMenuItem_Click;
             // 
             // updateToolStripMenuItem
             // 
@@ -1134,7 +1135,7 @@
             downloadVoicesListToolStripMenuItem.Name = "downloadVoicesListToolStripMenuItem";
             downloadVoicesListToolStripMenuItem.Size = new Size(282, 28);
             downloadVoicesListToolStripMenuItem.Text = "Download Voices list";
-            downloadVoicesListToolStripMenuItem.Click += downloadVoicesListToolStripMenuItem_Click;
+            downloadVoicesListToolStripMenuItem.Click += DownloadVoicesListToolStripMenuItem_Click;
             // 
             // populateTheComboBoxesToolStripMenuItem
             // 

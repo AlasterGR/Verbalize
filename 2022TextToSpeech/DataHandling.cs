@@ -7,6 +7,8 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Xml;
 using Microsoft.CognitiveServices.Speech;
 using Newtonsoft.Json;
+using NAudio.MediaFoundation;
+using NAudio.Wave;
 
 namespace _Verbalize
 {
@@ -84,5 +86,7 @@ namespace _Verbalize
             /*  Save the xml file but with no extention */
             xmlDoc.Save(Path.Combine(FileHandling.folderResources, rootName));
         }
+
+        
     }
 }

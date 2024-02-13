@@ -31,7 +31,7 @@ namespace _Verbalize
         // If, at some point, MS changes Cognitive Services authorization protocols, https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech provides the methods used
         /// <summary>  Azure Speech Service Location </summary>
         public static string serverLocation = ConfigurationManager.AppSettings["serverLocationWestEurope"];
-        readonly static string subscriptionKeyAlex1 = ConfigurationManager.AppSettings["subscriptionKeyAlex1"];
+        readonly public static string subscriptionKeyAlex1 = ConfigurationManager.AppSettings["subscriptionKeyAlex1"];
         /// <summary>  This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis </summary>
         public static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyAlex1, serverLocation);
         #region The Prosody and assorted elements of speech
@@ -77,25 +77,21 @@ namespace _Verbalize
         /// <summary> The dnamic XML of the document we are handling.</summary>
         public static XmlDocument VirtualSSMLDocument = new XmlDocument(); // the dynamic object which stores the proccessed ssml
 
-        public static ComboBox languagesComboBox, voicesComboBox, voiceStylesComboBox, rateComboBox, pitchComboBox;
+        public static TextBox textBox_Main_Single;
 
-        public static TextBox mainSingleTextBox;
+        public static bool soundTypeSelectorComboboxOrRadiogroup;
+        public RadioButton radioButton_SoundType_MP3, radioButton_SoundType_WAV, radioButton_SoundType_NONE, radioButton_TextType_XML, radioButton_TextType_TXT, radioButton_TextType_NONE;
 
-        public ComboBox soundtypesComboBox;
-        public bool soundTypeSelectorComboboxOrRadiogroup;
-        public System.Windows.Forms.RadioButton soundTypeRadioButtonMP3, soundTypeRadioButtonWAV, soundTypeRadioButtonNONE;
-        public System.Windows.Forms.RadioButton textTypeRadioButtonXML, textTypeRadioButtonTXT, textTypeRadioButtonNONE;
-
-        public static TableLayoutPanel soundRadioGroupParentPanel, textRadioGroupParentPanel;
+        public static TableLayoutPanel table_LayoutPanel_Sound_RadioGroupParent, table_LayoutPanel_Text_RadioGroupParent, table_LayoutPanel_MainGUIRow;
         public static Label label_FileName, label_FileName_in_menustrip, label_rate, label_pitch;
         public static VScrollBar vScrollBar_rate, vScrollBar_pitch, vScrollBar_volume;
+        public static ComboBox comboBox_Languages, comboBox_Voices, comboBox_VoiceStyles, comboBox_Rate, comboBox_Pitch, comboBox_SoundTypes;
 
-        public float attributesColumnInitialWidth;
-        public float attributesColumnCurrentWidth = 451f;
-        public SizeType attributesColumnInitialSizeType;
-        public System.Drawing.Size attributesColumnInitialMinimumSize;
-        public Button btnAttrColumnExpRec;
-        public Image buttonAttrColumnExpImage, buttonAttrColumnRecImage;
+        public static float attributesColumnInitialWidth, attributesColumnCurrentWidth = 451f;
+        public static SizeType attributesColumnInitialSizeType;
+        public static Size attributesColumnInitialMinimumSize;
+        public static Button bttn_HideAttributesColumn;
+        public static Image buttonAttrColumnExpImage, buttonAttrColumnRecImage;
         /// <summary>  The public class of the app's main Form, that is window. </summary>
         public Form1()
         {
@@ -104,34 +100,36 @@ namespace _Verbalize
             //InitializeVoices();  Let's start with the basic voices first
             #endregion
             label11.Text = string.Empty;
-            voicesComboBox = comboBox2;
+            comboBox_Voices = comboBox2;
 
-            soundtypesComboBox = cmbBx_SelectSavedSoundFormat;
+            comboBox_SoundTypes = cmbBx_SelectSavedSoundFormat;
             soundTypeSelectorComboboxOrRadiogroup = false;
 
-            soundTypeRadioButtonMP3 = radioButton1;
-            soundTypeRadioButtonWAV = radioButton2;
-            soundTypeRadioButtonNONE = radioButton4;
-            soundRadioGroupParentPanel = tableLayoutPanel15;
+            radioButton_SoundType_MP3 = radioButton1;
+            radioButton_SoundType_WAV = radioButton2;
+            radioButton_SoundType_NONE = radioButton4;
+            table_LayoutPanel_Sound_RadioGroupParent = tableLayoutPanel15;
 
-            textRadioGroupParentPanel = tableLayoutPanel14;
-            textTypeRadioButtonXML = radioButton3;
-            textTypeRadioButtonTXT = radioButton5;
-            textTypeRadioButtonNONE = radioButton6;
+            table_LayoutPanel_Text_RadioGroupParent = tableLayoutPanel14;
+            radioButton_TextType_XML = radioButton3;
+            radioButton_TextType_TXT = radioButton5;
+            radioButton_TextType_NONE = radioButton6;
 
-            mainSingleTextBox = textBox1;
+            textBox_Main_Single = textBox1;
             label_FileName = label1;
             label_FileName_in_menustrip = label12;
-            languagesComboBox = comboBox1;
-            voicesComboBox = comboBox2;
-            voiceStylesComboBox = comboBox3;
-            rateComboBox = comboBox4;
-            pitchComboBox = comboBox5;
+            comboBox_Languages = comboBox1;
+            comboBox_Voices = comboBox2;
+            comboBox_VoiceStyles = comboBox3;
+            comboBox_Rate = comboBox4;
+            comboBox_Pitch = comboBox5;
             label_rate = label3;
             label_pitch = label2;
             vScrollBar_rate = vScrollBar1;
             vScrollBar_pitch = vScrollBar2;
             vScrollBar_volume = vScrollBar3;
+
+            table_LayoutPanel_MainGUIRow = tableLayoutPanel11;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -145,10 +143,10 @@ namespace _Verbalize
             vScrollBar_volume.Value = volume;
 
             //Choosing how to offer sound type selection
-            soundtypesComboBox.Enabled = soundtypesComboBox.Visible = soundTypeSelectorComboboxOrRadiogroup;
-            soundtypesComboBox.SelectedIndex = 0;
-            soundTypeRadioButtonMP3.Checked = true;
-            textTypeRadioButtonXML.Checked = true;
+            comboBox_SoundTypes.Enabled = comboBox_SoundTypes.Visible = soundTypeSelectorComboboxOrRadiogroup;
+            comboBox_SoundTypes.SelectedIndex = 0;
+            radioButton_SoundType_MP3.Checked = true;
+            radioButton_TextType_XML.Checked = true;
 
             //Speech Synthesis objects
             // Initialize your synthesizer and other components
@@ -156,58 +154,35 @@ namespace _Verbalize
             synthesisCancellationToken = new CancellationTokenSource();
 
 
-            btnAttrColumnExpRec = button10;
+            bttn_HideAttributesColumn = button10;
             buttonAttrColumnExpImage = (Image)Properties.Resources.ResourceManager.GetObject("Triangle_Left");
             buttonAttrColumnRecImage = (Image)Properties.Resources.ResourceManager.GetObject("Triangle_Right");
-            btnAttrColumnExpRec.BackgroundImage = buttonAttrColumnRecImage;
+            bttn_HideAttributesColumn.BackgroundImage = buttonAttrColumnRecImage;
             //btnAttrColumnExpRec.BackColor = Color.FromArgb(82, 198, 222); //Set the button10's background colour to ARphy's
 
             attributesColumnInitialWidth = attributesColumnCurrentWidth;
-            attributesColumnInitialSizeType = tableLayoutPanel11.ColumnStyles[2].SizeType; // store the Attributes columnn's sizetype
+            attributesColumnInitialSizeType = table_LayoutPanel_MainGUIRow.ColumnStyles[2].SizeType; // store the Attributes columnn's sizetype
             attributesColumnInitialMinimumSize = tableLayoutPanel7.MinimumSize;
         }
 
         private void Bttn3_LoadText_Click(object sender, EventArgs e)
         {
-            FileHandling.Load_Text();            
+            FileHandling.Load_Text(label_FileName, Form1.ActiveForm, applicationBrandName, label_FileName_in_menustrip, textBox_Main_Single);
         }
-        
-        private void button4_Click(object sender, EventArgs e) // Export sound from a local file
+
+        private void Bttn_CreateAudioFromTextFile_Click(object sender, EventArgs e) // Export sound from a local file
         {
-            OpenFileDialog openFileDialog1 = new()
-            {
-                Filter = "XML Files (*.xml)|*.xml|Text Files (*.txt)|*.txt",
-                Title = "Select a file to be converted into sound. Chose either a .xml or a .txt file."
-            };
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                string pathFileSelected = openFileDialog1.FileName;
-                formatOutputSound = SetOutputSoundFormat();
-                _ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);  // "_= " is for discarding the result afterwards. Practically suppresses the warning.
-            }
+            FileHandling.CreateAudioFileFromTextFile();
         }
         private void button6_Click(object sender, EventArgs e) // Export sound
         {
-            formatOutputSound = SetOutputSoundFormat();
-
-            if (formatOutputSound != null && formatOutputSound != "None")
-            {
-                SaveFileDialog saveFileDialog1 = new() { Filter = "Sound|*." + formatOutputSound, Title = "Save the spoken text as a sound file in your disk." };
-                if (saveFileDialog1.ShowDialog() == DialogResult.OK)
-                {
-                    string text = textBox1.Text;
-                    XmlDocument SSMLDocument = DataHandling.CreateSSML(text);
-                    string pathFileSelected = saveFileDialog1.FileName;
-                    _ = SynthesizeAudioAsyncFromText(SSMLDocument, pathFileSelected, formatOutputSound, false);
-                }
-            }
+            FileHandling.CreateAudioFileFromTextBox();
         }
-
         /// <summary> The Update button </summary>
         private void Button2_Click(object sender, EventArgs e)
         {
             //string pathFileSelected = locationLoadedFile;
-            //string text = this.textBox1.Text;
+            //string text = this.mainSingleTextBox.Text;
             //XmlDocument SSMLDocument = DataHandling.CreateSSML(text);
             //SSMLDocument.Save(pathFileSelected);// Save the XML document to a file
             //formatOutputSound = SetOutputSoundFormat();
@@ -221,102 +196,17 @@ namespace _Verbalize
         public void btn_ExportText()
         {
             string outputTextFormat = SetOutputTextFormat();
-            FileHandling.SaveText(outputTextFormat, mainSingleTextBox);
+            FileHandling.SaveText(outputTextFormat, textBox_Main_Single);
         }
-
-        //public async SpeechSynthesisResult GetSpeechSynthesisResult(SpeechSynthesisResult _speechSynthesisResult, String _text )
-        //{
-        //    return _speechSynthesisResult = await synthesizer.SpeakSsmlAsync(_text);
-        //}
-        static async Task SynthesizeAudioAsync(string soundfile, string formatOutputSound, bool _audioOn)
-        {
-            #region Producing the sound data
-            XmlDocument xmlDoc = new();
-            xmlDoc.Load(soundfile);
-            string ssmlText = xmlDoc.OuterXml;
-            SoundPause();
-            if (!_audioOn) { speechSynthesizer = new SpeechSynthesizer(config, null); } // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
-            else { speechSynthesizer = new SpeechSynthesizer(config, null); }
-            speechSynthesisResult = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
-            //SpeechSynthesisResult speechSynthesisResult = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
-            #endregion
-            #region Saving the sound data to the disk as a specific sound format
-            string outputFile = Path.ChangeExtension(soundfile, "." + formatOutputSound);
-            using Stream stream = new MemoryStream(speechSynthesisResult.AudioData);
-            if (formatOutputSound != "None" || formatOutputSound != null)
-            {
-                switch (formatOutputSound)
-                {
-                    case "mp3":
-                        //outputFile = Path.ChangeExtension(outputFile, "."+formatOutputSound);
-                        MediaFoundationApi.Startup();
-                        var reader = new WaveFileReader(stream);  // Normally public WaveFileReader(Stream inputStream) ought to handle it properly but it does not accept it
-                        MediaFoundationEncoder.EncodeToMp3(reader, outputFile);
-                        break;
-
-                    case "wav":
-                        MediaFoundationApi.Startup();
-                        var reader1 = new WaveFileReader(stream);
-                        WaveFileWriter.CreateWaveFile(outputFile, reader1);
-                        break;
-
-                    case "ogg": // add an ogg vorbis encoder 
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            #endregion
-        }
-        static async Task SynthesizeAudioAsyncFromText(XmlDocument _xmlDoc, string soundfile, string formatOutputSound, bool _audioOn)
-        {
-            #region Producing the sound data
-            //XmlDocument xmlDoc = new();
-            //_xmlDoc.LoadXml(soundfile);
-            string ssmlText = _xmlDoc.OuterXml;
-            SoundPause();
-            if (!_audioOn) { speechSynthesizer = new SpeechSynthesizer(config, null); } // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
-            else { speechSynthesizer = new SpeechSynthesizer(config, null); }
-            SpeechSynthesisResult result = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
-            #endregion
-            #region Saving the sound data to the disk as a specific sound format
-            string outputFile = Path.ChangeExtension(soundfile, "." + formatOutputSound);
-            using Stream stream = new MemoryStream(result.AudioData);
-            if (formatOutputSound != "None" || formatOutputSound != null)
-            {
-                switch (formatOutputSound)
-                {
-                    case "mp3":
-                        //outputFile = Path.ChangeExtension(outputFile, "."+formatOutputSound);
-                        MediaFoundationApi.Startup();
-                        var reader = new WaveFileReader(stream);  // Normally public WaveFileReader(Stream inputStream) ought to handle it properly but it does not accept it
-                        MediaFoundationEncoder.EncodeToMp3(reader, outputFile);
-                        break;
-
-                    case "wav":
-                        MediaFoundationApi.Startup();
-                        var reader1 = new WaveFileReader(stream);
-                        WaveFileWriter.CreateWaveFile(outputFile, reader1);
-                        break;
-
-                    case "ogg": // add an ogg vorbis encoder 
-                        break;
-                    default:
-                        break;
-                }
-            }
-            #endregion
-        }
-        private string SetOutputSoundFormat()
+        public static string SetOutputSoundFormat()
         {
             if (soundTypeSelectorComboboxOrRadiogroup)
             {
-                return soundtypesComboBox?.SelectedItem?.ToString() ?? "None";
+                return comboBox_SoundTypes?.SelectedItem?.ToString() ?? "None";
             }
             else
             {
-                foreach (Control control in soundRadioGroupParentPanel.Controls)
+                foreach (Control control in table_LayoutPanel_Sound_RadioGroupParent.Controls)
                 {
                     if (control is System.Windows.Forms.RadioButton radioButton && radioButton.Checked)
                     {
@@ -329,7 +219,7 @@ namespace _Verbalize
         }
         private string SetOutputTextFormat()
         {
-            foreach (Control control in textRadioGroupParentPanel.Controls)
+            foreach (Control control in table_LayoutPanel_Text_RadioGroupParent.Controls)
             {
                 if (control is System.Windows.Forms.RadioButton radioButton && radioButton.Checked)
                 {
@@ -361,11 +251,9 @@ namespace _Verbalize
         #region Retrieve the list of voices from speech.microsoft.com and reload the voices into the boxes
         private async void Button8_Click(object sender, EventArgs e)
         {
-            //await VoicesRetrieve();
-            //VoicesLoad();
-            RetrieveVoicesAndReload();
+            RetrieveAndLoadVoices();
         }
-        public async void RetrieveVoicesAndReload()
+        public async void RetrieveAndLoadVoices()
         {
             await VoicesRetrieve();
             VoicesLoad();
@@ -396,7 +284,7 @@ namespace _Verbalize
             if (VoicesXML.DocumentElement != null)  //  To make sure it has been downloaded and loaded
             {
                 List<string> uniqueLocales = new();  //  List that will contain only the unique values of Locale, for reference, to populate the combo box with unique elements only
-                languagesComboBox.Items.Clear();
+                comboBox_Languages.Items.Clear();
                 foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice")) //Expression "//Voice" works as well
                 {
                     string? locale = node?.SelectSingleNode("Locale")?.InnerText;
@@ -404,15 +292,15 @@ namespace _Verbalize
                     {
                         uniqueLocales.Add(locale);
                         string? localeName = node?.SelectSingleNode("LocaleName")?.InnerText;
-                        languagesComboBox.Items.Add(localeName);
+                        comboBox_Languages.Items.Add(localeName);
                     }
                     string? localName = node?.SelectSingleNode("LocalName")?.InnerText ?? "N/A";
                     string? gender = node?.SelectSingleNode("Gender")?.InnerText ?? "N/A";
-                    languagesComboBox.SelectedIndex = 0;
+                    comboBox_Languages.SelectedIndex = 0;
                 }
             }
             else { VoicesXML.LoadXml(VoicesBasic); VoicesLoad(); }
-            voiceStylesComboBox.SelectedItem = style;  //  Have the the default voice style preselected as default
+            comboBox_VoiceStyles.SelectedItem = style;  //  Have the the default voice style preselected as default
         }
         #endregion
 
@@ -431,10 +319,10 @@ namespace _Verbalize
         }
         #endregion
         #region Language combo box
-        private void languagesComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void LanguagesComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             List<string> displayNames = new();
-            string selectedLocaleName = languagesComboBox?.SelectedItem?.ToString() ?? string.Empty;  // languagesComboBox.SelectedItem.ToString() is not a string that can be handled within the next if()
+            string selectedLocaleName = comboBox_Languages?.SelectedItem?.ToString() ?? string.Empty;  // languagesComboBox.SelectedItem.ToString() is not a string that can be handled within the next if()
 
             foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
             {
@@ -446,27 +334,26 @@ namespace _Verbalize
                     config.SpeechSynthesisLanguage = node.SelectSingleNode("Locale").InnerText;
                 }
             }
-            voicesComboBox.DataSource = displayNames;
-            try { voicesComboBox.SelectedIndex = 0; } catch { } //  This clause is for when pressing to populate the boxes but with the basic Voices loaded
+            comboBox_Voices.DataSource = displayNames;
+            try { comboBox_Voices.SelectedIndex = 0; } catch { } //  This clause is for when pressing to populate the boxes but with the basic Voices loaded
         }
         #endregion
         #region Voice actor combo box
-        private void VoicesComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBox_Voices_SelectedIndexChanged(object sender, EventArgs e)
         {
             foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
             {
                 string localName = node?.SelectSingleNode("DisplayName")?.InnerText ?? string.Empty;
-                string selectedDisplayName = voicesComboBox?.SelectedItem?.ToString() ?? string.Empty;
+                string selectedDisplayName = comboBox_Voices?.SelectedItem?.ToString() ?? string.Empty;
                 if (localName == selectedDisplayName)
                 {
                     config.SpeechSynthesisVoiceName = node.SelectSingleNode("ShortName").InnerText;  //  We store who our voice actor will be
                     label7.Text = " - " + node.SelectSingleNode("LocalName").InnerText + " (" + node.SelectSingleNode("Gender").InnerText + ")";
                 }
             }
-            PopulateVoiceStylesComboBox(voiceStylesComboBox, voicesComboBox.SelectedItem?.ToString()); // enter the combobox which holds the selected Voice's styles
+            PopulateVoiceStylesComboBox(comboBox_VoiceStyles, comboBox_Voices.SelectedItem?.ToString()); // enter the combobox which holds the selected Voice's styles
         }
         #endregion
-
         private void PopulateVoiceStylesComboBox(ComboBox _voiceStylesComboBox, string _selectedVoice)
         {
             // Clear the existing items in voiceStylesComboBox
@@ -505,43 +392,41 @@ namespace _Verbalize
                 }
             }
         }
-
-
         /// <summary> Voice Pitch slider </summary>
-        private void vScrollBar_pitch_ValueChanged(object sender, EventArgs e)
+        private void ScrollBar_Pitch_ValueChanged(object sender, EventArgs e)
         {
             pitch = vScrollBar_pitch.Value.ToString() + "Hz";
             label_pitch.Text = "Pitch = " + pitch;
-            pitchComboBox.SelectedItem = null;
+            comboBox_Pitch.SelectedItem = null;
         }
         /// <summary> Voice Rate slider </summary>
-        private void vScrollBar_rate_ValueChanged(object sender, EventArgs e)
+        private void ScrollBar_Rate_ValueChanged(object sender, EventArgs e)
         {
             rate = vScrollBar_rate.Value.ToString() + "%";
             label_rate.Text = "Rate = " + vScrollBar_rate.Value.ToString() + "%";
-            rateComboBox.SelectedItem = null;
+            comboBox_Rate.SelectedItem = null;
         }
         /// <summary> Voice Volume slider </summary>
-        private void vScrollBar_volume_ValueChanged(object sender, EventArgs e)
+        private void ScrollBar_Volume_ValueChanged(object sender, EventArgs e)
         {
             volume = vScrollBar_volume.Value;
             label11.Text = volume.ToString();
         }
         /// <summary> Voice Rate selection </summary>
-        private void rateComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBox_Rate_SelectedIndexChanged(object sender, EventArgs e)
         {
-            rate = rateComboBox?.SelectedItem?.ToString() ?? "Default";
+            rate = comboBox_Rate?.SelectedItem?.ToString() ?? "Default";
             label_rate.Text = "Rate : " + rate;
         }
         /// <summary> Voice Pitch selection </summary>
-        private void pitchComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBox_Pitch_SelectedIndexChanged(object sender, EventArgs e)
         {
-            pitch = pitchComboBox?.SelectedItem?.ToString() ?? "Default";
+            pitch = comboBox_Pitch?.SelectedItem?.ToString() ?? "Default";
             label_pitch.Text = "Pitch : " + pitch;
         }
         /// <summary> Voice Style selection </summary>
-        private void voiceStylesComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        { style = voiceStylesComboBox?.SelectedItem?.ToString() ?? "calm"; }
+        private void ComboBox_VoiceStyles_SelectedIndexChanged(object sender, EventArgs e)
+        { style = comboBox_VoiceStyles?.SelectedItem?.ToString() ?? "calm"; }
 
         /// <summary> Virtual object of our final XML document. Will be changed dynamically through the app and saved in the disk and loading from a disk's file.</summary>
         static XmlDocument InitializeSSMLDocument()
@@ -613,35 +498,15 @@ namespace _Verbalize
             express.InnerText = string.Empty;
             return SSMLDocument;
         }
-
-
         //  Speak the selected text from the textbox
-        private void Button12_Click(object sender, EventArgs e)
+        private void Bttn_Speak_Click(object sender, EventArgs e)
         {
-            SoundPause();
-            speechSynthesizer = new SpeechSynthesizer(config);
-            spokenTextSoundResult = speechSynthesizer.SpeakSsmlAsync(DataHandling.CreateSSML(string.IsNullOrEmpty(textBox1.SelectedText) ? textBox1.Text : textBox1.SelectedText).OuterXml); // Create SSML from textbox's either selected text or entire text (whichever is nonempty) and feed it to the syntesizer
-
+            Bttn_Speak();
         }
-        public static void SoundPause()
+        public static void Bttn_Speak()
         {
-            if (spokenTextSoundResult != null && !spokenTextSoundResult.IsCompleted) // Check if there's an ongoing synthesis
-            {
-                try
-                {
-                    speechSynthesizer?.StopSpeakingAsync();
-                    speechSynthesizer?.Dispose();
-                    //spokenTextSoundResult = null; // Reset the ongoing task
-                    spokenTextSoundResult?.Dispose();
-                }
-                catch (Exception ex)
-                {
-
-                }
-                //implement exception
-            }
+            AudioSynthesis.SpeakFromTextBox(textBox_Main_Single);
         }
-
         public static void LoadXMLtoApp(XmlDocument SSMLDocument) // Load all the markup of the XML onto the u.i.
         {
             #region Initialize every mark to its default values
@@ -680,7 +545,7 @@ namespace _Verbalize
             XmlNode? prosodyNode = SSMLDocument.SelectSingleNode("//speak:prosody", nsMgr);
             //  ... the voice style
             styleSSML = prosodyNode?.FirstChild?.Attributes["style"]?.Value ?? "calm"; // if it cannot find the attribute, it returns the default "calm" string
-            if (voiceStylesComboBox.FindStringExact(styleSSML) == -1) { styleSSML = "calm"; }// if the style is not an option withinn the combo box, it sets it to the default "calm" string
+            if (comboBox_VoiceStyles.FindStringExact(styleSSML) == -1) { styleSSML = "calm"; }// if the style is not an option withinn the combo box, it sets it to the default "calm" string
             //  ... the rate
             rate = rateSSML = prosodyNode?.Attributes["rate"]?.Value ?? "default";
             //  ... the pitch 
@@ -701,33 +566,33 @@ namespace _Verbalize
             config.SpeechSynthesisVoiceName = nameValue;
             config.SpeechSynthesisLanguage = langValue; //  Set the Speech Language to whatever is first on the xml file, which is the general one of the entire file
 
-            languagesComboBox.SelectedItem = localeName;
-            voicesComboBox.SelectedItem = DisplayName;
-            voiceStylesComboBox.SelectedItem = styleSSML;
+            comboBox_Languages.SelectedItem = localeName;
+            comboBox_Voices.SelectedItem = DisplayName;
+            comboBox_VoiceStyles.SelectedItem = styleSSML;
 
-            if (pitchComboBox.Items.Contains(pitch))
+            if (comboBox_Pitch.Items.Contains(pitch))
             {
-                pitchComboBox.SelectedItem = pitch;
+                comboBox_Pitch.SelectedItem = pitch;
                 label_pitch.Text = "Pitch : " + pitch;
             }
             else if (pitch.Contains("Hz") && Int32.TryParse(MyRegex().Replace(pitch, string.Empty), NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int pitchInt))
             {
                 //vScrollBar_pitch.Value = Math.Clamp(pitchInt, -30, 30); // try with scrollbar maxes - mins
                 vScrollBar_pitch.Value = Math.Clamp(pitchInt, vScrollBar_pitch.Minimum, vScrollBar_pitch.Maximum);
-                pitchComboBox.SelectedItem = null;
+                comboBox_Pitch.SelectedItem = null;
                 //label_pitch.Text = "Pitch = " + pitchInt.ToString();
                 label_pitch.Text = "Pitch = " + vScrollBar_pitch.Value.ToString();
             }
             else
             {
                 pitch = "default";
-                pitchComboBox.SelectedItem = null;
+                comboBox_Pitch.SelectedItem = null;
                 label_pitch.Text = "Pitch : " + pitch;
             }
 
-            if (rateComboBox.Items.Contains(rate))
+            if (comboBox_Rate.Items.Contains(rate))
             {
-                rateComboBox.SelectedItem = rate;
+                comboBox_Rate.SelectedItem = rate;
                 label_rate.Text = "Rate : " + rate;
             }
             else if (rate.Contains('%') && Int32.TryParse(MyRegex().Replace(rate, string.Empty), NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int rateInt))
@@ -736,37 +601,42 @@ namespace _Verbalize
                 vScrollBar_rate.Value = Math.Clamp(rateInt, vScrollBar_rate.Minimum, vScrollBar_rate.Maximum);
                 //label3.Text = "Rate = " + rateInt.ToString();
                 label_rate.Text = "Rate = " + vScrollBar_rate.Value.ToString();
-                rateComboBox.SelectedItem = null;
+                comboBox_Rate.SelectedItem = null;
             }
             else
             {
                 rate = "default";
                 label_rate.Text = "Rate : " + rate;
-                rateComboBox.SelectedItem = null;
+                comboBox_Rate.SelectedItem = null;
             }
 
             vScrollBar_volume.Value = volume;
             #endregion
         }
         /// <summary> Check if we have loaded a file and have the file name and update button accordingly visible.</summary>
-        private void label_FileName_TextChanged(object sender, EventArgs e)
+        private void Label_FileName_TextChanged(object sender, EventArgs e)
         {
             //button2.Enabled = !string.IsNullOrEmpty(label_filename.Text);// enable back when complete the code
             label_FileName.Visible = true;
         }
         /// <summary> Clears the Textbox and loaded file.</summary>
-        private void Button1_Click(object sender, EventArgs e)
+        private void Bttn_ClearTextBoxAndLoadedFile_Click(object sender, EventArgs e)
+        {
+            ClearTextBoxAndLoadedFile();            
+        }
+        /// <summary>
+        /// This is the method that clears the main TextBox and subsequently the label which presents the file name to the GUI.
+        /// </summary>
+        public static void ClearTextBoxAndLoadedFile()
         {
             locationLoadedFile = string.Empty;
-            textBox1.Clear();
+            textBox_Main_Single.Clear();
             label_FileName.Text = string.Empty;
-            label_FileName.Visible = false;
+            label_FileName.Visible = false; // remove this when implement the label's automatic behaviour through events
         }
         /// <summary> The Mute button.</summary>
-        private async void Button5_Click(object sender, EventArgs e) { SoundPause(); }
+        private async void Button5_Click(object sender, EventArgs e) { AudioSynthesis.SoundPause(); }
         /// <summary> Stop the sound if it is already playing.</summary>
-
-
         #region A string in XML format that is to be used, should the app not be able to download the Voices file
         readonly string VoicesBasic = @"<Voices>  
                                   <Voice>
@@ -1267,8 +1137,8 @@ namespace _Verbalize
         #endregion
 
 
-        private void soundtypesComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        { formatOutputSound = soundtypesComboBox?.SelectedItem?.ToString() ?? "None"; }
+        private void ComboBox_SoundTypes_SelectedIndexChanged(object sender, EventArgs e)
+        { formatOutputSound = comboBox_SoundTypes?.SelectedItem?.ToString() ?? "None"; }
 
         #region the vertical ScrollBar's annotations ~ could make it abstract for horizontal scrollbar as well
         private void panel_Paint(object sender, PaintEventArgs e)
@@ -1342,22 +1212,27 @@ namespace _Verbalize
 
         private void Button10_Click(object sender, EventArgs e)
         {
-            tableLayoutPanel11.ColumnStyles[2].SizeType = SizeType.Absolute;
-            if (tableLayoutPanel11.ColumnStyles[2].Width > 0)
+            HideGUI_Markup();
+        }
+
+        public static void HideGUI_Markup()
+        {
+            table_LayoutPanel_MainGUIRow.ColumnStyles[2].SizeType = SizeType.Absolute;
+            if (table_LayoutPanel_MainGUIRow.ColumnStyles[2].Width > 0)
             {
-                tableLayoutPanel11.ColumnStyles[2].Width = 0;
-                btnAttrColumnExpRec.BackgroundImage = buttonAttrColumnExpImage;
+                table_LayoutPanel_MainGUIRow.ColumnStyles[2].Width = 0;
+                bttn_HideAttributesColumn.BackgroundImage = buttonAttrColumnExpImage;
             }
             else
             {
                 //MessageBox.Show("attributesColumnInitialWidth = " + attributesColumnInitialWidth);
-                tableLayoutPanel11.ColumnStyles[2].Width = attributesColumnInitialWidth;
+                table_LayoutPanel_MainGUIRow.ColumnStyles[2].Width = attributesColumnInitialWidth;
                 //MessageBox.Show("tableLayoutPanel11.ColumnStyles[2].Width = " + tableLayoutPanel11.ColumnStyles[2].Width);
-                tableLayoutPanel11.ColumnStyles[2].SizeType = attributesColumnInitialSizeType;
+                table_LayoutPanel_MainGUIRow.ColumnStyles[2].SizeType = attributesColumnInitialSizeType;
                 // MessageBox.Show("attributesColumnInitialSizeType : " + attributesColumnInitialSizeType.ToString());
-                btnAttrColumnExpRec.BackgroundImage = buttonAttrColumnRecImage;
+                bttn_HideAttributesColumn.BackgroundImage = buttonAttrColumnRecImage;
             }
-            attributesColumnCurrentWidth = tableLayoutPanel11.ColumnStyles[2].Width;
+            attributesColumnCurrentWidth = table_LayoutPanel_MainGUIRow.ColumnStyles[2].Width;
             //MessageBox.Show("attributesColumnCurrentWidth = " + attributesColumnCurrentWidth.ToString());
         }
 
@@ -1365,7 +1240,6 @@ namespace _Verbalize
         {
             WindowState = FormWindowState.Minimized;
         }
-
         private void Maximize_btn_Click(object sender, EventArgs e)
         {
             Screen_Maximize();
@@ -1374,7 +1248,6 @@ namespace _Verbalize
         {
             Application.Exit();
         }
-
         private void fullScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Screen_Maximize();
@@ -1396,10 +1269,13 @@ namespace _Verbalize
                 fullScreenToolStripMenuItem.Text = "Normal Screen";
             }
         }
-
-        private void downloadVoicesListToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DownloadVoicesListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RetrieveVoicesAndReload();
+            RetrieveAndLoadVoices();
+        }
+        private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FileHandling.Load_Text(label_FileName, Form1.ActiveForm, applicationBrandName, label_FileName_in_menustrip, textBox_Main_Single);
         }
     }
 }

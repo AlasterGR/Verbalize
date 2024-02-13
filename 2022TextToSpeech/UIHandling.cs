@@ -8,9 +8,9 @@ namespace _Verbalize
 {
     internal class UIHandling
     {
-        public TableLayoutPanel soundRadioGroupParentPanel = Form1.soundRadioGroupParentPanel;
-        public TableLayoutPanel textRadioGroupParentPanel = Form1.textRadioGroupParentPanel;
-        public TextBox mainSingleTextBox = Form1.mainSingleTextBox;
+        public TableLayoutPanel soundRadioGroupParentPanel = Form1.table_LayoutPanel_Sound_RadioGroupParent;
+        public TableLayoutPanel textRadioGroupParentPanel = Form1.table_LayoutPanel_Text_RadioGroupParent;
+        public TextBox mainSingleTextBox = Form1.textBox_Main_Single;
 
         public void btn_ExportText()
         {
