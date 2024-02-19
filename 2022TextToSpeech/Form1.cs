@@ -20,6 +20,9 @@ namespace _Verbalize
     using NAudio.MediaFoundation;
     using System.Drawing.Drawing2D;
     using System.Configuration;
+    using _Verbalize.Properties;
+    using System.Resources;
+
     //using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
     /// <summary>
@@ -90,8 +93,9 @@ namespace _Verbalize
         public static float attributesColumnInitialWidth, attributesColumnCurrentWidth = 451f;
         public static SizeType attributesColumnInitialSizeType;
         public static Size attributesColumnInitialMinimumSize;
-        public static Button bttn_HideAttributesColumn;
+        public static Button button_SaveTextToFile, button_MuteSpokenNarration, button_PopulateVoicesAndStylesComboBoxes, button_LoadText, button_ClearTextBoxAndLoadedFile, button_HideGuiMarkup, button_CreateAudioFromTextFile, button_CreateNarrationSoundFile, button_UpdateTextFile, button_ShowHelp, button_MinimizeWindow, button_MaximizeWindow, button_QuitApplication, button_RetrieveAndLoadVoices;
         public static Image buttonAttrColumnExpImage, buttonAttrColumnRecImage;
+        public static Icon activeFormIcon;
         /// <summary>  The public class of the app's main Form, that is window. </summary>
         public Form1()
         {
@@ -130,14 +134,49 @@ namespace _Verbalize
             vScrollBar_volume = vScrollBar3;
 
             table_LayoutPanel_MainGUIRow = tableLayoutPanel11;
-        }
 
+            buttonAttrColumnExpImage = (Image)Resources.ResourceManager.GetObject("Triangle_Left");
+            buttonAttrColumnRecImage = (Image)Resources.ResourceManager.GetObject("Triangle_Right");
+
+            activeFormIcon = (Icon)Resources.ResourceManager.GetObject("Verbalize_logo");
+
+            button_LoadText = bttn3_LoadText;
+            button_ClearTextBoxAndLoadedFile = button1;
+            button_CreateAudioFromTextFile = button4;
+            button_CreateNarrationSoundFile = button6;
+            button_UpdateTextFile = button2;
+            button_ShowHelp = button14;
+            button_MinimizeWindow = button3;
+            button_MaximizeWindow = Maximize_btn;
+            button_QuitApplication = button13;
+            button_RetrieveAndLoadVoices = button8;
+            button_PopulateVoicesAndStylesComboBoxes = button9;
+            button_MuteSpokenNarration = button5;
+            button_SaveTextToFile = button7;
+            button_HideGuiMarkup = button10;
+            Subscribe_Buttons();
+        }
+        public void Subscribe_Buttons()
+        {
+            button_LoadText.Click += Button_LoadText_Click;
+            button_ClearTextBoxAndLoadedFile.Click += Button_ClearTextBoxAndLoadedFile_Click;
+            button_CreateAudioFromTextFile.Click += Button_CreateAudioFromTextFile_Click;
+            button_CreateNarrationSoundFile.Click += Button_CreateNarrationSoundFile_Click;
+            button_UpdateTextFile.Click += Button_UpdateTextFile_Click;
+            button_ShowHelp.Click += Button_ShowHelp_Click;
+            button_MinimizeWindow.Click += Button_MinimizeWindow_Click;
+            button_MaximizeWindow.Click += Button_MaximizeWindow_Click;
+            button_QuitApplication.Click += Button_QuitApplication_Click;
+            button_RetrieveAndLoadVoices.Click += Button_RetrieveAndLoadVoices_Click;
+            button_PopulateVoicesAndStylesComboBoxes.Click += Button_PopulateVoicesAndStylesComboBoxes_Click;
+            button_MuteSpokenNarration.Click += Button_MuteSpokenNarration_Click;
+            button_SaveTextToFile.Click += Button_SaveTextToFile_Click;
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
             label_FileName.Visible = false;
             label_FileName_in_menustrip.Visible = false;
             VoicesLoad();  //  Load the voices onto the combo boxes
-
 
             button2.Enabled = button8.Enabled = button8.Visible = button9.Enabled = button9.Visible = false;
             vScrollBar_volume.Value = volume;
@@ -153,16 +192,14 @@ namespace _Verbalize
             speechSynthesizer = new SpeechSynthesizer(config);
             synthesisCancellationToken = new CancellationTokenSource();
 
-
-            bttn_HideAttributesColumn = button10;
-            buttonAttrColumnExpImage = (Image)Properties.Resources.ResourceManager.GetObject("Triangle_Left");
-            buttonAttrColumnRecImage = (Image)Properties.Resources.ResourceManager.GetObject("Triangle_Right");
-            bttn_HideAttributesColumn.BackgroundImage = buttonAttrColumnRecImage;
+            button_HideGuiMarkup.BackgroundImage = buttonAttrColumnRecImage;
             //btnAttrColumnExpRec.BackColor = Color.FromArgb(82, 198, 222); //Set the button10's background colour to ARphy's
 
             attributesColumnInitialWidth = attributesColumnCurrentWidth;
             attributesColumnInitialSizeType = table_LayoutPanel_MainGUIRow.ColumnStyles[2].SizeType; // store the Attributes columnn's sizetype
             attributesColumnInitialMinimumSize = tableLayoutPanel7.MinimumSize;
+
+            this.Icon = activeFormIcon; // The app's main icon. ActiveForm has not yet been instanced with focus (https://stackoverflow.com/questions/23826059/why-this-works-but-form-activeform-throws-nullrefernceexception).
         }
 
         public static string SetOutputSoundFormat()
@@ -248,10 +285,10 @@ namespace _Verbalize
                     label7.Text = " - " + node.SelectSingleNode("LocalName").InnerText + " (" + node.SelectSingleNode("Gender").InnerText + ")";
                 }
             }
-            PopulateVoiceStylesComboBox(comboBox_VoiceStyles, comboBox_Voices.SelectedItem?.ToString()); // enter the combobox which holds the selected Voice's styles
+            PopulateSingleVoiceStylesComboBox(comboBox_VoiceStyles, comboBox_Voices.SelectedItem?.ToString()); // enter the combobox which holds the selected Voice's styles
         }
         #endregion
-        private void PopulateVoiceStylesComboBox(ComboBox _voiceStylesComboBox, string _selectedVoice)
+        private void PopulateSingleVoiceStylesComboBox(ComboBox _voiceStylesComboBox, string _selectedVoice)
         {
             // Clear the existing items in voiceStylesComboBox
             _voiceStylesComboBox.Items.Clear();
@@ -506,7 +543,7 @@ namespace _Verbalize
         private void Label_FileName_TextChanged(object sender, EventArgs e)
         {
             //button2.Enabled = !string.IsNullOrEmpty(label_filename.Text);// enable back when complete the code
-            label_FileName.Visible = true;
+            if (label_FileName.Text != string.Empty) label_FileName.Visible = true;
         }
 
         #region A string in XML format that is to be used, should the app not be able to download the Voices file
@@ -1084,7 +1121,7 @@ namespace _Verbalize
         private void Button_HideGuiMarkup_Click(object sender, EventArgs e)
         {
             HideGuiMarkup();
-        }       
+        }
         private void Button_ClearTextBoxAndLoadedFile_Click(object sender, EventArgs e)
         {
             ClearTextBoxAndLoadedFile();
@@ -1193,7 +1230,7 @@ namespace _Verbalize
         private void Button_MinimizeWindow_Click(object sender, EventArgs e)
         {
             MinimizeWindow();
-        }
+        }        
         private void Button_MaximizeWindow_Click(object sender, EventArgs e)
         {
             MaximizeWindow();
@@ -1240,7 +1277,7 @@ namespace _Verbalize
             if (table_LayoutPanel_MainGUIRow.ColumnStyles[2].Width > 0)
             {
                 table_LayoutPanel_MainGUIRow.ColumnStyles[2].Width = 0;
-                bttn_HideAttributesColumn.BackgroundImage = buttonAttrColumnExpImage;
+                button_HideGuiMarkup.BackgroundImage = buttonAttrColumnExpImage;
             }
             else
             {
@@ -1249,7 +1286,7 @@ namespace _Verbalize
                 //MessageBox.Show("tableLayoutPanel11.ColumnStyles[2].Width = " + tableLayoutPanel11.ColumnStyles[2].Width);
                 table_LayoutPanel_MainGUIRow.ColumnStyles[2].SizeType = attributesColumnInitialSizeType;
                 // MessageBox.Show("attributesColumnInitialSizeType : " + attributesColumnInitialSizeType.ToString());
-                bttn_HideAttributesColumn.BackgroundImage = buttonAttrColumnRecImage;
+                button_HideGuiMarkup.BackgroundImage = buttonAttrColumnRecImage;
             }
             attributesColumnCurrentWidth = table_LayoutPanel_MainGUIRow.ColumnStyles[2].Width;
             //MessageBox.Show("attributesColumnCurrentWidth = " + attributesColumnCurrentWidth.ToString());
@@ -1354,5 +1391,6 @@ namespace _Verbalize
             comboBox_VoiceStyles.SelectedItem = style;  //  Have the the default voice style preselected as default
         }
         #endregion
+
     }
 }

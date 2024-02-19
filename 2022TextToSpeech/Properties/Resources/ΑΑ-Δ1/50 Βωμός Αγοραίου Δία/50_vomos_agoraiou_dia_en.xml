@@ -1,9 +1,0 @@
-<speak xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" version="1.0" xml:lang="en-US">
-  <voice name="en-US-JennyNeural">
-    <prosody rate="-10%" pitch="-10%">
-      <mstts:express-as style="calm">
-        					In the years of August, the power of the Municipality's assemblies in pnix is drastically reduced, so the transfer is not accidental. Engravings of the craftsmen who facilitated the reassembly of the altar are witnesses to this transfer. The altar is made of limestone and the four steps on the front of the altar are made of Pentelic marble. It was elaborately decorated. It dates back to the 4th century BC.
-      </mstts:express-as>      
-    </prosody>
-  </voice>
-</speak>

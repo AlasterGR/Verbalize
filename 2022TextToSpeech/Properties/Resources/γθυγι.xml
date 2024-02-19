@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" xml:lang="el-GR" onlangfailure="ignoretext ">
-  <voice name="el-GR-AthinaNeural">
-    <prosody rate="default" pitch="default" volume="80">
-      <mstts:express-as style="calm">Καλησπέρα</mstts:express-as>
-    </prosody>
-  </voice>
-</speak>
