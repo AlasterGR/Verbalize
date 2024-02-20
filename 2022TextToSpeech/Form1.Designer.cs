@@ -53,7 +53,7 @@
             label11 = new Label();
             button1 = new Button();
             button5 = new Button();
-            cmbBx_SelectSavedSoundFormat = new ComboBox();
+            comboBox6 = new ComboBox();
             panel1 = new Panel();
             panel2 = new Panel();
             comboBox4 = new ComboBox();
@@ -152,7 +152,6 @@
             bttn3_LoadText.TabIndex = 2;
             bttn3_LoadText.Text = "&Load text";
             bttn3_LoadText.UseVisualStyleBackColor = true;
-            // bttn3_LoadText.Click += Button_LoadText_Click;
             // 
             // label1
             // 
@@ -293,7 +292,6 @@
             button8.TabIndex = 20;
             button8.Text = "Download Voices list";
             button8.UseVisualStyleBackColor = true;
-            //button8.Click += Button_RetrieveAndLoadVoices_Click;
             // 
             // button9
             // 
@@ -305,7 +303,6 @@
             button9.TabIndex = 21;
             button9.Text = "Populate the combo boxes";
             button9.UseVisualStyleBackColor = true;
-            //button9.Click += Button_PopulateVoicesAndStylesComboBoxes_Click;
             // 
             // label6
             // 
@@ -371,7 +368,6 @@
             button2.TabIndex = 28;
             button2.Text = "&Update this file";
             button2.UseVisualStyleBackColor = true;
-            //button2.Click += Button_UpdateTextFile_Click;
             // 
             // button12
             // 
@@ -428,7 +424,6 @@
             button1.TabIndex = 35;
             button1.Text = "&Clear";
             button1.UseVisualStyleBackColor = true;
-            //button1.Click += Button_ClearTextBoxAndLoadedFile_Click;
             // 
             // button5
             // 
@@ -442,20 +437,19 @@
             button5.TabIndex = 37;
             button5.Text = " ";
             button5.UseVisualStyleBackColor = true;
-            //button5.Click += Button_MuteSpokenNarration_Click;
             // 
-            // cmbBx_SelectSavedSoundFormat
+            // comboBox6
             // 
-            cmbBx_SelectSavedSoundFormat.Dock = DockStyle.Top;
-            cmbBx_SelectSavedSoundFormat.Font = new Font("Calibri", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            cmbBx_SelectSavedSoundFormat.FormattingEnabled = true;
-            cmbBx_SelectSavedSoundFormat.Items.AddRange(new object[] { "mp3", "wav", "None" });
-            cmbBx_SelectSavedSoundFormat.Location = new Point(10, 37);
-            cmbBx_SelectSavedSoundFormat.Margin = new Padding(5, 4, 5, 4);
-            cmbBx_SelectSavedSoundFormat.Name = "cmbBx_SelectSavedSoundFormat";
-            cmbBx_SelectSavedSoundFormat.Size = new Size(91, 31);
-            cmbBx_SelectSavedSoundFormat.TabIndex = 39;
-            cmbBx_SelectSavedSoundFormat.SelectedIndexChanged += ComboBox_SoundTypes_SelectedIndexChanged;
+            comboBox6.Dock = DockStyle.Top;
+            comboBox6.Font = new Font("Calibri", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            comboBox6.FormattingEnabled = true;
+            comboBox6.Items.AddRange(new object[] { "mp3", "wav", "None" });
+            comboBox6.Location = new Point(10, 37);
+            comboBox6.Margin = new Padding(5, 4, 5, 4);
+            comboBox6.Name = "comboBox6";
+            comboBox6.Size = new Size(91, 31);
+            comboBox6.TabIndex = 39;
+            comboBox6.SelectedIndexChanged += ComboBox_SoundTypes_SelectedIndexChanged;
             // 
             // panel1
             // 
@@ -601,7 +595,7 @@
             tableLayoutPanel2.BackColor = Color.FromArgb(192, 255, 192);
             tableLayoutPanel2.ColumnCount = 1;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Controls.Add(cmbBx_SelectSavedSoundFormat, 0, 1);
+            tableLayoutPanel2.Controls.Add(comboBox6, 0, 1);
             tableLayoutPanel2.Controls.Add(label9, 0, 0);
             tableLayoutPanel2.Controls.Add(tableLayoutPanel15, 0, 2);
             tableLayoutPanel2.Controls.Add(button6, 0, 3);
@@ -683,7 +677,6 @@
             button6.TabIndex = 51;
             button6.Text = "Export Sound";
             button6.UseVisualStyleBackColor = true;
-            //button6.Click += Button_CreateNarrationSoundFile_Click;
             // 
             // tableLayoutPanel16
             // 
@@ -783,7 +776,6 @@
             button7.TabIndex = 24;
             button7.Text = "Export Text";
             button7.UseVisualStyleBackColor = false;
-            //button7.Click += Button_SaveTextToFile_Click;
             // 
             // button4
             // 
@@ -796,7 +788,6 @@
             button4.TabIndex = 36;
             button4.Text = "Export audio from a local file";
             button4.UseVisualStyleBackColor = true;
-            //button4.Click += Button_CreateAudioFromTextFile_Click;
             // 
             // panel5
             // 
@@ -824,7 +815,6 @@
             button10.TabIndex = 0;
             button10.TextAlign = ContentAlignment.TopCenter;
             button10.UseVisualStyleBackColor = false;
-            //button10.Click += Button_HideGuiMarkup_Click;
             // 
             // tableLayoutPanel3
             // 
@@ -1198,7 +1188,6 @@
             button13.TabIndex = 2;
             button13.Text = "X";
             button13.UseVisualStyleBackColor = true;
-            //button13.Click += Button_QuitApplication_Click;
             // 
             // Maximize_btn
             // 
@@ -1210,7 +1199,6 @@
             Maximize_btn.TabIndex = 1;
             Maximize_btn.Text = "+";
             Maximize_btn.UseVisualStyleBackColor = true;
-            //Maximize_btn.Click += Button_MaximizeWindow_Click;
             // 
             // button3
             // 
@@ -1222,7 +1210,6 @@
             button3.TabIndex = 0;
             button3.Text = "-";
             button3.UseVisualStyleBackColor = true;
-            // button3.Click += Button_MinimizeWindow_Click;
             // 
             // button14
             // 
@@ -1234,7 +1221,6 @@
             button14.TabIndex = 3;
             button14.Text = "?";
             button14.UseVisualStyleBackColor = true;
-            //button14.Click += Button_ShowHelp_Click;
             // 
             // tableLayoutPanel11
             // 
@@ -1341,7 +1327,7 @@
         private Label label11;
         private Button button1;
         private Button button5;
-        private ComboBox cmbBx_SelectSavedSoundFormat;
+        private ComboBox comboBox6;
         private Panel panel1;
         private Panel panel2;
         private ComboBox comboBox4;
