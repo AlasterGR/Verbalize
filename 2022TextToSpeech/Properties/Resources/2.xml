@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" xml:lang="en-US" onlangfailure="ignoretext ">
-  <voice name="en-US-JennyNeural">
-    <prosody rate="default" pitch="-134Hz" volume="100">
-      <mstts:express-as style="sad">This is a test.</mstts:express-as>
+<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" xml:lang="sk-SK" onlangfailure="ignoretext ">
+  <voice name="sk-SK-ViktoriaNeural">
+    <prosody rate="30%" pitch="30Hz" volume="100">
+      <mstts:express-as style="assistant">This is a test.</mstts:express-as>
     </prosody>
   </voice>
 </speak>

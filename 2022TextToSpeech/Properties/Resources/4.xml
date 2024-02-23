@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" xml:lang="sl-SI" onlangfailure="ignoretext ">
+  <voice name="sl-SI-RokNeural">
+    <prosody rate="14%" pitch="16Hz" volume="80">
+      <mstts:express-as style="assistant">This is a test.</mstts:express-as>
+    </prosody>
+  </voice>
+</speak>

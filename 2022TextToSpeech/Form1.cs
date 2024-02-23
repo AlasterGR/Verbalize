@@ -1,17 +1,12 @@
-﻿using Microsoft.VisualBasic.Devices;
-
-namespace _Verbalize
+﻿namespace _Verbalize
 {
     using System;
     using System.Drawing;
     using System.IO;
-    using System.Threading;
     using System.Threading.Tasks;
     using System.Windows.Forms;
-    using Microsoft.CognitiveServices.Speech;
     using System.Xml; // For constructing our xml file 
-    using System.Net.Http; // for the supported languages of the voice
-    using Newtonsoft.Json; // for converting the Json files into XML ones. Possibly removable should we only load the XML file I am going to have produced 
+    using System.Net.Http; // for the supported languages of the voice    
     using System.Collections.Generic;
     using System.Globalization;
     using System.Text.RegularExpressions;
@@ -19,9 +14,7 @@ namespace _Verbalize
     using NAudio.Wave;  // for the audio conversion
     using NAudio.MediaFoundation;
     using System.Drawing.Drawing2D;
-    using System.Configuration;
     using _Verbalize.Properties;
-    using System.Resources;
 
     //using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
@@ -32,11 +25,8 @@ namespace _Verbalize
     {
         //static string regionService = Environment.GetEnvironmentVariable("westeurope");
         // If, at some point, MS changes Cognitive Services authorization protocols, https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech provides the methods used
-        /// <summary>  Azure Speech Service Location </summary>
-        public static string serverLocation = ConfigurationManager.AppSettings["serverLocationWestEurope"];
-        readonly public static string subscriptionKeyAlex1 = ConfigurationManager.AppSettings["subscriptionKeyAlex1"];
-        /// <summary>  This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis </summary>
-        public static SpeechConfig config = SpeechConfig.FromSubscription(subscriptionKeyAlex1, serverLocation);
+        
+        
         #region The Prosody and assorted elements of speech
         // As per : https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice. The https://www.w3.org/TR/speech-synthesis11/ is irrelevant so far.
         /// <summary>  Pitch is expressed in 3 ways. Here, for now, we are using just the absolute value from the range [-200, +200]</summary>
@@ -49,16 +39,10 @@ namespace _Verbalize
         public static string style = "calm";
         //  Integrate the rest of the speech elements, such as pitch contour, pitch range
         #endregion
-        /// <summary>  The app's Resources folder from which it will draw some info.</summary>
-        //readonly static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
         /// <summary>  The Voice Language's selected locale.</summary>
         private static string selectedLocale = string.Empty;
         /// <summary>  A file that needs to be used throughout the entire app. Might put it within the VoicesLoad() nethod if possible.</summary>
         private static XmlDocument VoicesXML = new();
-        /// <summary>  Change this to the desired file name and extension.</summary>
-        //private static string voicesSSMLFileName = "Voices";
-        /// <summary>  The file in which we store the downloaded Voices list.</summary>
-        //private static string locationFileResponse = Path.Combine(folderResources, voicesSSMLFileName);
         /// <summary>  Backup voices file. Change this to the desired file name and extension.</summary>
         private static string voicesSSMLFileNameBackup = "Voices_[orig].xml";
         /// <summary>  Backup voices file. The file in which we store them.</summary>
@@ -67,14 +51,10 @@ namespace _Verbalize
         private static string shortName = string.Empty;
         /// <summary>  The path of the loaded file.</summary>
         private static string locationLoadedFile = string.Empty;
-        public static Task<SpeechSynthesisResult>? spokenTextSoundResult;
-        public static CancellationTokenSource synthesisCancellationToken;
-        public static SpeechSynthesisResult speechSynthesisResult = null;
-        private static SpeechSynthesizer speechSynthesizer;
         private string formatOutputSound = "mp3";
-        private static bool isSynthSpeaking = false;
+        //private static bool isSynthSpeaking = false;
         /// <summary> What type of seperator, if any, we want to have on the title
-        private static string title_fileExtention_seperator = ".";
+        //private static string title_fileExtention_seperator = ".";
         /// <summary> The app's name</summary>
         public static string applicationBrandName = "Verbalize";
         /// <summary> The dnamic XML of the document we are handling.</summary>
@@ -83,12 +63,11 @@ namespace _Verbalize
         public static TextBox textBox_Main_Single;
 
         public static bool soundTypeSelectorComboboxOrRadiogroup;
-        public RadioButton radioButton_SoundType_MP3, radioButton_SoundType_WAV, radioButton_SoundType_NONE, radioButton_TextType_XML, radioButton_TextType_TXT, radioButton_TextType_NONE;
-
-        public static TableLayoutPanel table_LayoutPanel_Sound_RadioGroupParent, table_LayoutPanel_Text_RadioGroupParent, table_LayoutPanel_MainGUIRow;
+        
+        public static TableLayoutPanel table_LayoutPanel_MainGUIRow;
         public static Label label_FileName, label_FileName_in_menustrip, label_rate, label_pitch;
         public static VScrollBar vScrollBar_rate, vScrollBar_pitch, vScrollBar_volume;
-        public static ComboBox comboBox_Languages, comboBox_Voices, comboBox_VoiceStyles, comboBox_Rate, comboBox_Pitch, comboBox_SoundTypes;
+        public static ComboBox comboBox_Languages, comboBox_Voices, comboBox_VoiceStyles, comboBox_Rate, comboBox_Pitch, comboBox_SoundTypes, comboBox_TextTypes;
 
         public static float attributesColumnInitialWidth, attributesColumnCurrentWidth = 451f;
         public static SizeType attributesColumnInitialSizeType;
@@ -96,26 +75,30 @@ namespace _Verbalize
         public static Button button_NarrateMainTextBox, button_SaveTextToFile, button_MuteSpokenNarration, button_PopulateVoicesAndStylesComboBoxes, button_LoadText, button_ClearTextBoxAndLoadedFile, button_HideGuiMarkup, button_CreateAudioFromTextFile, button_CreateNarrationSoundFile, button_UpdateTextFile, button_ShowHelp, button_MinimizeWindow, button_MaximizeWindow, button_QuitApplication, button_RetrieveAndLoadVoices;
         public static Image image_AttrColumnButton_Expand, image_AttrColumnButton_Recede;
         public static Icon icon_AppLogo;
+
         /// <summary>  The public class of the app's main Form, that is window. </summary>
         public Form1()
         {
-            InitializeComponent();            
+            InitializeComponent();
             Assign_AbstractEntities();
-            Subscribe_AbstractButtons();           
-
+            Subscribe_AbstractButtons();
             #region Load the voices file that lists the various speech voices          
             //InitializeVoices();  Let's start with the basic voices first
             #endregion
+            Handler_AudioSynthesis.Initialize();
+            Handler_Networking.Initialize();
+            Handler_Data.Initialize();
+
         }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Assign_AbstractEntities_InitialValues();
+            this.Icon = icon_AppLogo; // The app's main icon. ActiveForm has not yet been instanced with focus (https://stackoverflow.com/questions/23826059/why-this-works-but-form-activeform-throws-nullrefernceexception).
+            VoicesLoad();  //  Load the voices onto the combo boxes            
+        }
+
         public void Assign_AbstractEntities()
         {
-            radioButton_SoundType_MP3 = radioButton1;
-            radioButton_SoundType_WAV = radioButton2;
-            radioButton_SoundType_NONE = radioButton4;
-            radioButton_TextType_XML = radioButton3;
-            radioButton_TextType_TXT = radioButton5;
-            radioButton_TextType_NONE = radioButton6;
-
             textBox_Main_Single = textBox1;
 
             label_FileName = label1;
@@ -129,14 +112,13 @@ namespace _Verbalize
             comboBox_Rate = comboBox4;
             comboBox_Pitch = comboBox5;
             comboBox_SoundTypes = comboBox6;
+            comboBox_TextTypes = comboBox7;
 
             vScrollBar_rate = vScrollBar1;
             vScrollBar_pitch = vScrollBar2;
             vScrollBar_volume = vScrollBar3;
 
             table_LayoutPanel_MainGUIRow = tableLayoutPanel11;
-            table_LayoutPanel_Text_RadioGroupParent = tableLayoutPanel14;
-            table_LayoutPanel_Sound_RadioGroupParent = tableLayoutPanel15;
 
             button_LoadText = bttn3_LoadText;
             button_ClearTextBoxAndLoadedFile = button1;
@@ -164,25 +146,23 @@ namespace _Verbalize
             icon_AppLogo = (Icon)Resources.ResourceManager.GetObject("Verbalize_logo");
 
             button_UpdateTextFile.Enabled = button_RetrieveAndLoadVoices.Enabled = button_RetrieveAndLoadVoices.Visible = button_PopulateVoicesAndStylesComboBoxes.Enabled = button_PopulateVoicesAndStylesComboBoxes.Visible = false;
-            
+
             vScrollBar_volume.Value = volume;
             vScrollBar_pitch.Value = 0;
             vScrollBar_rate.Value = 0;
 
             button_HideGuiMarkup.BackgroundImage = image_AttrColumnButton_Recede;
-            //btnAttrColumnExpRec.BackColor = Color.FromArgb(82, 198, 222); //Set the button10's background colour to ARphy's
 
             attributesColumnInitialWidth = attributesColumnCurrentWidth;
             attributesColumnInitialSizeType = table_LayoutPanel_MainGUIRow.ColumnStyles[2].SizeType; // store the Attributes columnn's sizetype
             attributesColumnInitialMinimumSize = tableLayoutPanel7.MinimumSize;
 
             //Choosing how to offer sound type selection
-            soundTypeSelectorComboboxOrRadiogroup = false;
-            comboBox_SoundTypes.Enabled = comboBox_SoundTypes.Visible = soundTypeSelectorComboboxOrRadiogroup;
-            table_LayoutPanel_Sound_RadioGroupParent.Enabled = table_LayoutPanel_Sound_RadioGroupParent.Visible = !soundTypeSelectorComboboxOrRadiogroup;
+            comboBox_SoundTypes.Enabled = comboBox_SoundTypes.Visible = true;
             comboBox_SoundTypes.SelectedIndex = 0;
-            radioButton_SoundType_MP3.Checked = true;
-            radioButton_TextType_XML.Checked = true;
+            //Choosing how to offer text type selection
+            comboBox_TextTypes.Enabled = comboBox_TextTypes.Visible = true;
+            comboBox_TextTypes.SelectedIndex = 0;
         }
         public void Subscribe_AbstractButtons()
         {
@@ -202,61 +182,235 @@ namespace _Verbalize
             button_HideGuiMarkup.Click += Button_HideGuiMarkup_Click;
             button_NarrateMainTextBox.Click += Button_NarrateMainTextBox_Click;
         }
-
-        private void Form1_Load(object sender, EventArgs e)
+        #region Main GUI Buttons -not the menu strip ones. Here are the calls to the functions, same with the menu strip ones
+        private void Button_HideGuiMarkup_Click(object sender, EventArgs e)
         {
-            this.Icon = icon_AppLogo; // The app's main icon. ActiveForm has not yet been instanced with focus (https://stackoverflow.com/questions/23826059/why-this-works-but-form-activeform-throws-nullrefernceexception).
-
-            Assign_AbstractEntities_InitialValues();
-            VoicesLoad();  //  Load the voices onto the combo boxes
-            //Speech Synthesis objects
-            // Initialize your synthesizer and other components
-            speechSynthesizer = new SpeechSynthesizer(config);
-            synthesisCancellationToken = new CancellationTokenSource();
+            HideGuiMarkup();
         }
-
-        public static string SetOutputSoundFormat()
+        private void Button_ClearTextBoxAndLoadedFile_Click(object sender, EventArgs e)
         {
-            if (soundTypeSelectorComboboxOrRadiogroup)
-            {
-                return comboBox_SoundTypes?.SelectedItem?.ToString() ?? "None";
-            }
+            ClearTextBoxAndLoadedFile();
+        }
+        private async void Button_MuteSpokenNarration_Click(object sender, EventArgs e)
+        {
+            MuteSpokenNarration();
+        }
+        private void Button_SaveTextToFile_Click(object sender, EventArgs e)
+        {
+            Save_MainTextBoxText_ToFile();
+        }
+        private void Button_LoadText_Click(object sender, EventArgs e)
+        {
+            LoadText();
+        }
+        private void Button_CreateAudioFromTextFile_Click(object sender, EventArgs e) // Export sound from a local file
+        {
+            CreateAudioFromTextFile();
+        }
+        /// <summary> The Update button </summary>
+        private void Button_UpdateTextFile_Click(object sender, EventArgs e)
+        {
+            UpdateTextFile();
+        }
+        private void Button_CreateNarrationSoundFile_Click(object sender, EventArgs e) // Export sound
+        {
+            CreateNarrationSoundFile();
+        }
+        private void Button_PopulateVoicesAndStylesComboBoxes_Click(object sender, EventArgs e)
+        {
+            PopulateVoicesAndStylesComboBoxes();
+        }
+        private void Button_NarrateMainTextBox_Click(object sender, EventArgs e)
+        {
+            NarrateMainTextBox();
+        }
+        private async void Button_RetrieveAndLoadVoices_Click(object sender, EventArgs e)
+        {
+            RetrieveAndLoadVoices();
+        }
+        public static void LoadText()
+        {
+            Handler_File.Load_Text(label_FileName, Form1.ActiveForm, applicationBrandName, label_FileName_in_menustrip, textBox_Main_Single);
+        }
+        #endregion
+        #region Button functions.
 
-            foreach (Control control in table_LayoutPanel_Sound_RadioGroupParent.Controls)
+        /// <summary> This is the function which changes the form fullscreen -- normalscreen </summary>
+        public void MaximizeWindow()
+        {
+            if (WindowState == FormWindowState.Maximized)
             {
-                if (control is RadioButton radioButton && radioButton.Checked)
+                WindowState = FormWindowState.Normal;
+                Size = new Size(1278, 718);  //This is the minimum size as set at the editor. Will change this to remember the size while in normal screen and revert to that
+                fullScreenToolStripMenuItem.Text = "Full Screen";
+            }
+            else if (WindowState == FormWindowState.Normal)
+            {
+                WindowState = FormWindowState.Maximized;
+                fullScreenToolStripMenuItem.Text = "Normal Screen";
+            }
+        }
+        public void MinimizeWindow()
+        {
+            WindowState = FormWindowState.Minimized;
+        }
+        public static void QuitApplication()
+        {
+            Application.Exit();
+        }
+        public static void HideGuiMarkup()
+        {
+            table_LayoutPanel_MainGUIRow.ColumnStyles[2].SizeType = SizeType.Absolute;
+            if (table_LayoutPanel_MainGUIRow.ColumnStyles[2].Width > 0)
+            {
+                table_LayoutPanel_MainGUIRow.ColumnStyles[2].Width = 0;
+                button_HideGuiMarkup.BackgroundImage = image_AttrColumnButton_Expand;
+            }
+            else
+            {
+                //MessageBox.Show("attributesColumnInitialWidth = " + attributesColumnInitialWidth);
+                table_LayoutPanel_MainGUIRow.ColumnStyles[2].Width = attributesColumnInitialWidth;
+                //MessageBox.Show("tableLayoutPanel11.ColumnStyles[2].Width = " + tableLayoutPanel11.ColumnStyles[2].Width);
+                table_LayoutPanel_MainGUIRow.ColumnStyles[2].SizeType = attributesColumnInitialSizeType;
+                // MessageBox.Show("attributesColumnInitialSizeType : " + attributesColumnInitialSizeType.ToString());
+                button_HideGuiMarkup.BackgroundImage = image_AttrColumnButton_Recede;
+            }
+            attributesColumnCurrentWidth = table_LayoutPanel_MainGUIRow.ColumnStyles[2].Width;
+            //MessageBox.Show("attributesColumnCurrentWidth = " + attributesColumnCurrentWidth.ToString());
+        }
+        /// <summary> This is the method that clears the main TextBox and subsequently the label which presents the file name to the GUI. </summary>
+        public static void ClearTextBoxAndLoadedFile()
+        {
+            locationLoadedFile = string.Empty;
+            textBox_Main_Single.Clear();
+            label_FileName.Text = string.Empty;
+            label_FileName.Visible = false; // remove this when implement the label's automatic behaviour through events
+        }
+        public static void MuteSpokenNarration()
+        {
+            Handler_AudioSynthesis.SoundPause();
+        }
+        public static void CreateAudioFromTextFile()
+        {
+            Handler_File.CreateAudioFileFromTextFile();
+        }
+        public static void CreateNarrationSoundFile()
+        {
+            Handler_File.CreateAudioFileFromTextBox();
+        }
+        public static void UpdateTextFile()
+        {
+            //string pathFileSelected = locationLoadedFile;
+            //string text = this.mainSingleTextBox.Text;
+            //XmlDocument SSMLDocument = DataHandling.CreateSSML(text);
+            //SSMLDocument.Save(pathFileSelected);// Save the XML document to a file
+            //formatOutputSound = SetOutputSoundFormat();
+            //_ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
+        }
+        public static void PopulateVoicesAndStylesComboBoxes()
+        {
+            try
+            {
+                VoicesXML.Load(Path.Combine(Handler_File.locationFileResponse)); // Use Load because LoadXML command produces error
+            }
+            catch (Exception)
+            {
+                _ = VoicesRetrieve();
+            }
+            VoicesLoad();
+        }
+        public static void NarrateMainTextBox()
+        {
+            Handler_AudioSynthesis.SpeakFromTextBox(textBox_Main_Single);
+        }
+        /// <summary> Retrieve the list of voices from speech.microsoft.com and reload the voices into the boxes </summary>
+        public async void RetrieveAndLoadVoices()
+        {
+            // will need to abstract it further and move into other classes in order to work correctly
+            //await VoicesRetrieve();
+            //VoicesLoad();
+        }
+        public static async Task VoicesRetrieve()  // need to make it wait until it is finished
+        {
+            var client = new HttpClient();
+            string subscriptionKey = Handler_Data.GetTheSubscriptionKey();
+            string serverLocation = Handler_Data.GetTheServerLocation();
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
+            string listVoicesLocationURL = "https://" + serverLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
+            HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
+            if (response.IsSuccessStatusCode)
+            {
+                using (Stream responseStream = await response.Content.ReadAsStreamAsync())
                 {
-                    return radioButton.Text;
+                    using (StreamReader reader = new(responseStream))
+                    {
+                        string responseData = reader.ReadToEnd();
+                        Handler_Data.SSML_JSONtoXMLConvert(responseData);
+                    }
                 }
             }
-            return "None";
         }
-        public static string SetOutputTextFormat()
+        /// <summary> This function loads the list of language elements from the SSML Voice file onto the Languages combo box </summary>
+        public static void VoicesLoad()
         {
-            foreach (Control control in table_LayoutPanel_Text_RadioGroupParent.Controls)
+            if (VoicesXML.DocumentElement != null)  //  To make sure it has been downloaded and loaded
             {
-                if (control is System.Windows.Forms.RadioButton radioButton && radioButton.Checked)
+                List<string> uniqueLocales = new();  //  List that will contain only the unique values of Locale, for reference, to populate the combo box with unique elements only
+                comboBox_Languages.Items.Clear();
+                foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice")) //Expression "//Voice" works as well
                 {
-                    return radioButton.Text;
+                    string? locale = node?.SelectSingleNode("Locale")?.InnerText;
+                    if (!uniqueLocales.Contains(locale))
+                    {
+                        uniqueLocales.Add(locale);
+                        string? localeName = node?.SelectSingleNode("LocaleName")?.InnerText;
+                        comboBox_Languages.Items.Add(localeName);
+                    }
+                    string? localName = node?.SelectSingleNode("LocalName")?.InnerText ?? "N/A";
+                    string? gender = node?.SelectSingleNode("Gender")?.InnerText ?? "N/A";
+                    comboBox_Languages.SelectedIndex = 0;
                 }
             }
-            return "None";
+            else { VoicesXML.LoadXml(VoicesBasic); VoicesLoad(); }
+            comboBox_VoiceStyles.SelectedItem = style;  //  Have the the default voice style preselected as default
         }
+        public static void Save_MainTextBoxText_ToFile()
+        {
+            string outputTextFormat = GetOutputFormatFromComboBox(comboBox_TextTypes);
+            string sourceText = textBox_Main_Single.Text;
+            Handler_File.SaveText(outputTextFormat, sourceText);
+        }
+        public static string GetOutputFormatFromComboBox(ComboBox _comboBox)
+        {
+            return _comboBox?.SelectedItem?.ToString() ?? "None";
+        }
+        private void ShowOrHideVoiceStylesRow(TableLayoutPanel _tableLayoutPanel, int _StylesRow, bool _showOrHide)
+        {
+            for (int columnIndex = 0; columnIndex < _tableLayoutPanel.ColumnCount; columnIndex++)
+            {
+                Control control = _tableLayoutPanel.GetControlFromPosition(columnIndex, _StylesRow);
+                if (control != null)
+                {
+                    control.Visible = _showOrHide;
+                }
+            }
+        }
+        #endregion
         async void InitializeVoices()  //  See if it should be called from a button
         {
             try
             {
-                VoicesXML.Load(FileHandling.locationFileResponse);
+                VoicesXML.Load(Handler_File.locationFileResponse);
             }
             catch (Exception)
             {
                 try
                 {
-                    VoicesXML.Load(FileHandling.locationFileResponseBackup);
+                    VoicesXML.Load(Handler_File.locationFileResponseBackup);
                 }
                 catch
                 {
-                    System.IO.Directory.CreateDirectory(FileHandling.folderResources);
+                    System.IO.Directory.CreateDirectory(Handler_File.folderResources);
                     await VoicesRetrieve();
                 }
             }
@@ -275,7 +429,9 @@ namespace _Verbalize
                 {
                     displayNames.Add(node.SelectSingleNode("DisplayName").InnerText);
                     this.label6.Text = node.SelectSingleNode("Locale").InnerText;  //  can probably delete this
-                    config.SpeechSynthesisLanguage = node.SelectSingleNode("Locale").InnerText;
+                    string _speechSynthesisLanguage = node.SelectSingleNode("Locale").InnerText;
+                    //Handler_AudioSynthesis.config.SpeechSynthesisLanguage = node.SelectSingleNode("Locale").InnerText;
+                    Handler_AudioSynthesis.SetSpeechSynthesisLanguage(_speechSynthesisLanguage);
                 }
             }
             comboBox_Voices.DataSource = displayNames;
@@ -291,7 +447,8 @@ namespace _Verbalize
                 string selectedDisplayName = comboBox_Voices?.SelectedItem?.ToString() ?? string.Empty;
                 if (localName == selectedDisplayName)
                 {
-                    config.SpeechSynthesisVoiceName = node.SelectSingleNode("ShortName").InnerText;  //  We store who our voice actor will be
+                    string _SpeechSynthesisVoiceName = node.SelectSingleNode("ShortName").InnerText;  //  We store who our voice actor will be
+                    Handler_AudioSynthesis.SetSpeechSynthesisVoiceName(_SpeechSynthesisVoiceName);
                     label7.Text = " - " + node.SelectSingleNode("LocalName").InnerText + " (" + node.SelectSingleNode("Gender").InnerText + ")";
                 }
             }
@@ -325,17 +482,7 @@ namespace _Verbalize
             _voiceStylesComboBox.SelectedIndex = selectedIndex; // set the index on it
             ShowOrHideVoiceStylesRow(tableLayoutPanel8, 2, selectedIndex == 0); // show or hide the row which has the styles
         }
-        private void ShowOrHideVoiceStylesRow(TableLayoutPanel _tableLayoutPanel, int _StylesRow, bool _showOrHide)
-        {
-            for (int columnIndex = 0; columnIndex < _tableLayoutPanel.ColumnCount; columnIndex++)
-            {
-                Control control = _tableLayoutPanel.GetControlFromPosition(columnIndex, _StylesRow);
-                if (control != null)
-                {
-                    control.Visible = _showOrHide;
-                }
-            }
-        }
+        
         /// <summary> Voice Pitch slider </summary>
         private void ScrollBar_Pitch_ValueChanged(object sender, EventArgs e)
         {
@@ -397,7 +544,7 @@ namespace _Verbalize
             emo.Value = "http://www.w3.org/2009/10/emotionml";
             speak.SetAttributeNode(emo);
             XmlAttribute lang = SSMLDocument.CreateAttribute("xml:lang");
-            lang.Value = config.SpeechSynthesisLanguage;
+            lang.Value = Handler_AudioSynthesis.GetSpeechSynthesisLanguage();
             speak.SetAttributeNode(lang);
             XmlAttribute onlangfailure = SSMLDocument.CreateAttribute("onlangfailure");
             onlangfailure.Value = "ignoretext ";
@@ -405,7 +552,8 @@ namespace _Verbalize
             #endregion
             #region creating new Voice node using variables for the attributes. 
             XmlElement voice = SSMLDocument.CreateElement("voice");
-            voice.SetAttribute("name", config.SpeechSynthesisVoiceName);
+            string _voiceAttributeValue = Handler_AudioSynthesis.GetSpeechSynthesisVoiceName();
+            voice.SetAttribute("name", _voiceAttributeValue);
             XmlElement prosody = SSMLDocument.CreateElement("prosody");
             prosody.SetAttribute("rate", rate);
             prosody.SetAttribute("pitch", pitch);
@@ -426,7 +574,8 @@ namespace _Verbalize
             XmlDocument SSMLDocument = new();
             #region creating new Voice node using variables for the attributes. 
             XmlElement voice = SSMLDocument.CreateElement("voice");
-            voice.SetAttribute("name", config.SpeechSynthesisVoiceName);
+            string _voiceAttributeValue = Handler_AudioSynthesis.GetSpeechSynthesisLanguage();
+            voice.SetAttribute("name", _voiceAttributeValue);
             XmlElement prosody = SSMLDocument.CreateElement("prosody");
             prosody.SetAttribute("rate", rate);
             prosody.SetAttribute("pitch", pitch);
@@ -499,8 +648,8 @@ namespace _Verbalize
 
             #region set the u.i. and config elements to the parsed values (which will be the default ones on whatever has failed)
 
-            config.SpeechSynthesisVoiceName = nameValue;
-            config.SpeechSynthesisLanguage = langValue; //  Set the Speech Language to whatever is first on the xml file, which is the general one of the entire file
+            Handler_AudioSynthesis.SetSpeechSynthesisVoiceName(nameValue) ;
+            Handler_AudioSynthesis.SetSpeechSynthesisLanguage(langValue); //  Set the Speech Language to whatever is first on the xml file, which is the general one of the entire file
 
             comboBox_Languages.SelectedItem = localeName;
             comboBox_Voices.SelectedItem = DisplayName;
@@ -522,7 +671,7 @@ namespace _Verbalize
             else
             {
                 pitch = "default";
-                comboBox_Pitch.SelectedItem = null;
+                comboBox_Pitch.SelectedItem = pitch;
                 label_pitch.Text = "Pitch : " + pitch;
             }
 
@@ -535,15 +684,15 @@ namespace _Verbalize
             {
                 //vScrollBar_rate.Value = Math.Clamp(rateInt, -30, 30);
                 vScrollBar_rate.Value = Math.Clamp(rateInt, vScrollBar_rate.Minimum, vScrollBar_rate.Maximum);
+                comboBox_Rate.SelectedItem = null;
                 //label3.Text = "Rate = " + rateInt.ToString();
                 label_rate.Text = "Rate = " + vScrollBar_rate.Value.ToString();
-                comboBox_Rate.SelectedItem = null;
             }
             else
             {
                 rate = "default";
                 label_rate.Text = "Rate : " + rate;
-                comboBox_Rate.SelectedItem = null;
+                comboBox_Rate.SelectedItem = rate;
             }
 
             vScrollBar_volume.Value = volume;
@@ -554,7 +703,156 @@ namespace _Verbalize
         {
             //button2.Enabled = !string.IsNullOrEmpty(label_filename.Text);// enable back when complete the code
             if (label_FileName.Text != string.Empty) label_FileName.Visible = true;
+        }       
+
+        private void ComboBox_SoundTypes_SelectedIndexChanged(object sender, EventArgs e)
+        { formatOutputSound = comboBox_SoundTypes?.SelectedItem?.ToString() ?? "None"; }
+
+        #region the vertical ScrollBar's annotations ~ could make it abstract for horizontal scrollbar as well
+        private void panel_Paint(object sender, PaintEventArgs e)
+        {
+            Panel panel = (Panel)sender;
+            int annotationWidth = SystemInformation.VerticalScrollBarWidth;
+            int annotationHeight = (SystemInformation.VerticalScrollBarThumbHeight / 10);
+            int barHeight = SystemInformation.VerticalScrollBarThumbHeight;
+            System.Windows.Forms.VScrollBar? vScrollBar = null;
+            foreach (Control c in panel.Controls)
+            {
+                if (c is VScrollBar)
+                {
+                    vScrollBar = (System.Windows.Forms.VScrollBar)c;
+                    break;
+                }
+            }
+            int annotationX = vScrollBar.Right;
+            int ceiling = vScrollBar.Top + vScrollBar.Margin.Top + barHeight + barHeight / 2;  //  the highest point, within the control, from which the annontations are drawn - will be the 1st one as well             
+            int floor = vScrollBar.Bottom - vScrollBar.Margin.Bottom - barHeight - barHeight / 2;
+            int stepMath = 12;// the mathematical step between the annontations
+            int stepGraphic = (floor - ceiling) / stepMath; // the graphical step between the annontations
+            int annotationYOffset = 0; // A small offset so that the lines are drawn at a distance fromt he scrollbar.
+            int annotationXOffset = -5; // A small offset so that the lines are always drawn at the middle of the Thumb.
+            int stepAnontations = Math.Abs(vScrollBar.Maximum - vScrollBar.Minimum) / stepMath; // this nis how much will be added in the annontations, effectively showcasing the scrollbar's value at their point
+            int i = 0;  //  this is our step. There will be 10-increment steps
+            int value = vScrollBar.Minimum;
+            for (int annotationY = ceiling; annotationY <= floor; annotationY += stepGraphic) //  ceiling is actually a small number
+            {
+                if (value != 0)
+                {
+                    e.Graphics.FillRectangle(Brushes.Black, new Rectangle(annotationX, annotationY, annotationWidth, annotationHeight));
+
+                    e.Graphics.DrawString(value.ToString("+#;-#") + " %", Font, Brushes.Black, new Point(annotationX + annotationWidth + annotationYOffset, annotationY - barHeight / 2 + annotationXOffset));  //  Would rather draw the strings of the scrollbar's actual value
+                }
+                i += stepMath;
+                value += stepAnontations;
+            }
+            e.Graphics.FillRectangle(Brushes.Red, new Rectangle(annotationX, vScrollBar.Height / 2, annotationWidth * 2, annotationHeight));
+            e.Graphics.DrawString("0", Font, Brushes.Black, new Point(annotationX + annotationWidth * 2 + annotationYOffset / 2, ((vScrollBar.Height / 2) - barHeight / 2 + annotationXOffset)));
         }
+        #endregion
+
+        /// <summary> Draw a light blue rectangle as the text file's title background. </summary>
+        private void label_FileName_Paint(object sender, PaintEventArgs e)
+        {
+            using LinearGradientBrush brush = new(ClientRectangle, Color.LightBlue, Color.White, 0F);
+            e.Graphics.FillRectangle(brush, ClientRectangle);
+            TextRenderer.DrawText(e.Graphics, label_FileName.Text, label_FileName.Font, label_FileName.ClientRectangle, label_FileName.ForeColor, TextFormatFlags.Default);
+        }
+        /// <summary> This is in order to make sure the panels are redrawn properly. Invalidate() any other control that is drawn uniquely. </summary>
+        public void ReDrawEverything()
+        {
+            foreach (Control control in Controls)
+            {
+                panel1.Invalidate();
+                panel2.Invalidate();
+                control.Invalidate();
+                label_FileName = label1;// need to fix this, so that it gets called as the below
+                label_FileName.Invalidate();
+
+            }
+        }
+        private void Form1_Resize(object sender, EventArgs e) { ReDrawEverything(); }
+        private void Form1_Paint(object sender, PaintEventArgs e) { /*ReDrawEverything();*/ }
+        /// <summary> Remove any extra unit from the string, keeping solely the number </summary>
+        [GeneratedRegex("[^0-9-+]")]
+        private static partial Regex MyRegex();        
+
+        #region Menu Bar items
+
+        #region Menu strip buttons
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Save_MainTextBoxText_ToFile();
+        }
+        private void DownloadVoicesListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            RetrieveAndLoadVoices();
+        }
+        private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            LoadText();
+        }
+        private void FullScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MaximizeWindow();
+        }
+        private void UpdateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UpdateTextFile();
+        }
+        private void ExportSoundToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateNarrationSoundFile();
+        }
+        private void ExportTextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Save_MainTextBoxText_ToFile();
+        }
+        private void ExportBatchAudioToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateAudioFromTextFile();
+        }
+        private void MenuBarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void AppGUIToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void ColourSchemeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void PopulateVoicesAndStylesComboBoxesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PopulateVoicesAndStylesComboBoxes();
+        }
+        private void PresetLanguageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+        #endregion
+
+        #region Window buttons - Help, Minimize, Maximize, Quit
+        private void Button_ShowHelp_Click(object sender, EventArgs e)
+        {
+
+        }
+        private void Button_MinimizeWindow_Click(object sender, EventArgs e)
+        {
+            MinimizeWindow();
+        }        
+        private void Button_MaximizeWindow_Click(object sender, EventArgs e)
+        {
+            MaximizeWindow();
+        }
+        private void Button_QuitApplication_Click(object sender, EventArgs e)
+        {
+            QuitApplication();
+        }
+        #endregion
+
+        #endregion
 
         #region A string in XML format that is to be used, should the app not be able to download the Voices file
         public readonly static string VoicesBasic = @"<Voices>  
@@ -1053,353 +1351,6 @@ namespace _Verbalize
                                     <LocaleName>Slovenian (Slovenia)</LocaleName>
                                   </Voice>
                                 </Voices>";
-        #endregion
-
-        private void ComboBox_SoundTypes_SelectedIndexChanged(object sender, EventArgs e)
-        { formatOutputSound = comboBox_SoundTypes?.SelectedItem?.ToString() ?? "None"; }
-
-        #region the vertical ScrollBar's annotations ~ could make it abstract for horizontal scrollbar as well
-        private void panel_Paint(object sender, PaintEventArgs e)
-        {
-            Panel panel = (Panel)sender;
-            int annotationWidth = SystemInformation.VerticalScrollBarWidth;
-            int annotationHeight = (SystemInformation.VerticalScrollBarThumbHeight / 10);
-            int barHeight = SystemInformation.VerticalScrollBarThumbHeight;
-            System.Windows.Forms.VScrollBar? vScrollBar = null;
-            foreach (Control c in panel.Controls)
-            {
-                if (c is VScrollBar)
-                {
-                    vScrollBar = (System.Windows.Forms.VScrollBar)c;
-                    break;
-                }
-            }
-            int annotationX = vScrollBar.Right;
-            int ceiling = vScrollBar.Top + vScrollBar.Margin.Top + barHeight + barHeight / 2;  //  the highest point, within the control, from which the annontations are drawn - will be the 1st one as well             
-            int floor = vScrollBar.Bottom - vScrollBar.Margin.Bottom - barHeight - barHeight / 2;
-            int stepMath = 12;// the mathematical step between the annontations
-            int stepGraphic = (floor - ceiling) / stepMath; // the graphical step between the annontations
-            int annotationYOffset = 0; // A small offset so that the lines are drawn at a distance fromt he scrollbar.
-            int annotationXOffset = -5; // A small offset so that the lines are always drawn at the middle of the Thumb.
-            int stepAnontations = Math.Abs(vScrollBar.Maximum - vScrollBar.Minimum) / stepMath; // this nis how much will be added in the annontations, effectively showcasing the scrollbar's value at their point
-            int i = 0;  //  this is our step. There will be 10-increment steps
-            int value = vScrollBar.Minimum;
-            for (int annotationY = ceiling; annotationY <= floor; annotationY += stepGraphic) //  ceiling is actually a small number
-            {
-                if (value != 0)
-                {
-                    e.Graphics.FillRectangle(Brushes.Black, new Rectangle(annotationX, annotationY, annotationWidth, annotationHeight));
-
-                    e.Graphics.DrawString(value.ToString("+#;-#") + " %", Font, Brushes.Black, new Point(annotationX + annotationWidth + annotationYOffset, annotationY - barHeight / 2 + annotationXOffset));  //  Would rather draw the strings of the scrollbar's actual value
-                }
-                i += stepMath;
-                value += stepAnontations;
-            }
-            e.Graphics.FillRectangle(Brushes.Red, new Rectangle(annotationX, vScrollBar.Height / 2, annotationWidth * 2, annotationHeight));
-            e.Graphics.DrawString("0", Font, Brushes.Black, new Point(annotationX + annotationWidth * 2 + annotationYOffset / 2, ((vScrollBar.Height / 2) - barHeight / 2 + annotationXOffset)));
-        }
-        #endregion
-
-        /// <summary> Draw a light blue rectangle as the text file's title background. </summary>
-        private void label_FileName_Paint(object sender, PaintEventArgs e)
-        {
-            using LinearGradientBrush brush = new(ClientRectangle, Color.LightBlue, Color.White, 0F);
-            e.Graphics.FillRectangle(brush, ClientRectangle);
-            TextRenderer.DrawText(e.Graphics, label_FileName.Text, label_FileName.Font, label_FileName.ClientRectangle, label_FileName.ForeColor, TextFormatFlags.Default);
-        }
-        /// <summary> This is in order to make sure the panels are redrawn properly. Invalidate() any other control that is drawn uniquely. </summary>
-        public void ReDrawEverything()
-        {
-            foreach (Control control in Controls)
-            {
-                panel1.Invalidate();
-                panel2.Invalidate();
-                control.Invalidate();
-                label_FileName = label1;// need to fix this, so that it gets called as the below
-                label_FileName.Invalidate();
-
-            }
-        }
-        private void Form1_Resize(object sender, EventArgs e) { ReDrawEverything(); }
-        private void Form1_Paint(object sender, PaintEventArgs e) { /*ReDrawEverything();*/ }
-        /// <summary> Remove any extra unit from the string, keeping solely the number </summary>
-        [GeneratedRegex("[^0-9-+]")]
-        private static partial Regex MyRegex();
-
-
-        #region Main GUI Buttons -not the menu strip ones. Here are the calls to the functions, same with the menu strip ones
-        private void Button_HideGuiMarkup_Click(object sender, EventArgs e)
-        {
-            HideGuiMarkup();
-        }
-        private void Button_ClearTextBoxAndLoadedFile_Click(object sender, EventArgs e)
-        {
-            ClearTextBoxAndLoadedFile();
-        }
-        private async void Button_MuteSpokenNarration_Click(object sender, EventArgs e)
-        {
-            MuteSpokenNarration();
-        }
-        private void Button_SaveTextToFile_Click(object sender, EventArgs e)
-        {
-            SaveTextToFile();
-        }
-        private void Button_LoadText_Click(object sender, EventArgs e)
-        {
-            LoadText();
-        }
-        private void Button_CreateAudioFromTextFile_Click(object sender, EventArgs e) // Export sound from a local file
-        {
-            CreateAudioFromTextFile();
-        }
-        /// <summary> The Update button </summary>
-        private void Button_UpdateTextFile_Click(object sender, EventArgs e)
-        {
-            UpdateTextFile();
-        }
-        private void Button_CreateNarrationSoundFile_Click(object sender, EventArgs e) // Export sound
-        {
-            CreateNarrationSoundFile();
-        }
-        private void Button_PopulateVoicesAndStylesComboBoxes_Click(object sender, EventArgs e)
-        {
-            PopulateVoicesAndStylesComboBoxes();
-        }
-        private void Button_NarrateMainTextBox_Click(object sender, EventArgs e)
-        {
-            NarrateMainTextBox();
-        }
-        private async void Button_RetrieveAndLoadVoices_Click(object sender, EventArgs e)
-        {
-            RetrieveAndLoadVoices();
-        }
-        #endregion
-
-        #region Menu Bar items
-
-        #region Menu strip buttons
-        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveTextToFile();
-        }
-        private void DownloadVoicesListToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            RetrieveAndLoadVoices();
-        }
-        private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            LoadText();
-        }
-        private void FullScreenToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MaximizeWindow();
-        }
-        private void UpdateToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            UpdateTextFile();
-        }
-        private void ExportSoundToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            CreateNarrationSoundFile();
-        }
-        private void ExportTextToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveTextToFile();
-        }
-        private void ExportBatchAudioToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            CreateAudioFromTextFile();
-        }
-        private void MenuBarToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void AppGUIToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void ColourSchemeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void PopulateVoicesAndStylesComboBoxesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            PopulateVoicesAndStylesComboBoxes();
-        }
-        private void PresetLanguageToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-        #endregion
-
-        #region Window buttons - Help, Minimize, Maximize, Quit
-        private void Button_ShowHelp_Click(object sender, EventArgs e)
-        {
-
-        }
-        private void Button_MinimizeWindow_Click(object sender, EventArgs e)
-        {
-            MinimizeWindow();
-        }        
-        private void Button_MaximizeWindow_Click(object sender, EventArgs e)
-        {
-            MaximizeWindow();
-        }
-        private void Button_QuitApplication_Click(object sender, EventArgs e)
-        {
-            QuitApplication();
-        }
-        #endregion
-
-        #endregion
-
-        #region Button functions.
-        public static void LoadText()
-        {
-            FileHandling.Load_Text(label_FileName, Form1.ActiveForm, applicationBrandName, label_FileName_in_menustrip, textBox_Main_Single);
-        }
-        /// <summary> This is the function which changes the form fullscreen -- normalscreen </summary>
-        public void MaximizeWindow()
-        {
-            if (WindowState == FormWindowState.Maximized)
-            {
-                WindowState = FormWindowState.Normal;
-                Size = new Size(1278, 718);  //This is the minimum size as set at the editor. Will change this to remember the size while in normal screen and revert to that
-                fullScreenToolStripMenuItem.Text = "Full Screen";
-            }
-            else if (WindowState == FormWindowState.Normal)
-            {
-                WindowState = FormWindowState.Maximized;
-                fullScreenToolStripMenuItem.Text = "Normal Screen";
-            }
-        }
-        public void MinimizeWindow()
-        {
-            WindowState = FormWindowState.Minimized;
-        }
-        public static void QuitApplication()
-        {
-            Application.Exit();
-        }
-        public static void HideGuiMarkup()
-        {
-            table_LayoutPanel_MainGUIRow.ColumnStyles[2].SizeType = SizeType.Absolute;
-            if (table_LayoutPanel_MainGUIRow.ColumnStyles[2].Width > 0)
-            {
-                table_LayoutPanel_MainGUIRow.ColumnStyles[2].Width = 0;
-                button_HideGuiMarkup.BackgroundImage = image_AttrColumnButton_Expand;
-            }
-            else
-            {
-                //MessageBox.Show("attributesColumnInitialWidth = " + attributesColumnInitialWidth);
-                table_LayoutPanel_MainGUIRow.ColumnStyles[2].Width = attributesColumnInitialWidth;
-                //MessageBox.Show("tableLayoutPanel11.ColumnStyles[2].Width = " + tableLayoutPanel11.ColumnStyles[2].Width);
-                table_LayoutPanel_MainGUIRow.ColumnStyles[2].SizeType = attributesColumnInitialSizeType;
-                // MessageBox.Show("attributesColumnInitialSizeType : " + attributesColumnInitialSizeType.ToString());
-                button_HideGuiMarkup.BackgroundImage = image_AttrColumnButton_Recede;
-            }
-            attributesColumnCurrentWidth = table_LayoutPanel_MainGUIRow.ColumnStyles[2].Width;
-            //MessageBox.Show("attributesColumnCurrentWidth = " + attributesColumnCurrentWidth.ToString());
-        }
-        /// <summary> This is the method that clears the main TextBox and subsequently the label which presents the file name to the GUI. </summary>
-        public static void ClearTextBoxAndLoadedFile()
-        {
-            locationLoadedFile = string.Empty;
-            textBox_Main_Single.Clear();
-            label_FileName.Text = string.Empty;
-            label_FileName.Visible = false; // remove this when implement the label's automatic behaviour through events
-        }
-        public static void MuteSpokenNarration()
-        {
-            AudioSynthesis.SoundPause();
-        }
-        public static void SaveTextToFile()
-        {
-            string outputTextFormat = SetOutputTextFormat();
-            FileHandling.SaveText(outputTextFormat, textBox_Main_Single);
-        }
-        public static void CreateAudioFromTextFile()
-        {
-            FileHandling.CreateAudioFileFromTextFile();
-        }
-        public static void CreateNarrationSoundFile()
-        {
-            FileHandling.CreateAudioFileFromTextBox();
-        }
-        public static void UpdateTextFile()
-        {
-            //string pathFileSelected = locationLoadedFile;
-            //string text = this.mainSingleTextBox.Text;
-            //XmlDocument SSMLDocument = DataHandling.CreateSSML(text);
-            //SSMLDocument.Save(pathFileSelected);// Save the XML document to a file
-            //formatOutputSound = SetOutputSoundFormat();
-            //_ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
-        }
-        public static void PopulateVoicesAndStylesComboBoxes()
-        {
-            try
-            {
-                VoicesXML.Load(Path.Combine(FileHandling.locationFileResponse)); // Use Load because LoadXML command produces error
-            }
-            catch (Exception)
-            {
-                _ = VoicesRetrieve();
-            }
-            VoicesLoad();
-        }
-        public static void NarrateMainTextBox()
-        {
-            AudioSynthesis.SpeakFromTextBox(textBox_Main_Single);
-        }
-        /// <summary> Retrieve the list of voices from speech.microsoft.com and reload the voices into the boxes </summary>
-        public async void RetrieveAndLoadVoices()
-        {
-            // will need to abstract it further and move into other classes in order to work correctly
-            //await VoicesRetrieve();
-            //VoicesLoad();
-        }
-        public static async Task VoicesRetrieve()  // need to make it wait until it is finished
-        {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKeyAlex1);
-            string listVoicesLocationURL = "https://" + serverLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
-            HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
-            if (response.IsSuccessStatusCode)
-            {
-                using (Stream responseStream = await response.Content.ReadAsStreamAsync())
-                {
-                    using (StreamReader reader = new(responseStream))
-                    {
-                        string responseData = reader.ReadToEnd();
-                        DataHandling.SSML_JSONtoXMLConvert(responseData);
-                    }
-                }
-            }
-        }
-        /// <summary> This function loads the list of language elements from the SSML Voice file onto the Languages combo box </summary>
-        public static void VoicesLoad()
-        {
-            if (VoicesXML.DocumentElement != null)  //  To make sure it has been downloaded and loaded
-            {
-                List<string> uniqueLocales = new();  //  List that will contain only the unique values of Locale, for reference, to populate the combo box with unique elements only
-                comboBox_Languages.Items.Clear();
-                foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice")) //Expression "//Voice" works as well
-                {
-                    string? locale = node?.SelectSingleNode("Locale")?.InnerText;
-                    if (!uniqueLocales.Contains(locale))
-                    {
-                        uniqueLocales.Add(locale);
-                        string? localeName = node?.SelectSingleNode("LocaleName")?.InnerText;
-                        comboBox_Languages.Items.Add(localeName);
-                    }
-                    string? localName = node?.SelectSingleNode("LocalName")?.InnerText ?? "N/A";
-                    string? gender = node?.SelectSingleNode("Gender")?.InnerText ?? "N/A";
-                    comboBox_Languages.SelectedIndex = 0;
-                }
-            }
-            else { VoicesXML.LoadXml(VoicesBasic); VoicesLoad(); }
-            comboBox_VoiceStyles.SelectedItem = style;  //  Have the the default voice style preselected as default
-        }
         #endregion
 
     }

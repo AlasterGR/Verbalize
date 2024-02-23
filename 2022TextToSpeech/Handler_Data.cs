@@ -9,20 +9,37 @@ using Microsoft.CognitiveServices.Speech;
 using Newtonsoft.Json;
 using NAudio.MediaFoundation;
 using NAudio.Wave;
+using _Verbalize.Properties;
 
 namespace _Verbalize
 {
-    internal class DataHandling
+    internal class Handler_Data
     {
-        public static SpeechConfig config = Form1.config;
-        public static string pitch = Form1.pitch;
+        public static SpeechConfig config ;
+        public static string pitch = string.Empty;
         /// <summary>  Rate is expressed in 2 ways, an absolute value (string) and a relative (as a number) one. For now, we will use it only as a number (-50% - +50%), I will incoroprate it as a string later </summary>
-        public static string rate = Form1.rate;
+        public static string rate = string.Empty;
         /// <summary>  Defaults in 80. </summary>
-        public static int volume = Form1.volume;
+        public static int volume = 0;
         /// <summary>  The Voice's style. Defaults to "calm" </summary>
-        public static string style = Form1.style;
-
+        public static string style = string.Empty;
+        public static void Initialize()
+        {
+            pitch = Form1.pitch;
+            rate = Form1.rate;
+            volume = Form1.volume;
+            style = Form1.style;
+        }
+        public static string GetTheSubscriptionKey()
+        {
+            string subscriptionKey = (string)Resources.ResourceManager.GetObject("subscriptionKey1");
+            return subscriptionKey; 
+        }
+        public static string GetTheServerLocation()
+        {
+            string serverLocation = (string)Resources.ResourceManager.GetObject("serverLocation");
+            return serverLocation;
+        }
         public static XmlDocument CreateSSML(string text)
         {
             #region Creation of the XML document and its root element
@@ -34,6 +51,14 @@ namespace _Verbalize
             #region XML declaration. Mandatory for XML 1.1 and SSML also requires this : https://www.w3.org/TR/speech-synthesis/#S2.1
             XmlDeclaration xmlDeclaration = SSMLDocument.CreateXmlDeclaration("1.0", "UTF-8", null);
             SSMLDocument.InsertBefore(xmlDeclaration, speak);
+            #endregion
+
+            #region Retrieve needed data from other parts
+            config = Handler_AudioSynthesis.GetConfig();
+            pitch = Form1.pitch;
+            rate = Form1.rate;
+            volume = Form1.volume;
+            style = Form1.style;
             #endregion
 
             #region Assigning the XML's elements and using variables for the attributes. Reference : https://www.w3.org/TR/speech-synthesis/#S3.1.1         
@@ -76,7 +101,7 @@ namespace _Verbalize
 
         public static void SSML_JSONtoXMLConvert(string TextJSONFile)
         {
-            string rootName = FileHandling.voicesSSMLFileName;  //  Change to whatever we need to have as root
+            string rootName = Handler_File.voicesSSMLFileName;  //  Change to whatever we need to have as root
             string mainElementsName = "\"Voice\":";
             string textJSONFile = "{ " + mainElementsName + TextJSONFile + "}";
             XmlDocument xmlDoc = JsonConvert.DeserializeXmlNode(textJSONFile, rootName);
@@ -84,7 +109,7 @@ namespace _Verbalize
             XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", null);
             xmlDoc.InsertBefore(xmldecl, xmlDoc.DocumentElement);
             /*  Save the xml file but with no extention */
-            xmlDoc.Save(Path.Combine(FileHandling.folderResources, rootName));
+            xmlDoc.Save(Path.Combine(Handler_File.folderResources, rootName));
         }
 
         

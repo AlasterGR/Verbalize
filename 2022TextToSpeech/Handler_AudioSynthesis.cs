@@ -7,17 +7,47 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace _Verbalize
 {
-    internal class AudioSynthesis
+    internal class Handler_AudioSynthesis
     {
         /// <summary>  This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis </summary>
-        public static SpeechConfig config = SpeechConfig.FromSubscription(Form1.subscriptionKeyAlex1, Form1.serverLocation);
+        private static SpeechConfig config ;
         public static Task<SpeechSynthesisResult>? spokenTextSoundResult;
         public static CancellationTokenSource synthesisCancellationToken;
         public static SpeechSynthesisResult speechSynthesisResult = null;
         public static SpeechSynthesizer speechSynthesizer;
+        public static void Initialize()
+        {
+            string subscriptionKey = Handler_Data.GetTheSubscriptionKey();
+            string serverLocation = Handler_Data.GetTheServerLocation();
+            config = SpeechConfig.FromSubscription(subscriptionKey, serverLocation);
+            // Initialize your synthesizer and other components
+            speechSynthesizer = new SpeechSynthesizer(config);
+            synthesisCancellationToken = new CancellationTokenSource();
+        }
+        public static SpeechConfig GetConfig()
+        {
+            return config;
+        }
+        public static void SetSpeechSynthesisLanguage(string _speechSynthesisLanguage)
+        {
+            config.SpeechSynthesisLanguage = _speechSynthesisLanguage;
+        }
+        public static string GetSpeechSynthesisLanguage()
+        {
+            return config.SpeechSynthesisLanguage;
+        }
+        public static void SetSpeechSynthesisVoiceName(string _SpeechSynthesisVoiceName)
+        {
+            config.SpeechSynthesisVoiceName = _SpeechSynthesisVoiceName;
+        }
+        public static string GetSpeechSynthesisVoiceName()
+        {
+            return config.SpeechSynthesisVoiceName;
+        }
         public static async Task SynthesizeAudioAsync(string soundfile, string formatOutputSound, bool _audioOn)
         {
             #region Producing the sound data
@@ -121,7 +151,7 @@ namespace _Verbalize
         {
             SoundPause();
             speechSynthesizer = new SpeechSynthesizer(config);
-            spokenTextSoundResult = speechSynthesizer.SpeakSsmlAsync(DataHandling.CreateSSML(string.IsNullOrEmpty(_mainSingleTextBox.SelectedText) ? _mainSingleTextBox.Text : _mainSingleTextBox.SelectedText).OuterXml); // Create SSML from textbox's either selected text or entire text (whichever is nonempty) and feed it to the syntesizer
+            spokenTextSoundResult = speechSynthesizer.SpeakSsmlAsync(Handler_Data.CreateSSML(string.IsNullOrEmpty(_mainSingleTextBox.SelectedText) ? _mainSingleTextBox.Text : _mainSingleTextBox.SelectedText).OuterXml); // Create SSML from textbox's either selected text or entire text (whichever is nonempty) and feed it to the syntesizer
         }
     }
 }

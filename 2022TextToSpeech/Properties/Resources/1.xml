@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" xml:lang="en-US" onlangfailure="ignoretext ">
-  <voice name="en-US-JennyNeural">
+<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xmlns:mstts="http://www.w3.org/2001/mstts" xmlns:emo="http://www.w3.org/2009/10/emotionml" xml:lang="el-GR" onlangfailure="ignoretext ">
+  <voice name="el-GR-AthinaNeural">
     <prosody rate="0%" pitch="0Hz" volume="100">
-      <mstts:express-as style="assistant">TestTestTost</mstts:express-as>
+      <mstts:express-as style="assistant">Δοκιμάζωντας την εφαρμογή...</mstts:express-as>
     </prosody>
   </voice>
 </speak>

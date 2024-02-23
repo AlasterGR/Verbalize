@@ -703,6 +703,15 @@
   <data name="panel4.Size" type="System.Drawing.Size, System.Drawing">
     <value>1233, 30</value>
   </data>
+  <data name="serverLocation" xml:space="preserve">
+    <value>westeurope</value>
+  </data>
+  <data name="subscriptionKey1" xml:space="preserve">
+    <value>5521b17037c34b96aa88e1ab83b34fb3</value>
+  </data>
+  <data name="subscriptionKey2" xml:space="preserve">
+    <value>1491bf9d70da4dedab0f0f375beae896</value>
+  </data>
   <data name="tableLayoutPanel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
@@ -928,7 +937,7 @@
         4JlhM5ueJw4Ti6UuVrqYlU2NOEYcUTWd8oWcxyrnLc5atc7a5+Q3DBX0lQzXaY4hgSUkkYIIBXVUUIWN
         KK06KRbStC/18I+6/hS5FHJVwMixgBo0yK4f/A1+d2sVZ6a9pJAE9L84zscEENgFWg3H+T52nNYJ4H8G
         rvSOv9YE5j5Jb3S0yBEwtA1cXHc0ZQ+43AFGngzZlF3JT1MoFoH3M3qmPDB8Cwyseb2193H6AGSpq+Ub
-        4OAQmCxR9nqPewe7e/vzH7c/SD+8QHLEkiHF8AAAAAlwSFlzAAALEAAACxABrSO9dQAAAAd0SU1FB+cI
+        4OAQmCxR9nqPewe7e/vzH7c/SD+8QHLEkiHF8AAAAAlwSFlzAAALDwAACw8BkvkDpQAAAAd0SU1FB+cI
         BwcfCdv7Ul0AABE4SURBVHhe7dZddlvZkW5R979n1apb6Vvhv/RKSaRAAoiYa4z58lkpkcA5e/tvf/vb
         /wAA5+QIAOyWIwCwW44AwG45AgC75QgA7JYjALBbjgDAbjkCALvlCADsliMAsFuOAMBuOQIAu+UIAOyW
         IwCwW44AwG45AgC75QgA7JYjALBbjgDAbjkCALvlCADsliMAsFuOAMBuOQIAu+UIAOyWIwCwW44AwG45
@@ -1052,7 +1061,7 @@
         5DB0/qbrzUu3vG5du73i9uBw6PCdkeiR0TvsO1N3U+6+uJd5b+H+xgfoB0UPpR5WPFJ81PCz7s9to5aj
         p8dcx/ofBz++P84af/ZLxi/vJwqekJ9UTKpMNk+ZTZ2adp++8XTl04ln6c8WZgp/lf619rnO8x9+c/yt
         fzZiduIF/8Wn30teyr889GrZq565gLlHr1NfL8wXvZF/c/gt423fu/B3kwtZ77HvKz/ofuj+6PPxwafU
-        T5/+BQOY8/xvJtwPAAAACXBIWXMAAAsQAAALEAGtI711AAAK/ElEQVR4Xu3W2XYcNxZEUf//T3dL3cey
+        T5/+BQOY8/xvJtwPAAAACXBIWXMAAAsPAAALDwGS+QOlAAAK/ElEQVR4Xu3W2XYcNxZEUf//T3dL3cey
         TVNkDTlg2PtJiypmIYGLCP4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA

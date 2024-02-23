@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace _Verbalize
 {
-    internal class FileHandling
+    internal class Handler_File
     {
         /// <summary>  The path of the loaded file.</summary>
         private static string locationLoadedFile = string.Empty;
@@ -23,7 +24,8 @@ namespace _Verbalize
         public static string voicesSSMLFileNameBackup = "Voices_[orig].xml";
         /// <summary>  Backup voices file. The file in which we store them.</summary>
         public static string locationFileResponseBackup = Path.Combine(folderResources, voicesSSMLFileNameBackup);
-        public static void SaveText(string outputTextFormat, TextBox _textBox)
+        
+        public static void SaveText(string outputTextFormat, string _textBoxText)
         {
             if (outputTextFormat == "xml")
             {
@@ -31,13 +33,10 @@ namespace _Verbalize
                 if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     string pathFileSelected = saveFileDialog1.FileName;
-                    string text = _textBox.Text;
-                    XmlDocument SSMLDocument = DataHandling.CreateSSML(text);
+                    
+                    XmlDocument SSMLDocument = Handler_Data.CreateSSML(_textBoxText);
                     SSMLDocument.Save(pathFileSelected);  // Save the XML document to a file
-                    //formatOutputSound = SetOutputSoundFormat();
-                    //_ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
                     locationLoadedFile = pathFileSelected;
-                    //Form1.label1.Text = Path.GetFileNameWithoutExtension(pathFileSelected); // Show the loaded file's name                
                 }
             }
             else if (outputTextFormat == "txt")
@@ -46,27 +45,20 @@ namespace _Verbalize
                 if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     string pathFileSelected = saveFileDialog1.FileName;
-                    string text = _textBox.Text;
-                    File.WriteAllText(pathFileSelected, text);
-                    //XmlDocument SSMLDocument = CreateSSML(text);
-                    //SSMLDocument.Save(pathFileSelected);  // Save the XML document to a file
-                    //formatOutputSound = SetOutputSoundFormat();
-                    //_ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
+                    File.WriteAllText(pathFileSelected, _textBoxText);
                     locationLoadedFile = pathFileSelected;
-                    //label1.Text = Path.GetFileNameWithoutExtension(pathFileSelected); // Show the loaded file's name                
                 }
             }
         }
 
-        public static void Load_Text(Label label_FileName, Form activeForm, string applicationBrandName, Label label_FileName_in_menustrip, TextBox mainSingleTextBox)
+        public static void Load_Text(Label label_FileName, Form activeForm, string applicationBrandName, Label label_FileName_in_menustrip, System.Windows.Forms.TextBox mainSingleTextBox)
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 locationLoadedFile = openFileDialog1.FileName;
                 // make it into an event so that it gets automatically changed
-                label_FileName.Text = Path.GetFileName(locationLoadedFile); // Show the loaded file's name                
-                //label1.Font = new Font(Label.DefaultFont, FontStyle.Bold);
+                label_FileName.Text = Path.GetFileName(locationLoadedFile); // Show the loaded file's name
                 activeForm.Text = applicationBrandName + " : " + label_FileName.Text /*+ Path.GetFileNameWithoutExtension(locationLoadedFile) + Path.GetExtension(locationLoadedFile)*/;
                 
                 label_FileName_in_menustrip.Visible = true;
@@ -103,13 +95,13 @@ namespace _Verbalize
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 string pathFileSelected = openFileDialog1.FileName;
-                string formatOutputSound = Form1.SetOutputSoundFormat();
-                _ = AudioSynthesis.SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);  // "_= " is for discarding the result afterwards. Practically suppresses the warning.
+                string formatOutputSound = Form1.GetOutputFormatFromComboBox(Form1.comboBox_SoundTypes);
+                _ = Handler_AudioSynthesis.SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);  // "_= " is for discarding the result afterwards. Practically suppresses the warning.
             }
         }
         public static void CreateAudioFileFromTextBox()
         {
-            string formatOutputSound = Form1.SetOutputSoundFormat();
+            string formatOutputSound = Form1.GetOutputFormatFromComboBox(Form1.comboBox_SoundTypes);
 
             if (formatOutputSound != null && formatOutputSound != "None")
             {
@@ -117,9 +109,9 @@ namespace _Verbalize
                 if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     string text = Form1.textBox_Main_Single.Text;
-                    XmlDocument SSMLDocument = DataHandling.CreateSSML(text);
+                    XmlDocument SSMLDocument = Handler_Data.CreateSSML(text);
                     string pathFileSelected = saveFileDialog1.FileName;
-                    _ = AudioSynthesis.SynthesizeAudioAsyncFromText(SSMLDocument, pathFileSelected, formatOutputSound, false);
+                    _ = Handler_AudioSynthesis.SynthesizeAudioAsyncFromText(SSMLDocument, pathFileSelected, formatOutputSound, false);
                 }
             }
         }
