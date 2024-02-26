@@ -1,6 +1,8 @@
 ﻿using Microsoft.CognitiveServices.Speech;
+// for the audio conversion - add an ogg vorbis encoder
 using NAudio.MediaFoundation;
 using NAudio.Wave;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -10,9 +10,6 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Text.RegularExpressions;
-    // for the audio conversion - add an ogg vorbis encoder
-    using NAudio.Wave;  // for the audio conversion
-    using NAudio.MediaFoundation;
     using System.Drawing.Drawing2D;
     using _Verbalize.Properties;
 
@@ -53,7 +50,7 @@
         private static string locationLoadedFile = string.Empty;
         private string formatOutputSound = "mp3";
         //private static bool isSynthSpeaking = false;
-        /// <summary> What type of seperator, if any, we want to have on the title
+        /// <summary> What type of seperator, if any, we want to have on the title</summary>
         //private static string title_fileExtention_seperator = ".";
         /// <summary> The app's name</summary>
         public static string applicationBrandName = "Verbalize";
@@ -233,6 +230,7 @@
             Handler_File.Load_Text(label_FileName, Form1.ActiveForm, applicationBrandName, label_FileName_in_menustrip, textBox_Main_Single);
         }
         #endregion
+
         #region Button functions.
 
         /// <summary> This is the function which changes the form fullscreen -- normalscreen </summary>
@@ -335,6 +333,7 @@
             var client = new HttpClient();
             string subscriptionKey = Handler_Data.GetTheSubscriptionKey();
             string serverLocation = Handler_Data.GetTheServerLocation();
+            //older code to deprecate
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
             string listVoicesLocationURL = "https://" + serverLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
             HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
@@ -349,6 +348,10 @@
                     }
                 }
             }
+            //newer code to switch to
+            //HttpResponseMessage responseMessage = Handler_Networking.RetrieveDataFromServer("VoicesList", serverLocation, subscriptionKey).Result;
+            //String responseData = Handler_Data.TransformHttpResponceIntoString(responseMessage).Result;
+            //Handler_Data.SSML_JSONtoXMLConvert(responseData);
         }
         /// <summary> This function loads the list of language elements from the SSML Voice file onto the Languages combo box </summary>
         public static void VoicesLoad()

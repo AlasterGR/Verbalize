@@ -10,11 +10,16 @@ using Newtonsoft.Json;
 using NAudio.MediaFoundation;
 using NAudio.Wave;
 using _Verbalize.Properties;
+using System.ComponentModel.DataAnnotations;
 
 namespace _Verbalize
 {
     internal class Handler_Data
     {
+        private static string subscriptionKey = string.Empty;
+        private static string serverLocation = string.Empty;
+        private static string voicesListDefaultUriPart = string.Empty;
+
         public static SpeechConfig config ;
         public static string pitch = string.Empty;
         /// <summary>  Rate is expressed in 2 ways, an absolute value (string) and a relative (as a number) one. For now, we will use it only as a number (-50% - +50%), I will incoroprate it as a string later </summary>
@@ -112,6 +117,49 @@ namespace _Verbalize
             xmlDoc.Save(Path.Combine(Handler_File.folderResources, rootName));
         }
 
-        
+        public static string GetTheVoicesListDefaultUriPart()
+        {
+            string voicesListRetrieveUriPartDefault = (string)Resources.ResourceManager.GetObject("voicesListRetrieveUriPartDefault");
+            return voicesListRetrieveUriPartDefault;
+        }
+        public static HttpClient CreateHttpClientWithSubscriptionKey(string _subscriptionKey)
+        {
+            // create the client object
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _subscriptionKey);
+            return client;
+        }
+        public static string CreateUriOfServerLocationForDataType(string _serverLocation, string _dataType)
+        {
+            string uri = string.Empty;
+            //string listVoicesLocationURL = "https://" + _serverLocation + voicesListDefaultUriPart;
+            switch (_dataType)
+            {
+                case "VoicesList":
+                    uri = "https://" + _serverLocation + GetTheVoicesListDefaultUriPart();
+                    break;
+                default:
+                    break;
+            }
+            return uri;
+        }
+        public static async Task<string> TransformHttpResponceIntoString(HttpResponseMessage _message)
+        {
+            string message = string.Empty;
+            // turn the response into string data
+            if (_message != null)
+            {                
+                using (Stream responseStream = await _message.Content.ReadAsStreamAsync())
+                {
+                    using (StreamReader reader = new(responseStream))
+                    {
+                        message = reader.ReadToEnd();
+                    }
+                }
+            }
+            return message;
+            //Handler_Data.SSML_JSONtoXMLConvert(responseData);
+        }
+       
     }
 }
