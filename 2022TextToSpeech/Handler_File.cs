@@ -19,12 +19,18 @@ namespace _Verbalize
         /// <summary>  Change this to the desired file name and extension.</summary>
         public static string voicesSSMLFileName = "Voices";
         /// <summary>  The file in which we store the downloaded Voices list.</summary>
-        public static string locationFileResponse = Path.Combine(folderResources, voicesSSMLFileName);
+        public static string locationOfVoicesFile = Path.Combine(folderResources, voicesSSMLFileName);
         /// <summary>  Backup voices file. Change this to the desired file name and extension.</summary>
-        public static string voicesSSMLFileNameBackup = "Voices_[orig].xml";
+        public static string locationOfVoicesFileBackup = "Voices_[orig].xml";
         /// <summary>  Backup voices file. The file in which we store them.</summary>
-        public static string locationFileResponseBackup = Path.Combine(folderResources, voicesSSMLFileNameBackup);
-        
+        public static string locationFileResponseBackup = Path.Combine(folderResources, locationOfVoicesFileBackup);
+        public static void Initialize()
+        {
+            if (!Directory.Exists(folderResources))
+            {
+                Directory.CreateDirectory(folderResources);
+            }            
+        }
         public static void SaveText(string outputTextFormat, string _textBoxText)
         {
             if (outputTextFormat == "xml")

@@ -19,11 +19,7 @@
     /// The main Form of the app
     /// </summary>
     public partial class Form1 : Form
-    {
-        //static string regionService = Environment.GetEnvironmentVariable("westeurope");
-        // If, at some point, MS changes Cognitive Services authorization protocols, https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech provides the methods used
-        
-        
+    {  
         #region The Prosody and assorted elements of speech
         // As per : https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice. The https://www.w3.org/TR/speech-synthesis11/ is irrelevant so far.
         /// <summary>  Pitch is expressed in 3 ways. Here, for now, we are using just the absolute value from the range [-200, +200]</summary>
@@ -40,10 +36,6 @@
         private static string selectedLocale = string.Empty;
         /// <summary>  A file that needs to be used throughout the entire app. Might put it within the VoicesLoad() nethod if possible.</summary>
         private static XmlDocument VoicesXML = new();
-        /// <summary>  Backup voices file. Change this to the desired file name and extension.</summary>
-        private static string voicesSSMLFileNameBackup = "Voices_[orig].xml";
-        /// <summary>  Backup voices file. The file in which we store them.</summary>
-        //private static string locationFileResponseBackup = Path.Combine(folderResources, voicesSSMLFileNameBackup);
         /// <summary>  The "short name" of a Voice.</summary>
         private static string shortName = string.Empty;
         /// <summary>  The path of the loaded file.</summary>
@@ -85,7 +77,7 @@
             Handler_AudioSynthesis.Initialize();
             Handler_Networking.Initialize();
             Handler_Data.Initialize();
-
+            Handler_File.Initialize();
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -142,7 +134,7 @@
             image_AttrColumnButton_Recede = (Image)Resources.ResourceManager.GetObject("Triangle_Right");
             icon_AppLogo = (Icon)Resources.ResourceManager.GetObject("Verbalize_logo");
 
-            button_UpdateTextFile.Enabled = button_RetrieveAndLoadVoices.Enabled = button_RetrieveAndLoadVoices.Visible = button_PopulateVoicesAndStylesComboBoxes.Enabled = button_PopulateVoicesAndStylesComboBoxes.Visible = false;
+            button_UpdateTextFile.Enabled = button_RetrieveAndLoadVoices.Enabled = button_RetrieveAndLoadVoices.Visible = button_PopulateVoicesAndStylesComboBoxes.Enabled = button_PopulateVoicesAndStylesComboBoxes.Visible = true;
 
             vScrollBar_volume.Value = volume;
             vScrollBar_pitch.Value = 0;
@@ -309,11 +301,11 @@
         {
             try
             {
-                VoicesXML.Load(Path.Combine(Handler_File.locationFileResponse)); // Use Load because LoadXML command produces error
+                VoicesXML.Load(Path.Combine(Handler_File.locationOfVoicesFile)); // Use Load because LoadXML command produces error
             }
             catch (Exception)
             {
-                _ = VoicesRetrieve();
+                _ = Retrieve_Voices_AndSaveToDisk();
             }
             VoicesLoad();
         }
@@ -325,33 +317,34 @@
         public async void RetrieveAndLoadVoices()
         {
             // will need to abstract it further and move into other classes in order to work correctly
-            //await VoicesRetrieve();
+            await Retrieve_Voices_AndSaveToDisk();
             //VoicesLoad();
         }
-        public static async Task VoicesRetrieve()  // need to make it wait until it is finished
+        public static async Task Retrieve_Voices_AndSaveToDisk()  // need to make it wait until it is finished
         {
-            var client = new HttpClient();
+            //var client = new HttpClient();
             string subscriptionKey = Handler_Data.GetTheSubscriptionKey();
             string serverLocation = Handler_Data.GetTheServerLocation();
             //older code to deprecate
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
-            string listVoicesLocationURL = "https://" + serverLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
-            HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
-            if (response.IsSuccessStatusCode)
-            {
-                using (Stream responseStream = await response.Content.ReadAsStreamAsync())
-                {
-                    using (StreamReader reader = new(responseStream))
-                    {
-                        string responseData = reader.ReadToEnd();
-                        Handler_Data.SSML_JSONtoXMLConvert(responseData);
-                    }
-                }
-            }
+            //client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
+            //string listVoicesLocationURL = "https://" + serverLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
+            //HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
+            //if (response.IsSuccessStatusCode)
+            //{
+            //    using (Stream responseStream = await response.Content.ReadAsStreamAsync())
+            //    {
+            //        using (StreamReader reader = new(responseStream))
+            //        {
+            //            string responseData = reader.ReadToEnd();
+            //            Handler_Data.Convert_JSONtoXML_AndSaveToDisk(responseData);
+            //        }
+            //    }
+            //}
             //newer code to switch to
-            //HttpResponseMessage responseMessage = Handler_Networking.RetrieveDataFromServer("VoicesList", serverLocation, subscriptionKey).Result;
-            //String responseData = Handler_Data.TransformHttpResponceIntoString(responseMessage).Result;
-            //Handler_Data.SSML_JSONtoXMLConvert(responseData);
+            HttpResponseMessage responseMessage = Handler_Networking.RetrieveDataFromServer("VoicesList", serverLocation, subscriptionKey).Result;
+            
+            String jsonResponseData = Handler_Data.TransformHttpResponceIntoString(responseMessage).Result;
+            Handler_Data.Convert_JSONtoXML_AndSaveToDisk(jsonResponseData);
         }
         /// <summary> This function loads the list of language elements from the SSML Voice file onto the Languages combo box </summary>
         public static void VoicesLoad()
@@ -403,18 +396,18 @@
         {
             try
             {
-                VoicesXML.Load(Handler_File.locationFileResponse);
+                VoicesXML.Load(Handler_File.locationOfVoicesFile);
             }
             catch (Exception)
             {
                 try
                 {
-                    VoicesXML.Load(Handler_File.locationFileResponseBackup);
+                    VoicesXML.Load(Handler_File.locationOfVoicesFileBackup);
                 }
                 catch
                 {
-                    System.IO.Directory.CreateDirectory(Handler_File.folderResources);
-                    await VoicesRetrieve();
+                    Directory.CreateDirectory(Handler_File.folderResources);
+                    await Retrieve_Voices_AndSaveToDisk();
                 }
             }
         }

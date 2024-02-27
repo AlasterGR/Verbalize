@@ -9,6 +9,7 @@ namespace _Verbalize
 {
     internal class Handler_Networking
     {
+        // If, at some point, MS changes Cognitive Services authorization protocols, https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-text-to-speech provides the methods used
         private static string subscriptionKey = string.Empty;
         private static string serverLocation = string.Empty;
         private static string voicesListDefaultUriPart = string.Empty;
@@ -35,7 +36,7 @@ namespace _Verbalize
                     using (StreamReader reader = new(responseStream))
                     {
                         string responseData = reader.ReadToEnd();
-                        Handler_Data.SSML_JSONtoXMLConvert(responseData);
+                        Handler_Data.Convert_JSONtoXML_AndSaveToDisk(responseData);
                     }
                 }
             }
@@ -50,9 +51,18 @@ namespace _Verbalize
 
             // prepare the string of the URI/URL 
             string uri = Handler_Data.CreateUriOfServerLocationForDataType(_serverLocation, _dataType);
-
-             // get and store the response from the server with the URI 
-             HttpResponseMessage response = await GetResponseMessageFromClientWithUri(client, uri);
+            MessageBox.Show("The url to be used is " + uri +".");
+            if(uri == "https://westeurope.tts.speech.microsoft.com/cognitiveservices/voices/list")
+            {
+                MessageBox.Show("The url is correct.");
+            }
+            else
+            {                
+                MessageBox.Show("The url is NOT correct.");
+                
+            }
+            // get and store the response from the server with the URI 
+            HttpResponseMessage response = await GetResponseMessageFromClientWithUri(client, uri);
 
             return response;           
         }

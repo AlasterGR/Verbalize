@@ -1,25 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using System.Xml;
+﻿using System.Xml;
 using Microsoft.CognitiveServices.Speech;
 using Newtonsoft.Json;
-using NAudio.MediaFoundation;
-using NAudio.Wave;
 using _Verbalize.Properties;
-using System.ComponentModel.DataAnnotations;
 
 namespace _Verbalize
 {
     internal class Handler_Data
     {
-        private static string subscriptionKey = string.Empty;
-        private static string serverLocation = string.Empty;
-        private static string voicesListDefaultUriPart = string.Empty;
-
         public static SpeechConfig config ;
         public static string pitch = string.Empty;
         /// <summary>  Rate is expressed in 2 ways, an absolute value (string) and a relative (as a number) one. For now, we will use it only as a number (-50% - +50%), I will incoroprate it as a string later </summary>
@@ -28,12 +15,15 @@ namespace _Verbalize
         public static int volume = 0;
         /// <summary>  The Voice's style. Defaults to "calm" </summary>
         public static string style = string.Empty;
+        /// <summary>  A file that needs to be used throughout the entire app. Might put it within the VoicesLoad() nethod if possible.</summary>
+        private static XmlDocument VoicesXML = new();
         public static void Initialize()
         {
             pitch = Form1.pitch;
             rate = Form1.rate;
             volume = Form1.volume;
             style = Form1.style;
+            
         }
         public static string GetTheSubscriptionKey()
         {
@@ -104,7 +94,7 @@ namespace _Verbalize
             return SSMLDocument;
         }
 
-        public static void SSML_JSONtoXMLConvert(string TextJSONFile)
+        public static void Convert_JSONtoXML_AndSaveToDisk(string TextJSONFile)
         {
             string rootName = Handler_File.voicesSSMLFileName;  //  Change to whatever we need to have as root
             string mainElementsName = "\"Voice\":";
@@ -113,13 +103,14 @@ namespace _Verbalize
             /*  Create an XML declaration and then add it to the xml document  */
             XmlDeclaration xmldecl = xmlDoc.CreateXmlDeclaration("1.0", "utf-8", null);
             xmlDoc.InsertBefore(xmldecl, xmlDoc.DocumentElement);
-            /*  Save the xml file but with no extention */
+            /*  Save the xml file but with no extention - probably should move to Handler_File */
             xmlDoc.Save(Path.Combine(Handler_File.folderResources, rootName));
         }
 
         public static string GetTheVoicesListDefaultUriPart()
         {
             string voicesListRetrieveUriPartDefault = (string)Resources.ResourceManager.GetObject("voicesListRetrieveUriPartDefault");
+            
             return voicesListRetrieveUriPartDefault;
         }
         public static HttpClient CreateHttpClientWithSubscriptionKey(string _subscriptionKey)
@@ -158,7 +149,7 @@ namespace _Verbalize
                 }
             }
             return message;
-            //Handler_Data.SSML_JSONtoXMLConvert(responseData);
+            //SSML_JSONtoXMLConvert(responseData);
         }
        
     }

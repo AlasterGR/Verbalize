@@ -937,7 +937,7 @@
         4JlhM5ueJw4Ti6UuVrqYlU2NOEYcUTWd8oWcxyrnLc5atc7a5+Q3DBX0lQzXaY4hgSUkkYIIBXVUUIWN
         KK06KRbStC/18I+6/hS5FHJVwMixgBo0yK4f/A1+d2sVZ6a9pJAE9L84zscEENgFWg3H+T52nNYJ4H8G
         rvSOv9YE5j5Jb3S0yBEwtA1cXHc0ZQ+43AFGngzZlF3JT1MoFoH3M3qmPDB8Cwyseb2193H6AGSpq+Ub
-        4OAQmCxR9nqPewe7e/vzH7c/SD+8QHLEkiHF8AAAAAlwSFlzAAALDgAACw4BQL7hQQAAAAd0SU1FB+cI
+        4OAQmCxR9nqPewe7e/vzH7c/SD+8QHLEkiHF8AAAAAlwSFlzAAALDQAACw0B7QfALAAAAAd0SU1FB+cI
         BwcfCdv7Ul0AABE4SURBVHhe7dZddlvZkW5R979n1apb6Vvhv/RKSaRAAoiYa4z58lkpkcA5e/tvf/vb
         /wAA5+QIAOyWIwCwW44AwG45AgC75QgA7JYjALBbjgDAbjkCALvlCADsliMAsFuOAMBuOQIAu+UIAOyW
         IwCwW44AwG45AgC75QgA7JYjALBbjgDAbjkCALvlCADsliMAsFuOAMBuOQIAu+UIAOyWIwCwW44AwG45
@@ -1061,7 +1061,7 @@
         5DB0/qbrzUu3vG5du73i9uBw6PCdkeiR0TvsO1N3U+6+uJd5b+H+xgfoB0UPpR5WPFJ81PCz7s9to5aj
         p8dcx/ofBz++P84af/ZLxi/vJwqekJ9UTKpMNk+ZTZ2adp++8XTl04ln6c8WZgp/lf619rnO8x9+c/yt
         fzZiduIF/8Wn30teyr889GrZq565gLlHr1NfL8wXvZF/c/gt423fu/B3kwtZ77HvKz/ofuj+6PPxwafU
-        T5/+BQOY8/xvJtwPAAAACXBIWXMAAAsOAAALDgFAvuFBAAAK/ElEQVR4Xu3W2XYcNxZEUf//T3dL3cey
+        T5/+BQOY8/xvJtwPAAAACXBIWXMAAAsNAAALDQHtB8AsAAAK/ElEQVR4Xu3W2XYcNxZEUf//T3dL3cey
         TVNkDTlg2PtJiypmIYGLCP4BAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -4951,7 +4951,7 @@
 </value>
   </data>
   <data name="voicesListRetrieveUriPartDefault" xml:space="preserve">
-    <value>".tts.speech.microsoft.com/cognitiveservices/voices/list"</value>
+    <value>.tts.speech.microsoft.com/cognitiveservices/voices/list</value>
   </data>
   <data name="vScrollBar1.Size" type="System.Drawing.Size, System.Drawing">
     <value>86, 444</value>
