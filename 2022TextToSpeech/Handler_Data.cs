@@ -113,11 +113,12 @@ namespace _Verbalize
             
             return voicesListRetrieveUriPartDefault;
         }
-        public static HttpClient CreateHttpClientWithSubscriptionKey(string _subscriptionKey)
+        public static HttpClient CreateHttpClientWithSubscriptionKey()
         {
             // create the client object
             var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _subscriptionKey);
+            string subscriptionKey = GetTheSubscriptionKey();
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
             return client;
         }
         public static string CreateUriOfServerLocationForDataType(string _serverLocation, string _dataType)

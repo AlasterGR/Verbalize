@@ -54,7 +54,7 @@
         public static bool soundTypeSelectorComboboxOrRadiogroup;
         
         public static TableLayoutPanel table_LayoutPanel_MainGUIRow;
-        public static Label label_FileName, label_FileName_in_menustrip, label_rate, label_pitch;
+        public static Label label_FileName, label_FileName_in_menustrip, label_rate, label_pitch, label_system_messages, label_user_messages;
         public static VScrollBar vScrollBar_rate, vScrollBar_pitch, vScrollBar_volume;
         public static ComboBox comboBox_Languages, comboBox_Voices, comboBox_VoiceStyles, comboBox_Rate, comboBox_Pitch, comboBox_SoundTypes, comboBox_TextTypes;
 
@@ -94,6 +94,8 @@
             label_FileName_in_menustrip = label12;
             label_rate = label3;
             label_pitch = label2;
+            label_system_messages = label15;
+            label_user_messages = label17;
 
             comboBox_Languages = comboBox1;
             comboBox_Voices = comboBox2;
@@ -129,6 +131,8 @@
         {
             label_FileName.Visible = label_FileName_in_menustrip.Visible = false;
             label_FileName.Text = string.Empty;
+            label_system_messages.Text = "System messages";
+            label_user_messages.Text = "User messages";
 
             image_AttrColumnButton_Expand = (Image)Resources.ResourceManager.GetObject("Triangle_Left");
             image_AttrColumnButton_Recede = (Image)Resources.ResourceManager.GetObject("Triangle_Right");
@@ -322,29 +326,29 @@
         }
         public static async Task Retrieve_Voices_AndSaveToDisk()  // need to make it wait until it is finished
         {
-            //var client = new HttpClient();
+            HttpClient client = new HttpClient();
             string subscriptionKey = Handler_Data.GetTheSubscriptionKey();
             string serverLocation = Handler_Data.GetTheServerLocation();
             //older code to deprecate
-            //client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
-            //string listVoicesLocationURL = "https://" + serverLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
-            //HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
-            //if (response.IsSuccessStatusCode)
-            //{
-            //    using (Stream responseStream = await response.Content.ReadAsStreamAsync())
-            //    {
-            //        using (StreamReader reader = new(responseStream))
-            //        {
-            //            string responseData = reader.ReadToEnd();
-            //            Handler_Data.Convert_JSONtoXML_AndSaveToDisk(responseData);
-            //        }
-            //    }
-            //}
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
+            string listVoicesLocationURL = "https://" + serverLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
+            HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
+            if (response.IsSuccessStatusCode)
+            {
+                using (Stream responseStream = await response.Content.ReadAsStreamAsync())
+                {
+                    using (StreamReader reader = new(responseStream))
+                    {
+                        string responseData = reader.ReadToEnd();
+                        Handler_Data.Convert_JSONtoXML_AndSaveToDisk(responseData);
+                    }
+                }
+            }
             //newer code to switch to
-            HttpResponseMessage responseMessage = Handler_Networking.RetrieveDataFromServer("VoicesList", serverLocation, subscriptionKey).Result;
-            
-            String jsonResponseData = Handler_Data.TransformHttpResponceIntoString(responseMessage).Result;
-            Handler_Data.Convert_JSONtoXML_AndSaveToDisk(jsonResponseData);
+            //HttpResponseMessage responseMessage = Handler_Networking.RetrieveDataFromServer("VoicesList", serverLocation, subscriptionKey).Result;
+
+            //String jsonResponseData = Handler_Data.TransformHttpResponceIntoString(responseMessage).Result;
+            //Handler_Data.Convert_JSONtoXML_AndSaveToDisk(jsonResponseData);
         }
         /// <summary> This function loads the list of language elements from the SSML Voice file onto the Languages combo box </summary>
         public static void VoicesLoad()
@@ -770,8 +774,18 @@
         private void Form1_Paint(object sender, PaintEventArgs e) { /*ReDrawEverything();*/ }
         /// <summary> Remove any extra unit from the string, keeping solely the number </summary>
         [GeneratedRegex("[^0-9-+]")]
-        private static partial Regex MyRegex();        
-
+        private static partial Regex MyRegex();      
+        
+        public static void Inform_WithSystemMessage(string _message)
+        {
+            label_system_messages.Text = _message;
+            label_system_messages.Invalidate();
+        }
+        public static void Inform_WithUserMessage(string _message)
+        {
+            label_user_messages.Text = _message;
+            label_user_messages.Invalidate();
+        }
         #region Menu Bar items
 
         #region Menu strip buttons
@@ -1350,4 +1364,5 @@
         #endregion
 
     }
+
 }

@@ -47,22 +47,31 @@ namespace _Verbalize
             string data = string.Empty;
 
             // create the client object
-            var client = Handler_Data.CreateHttpClientWithSubscriptionKey(_subscriptionKey);
+            HttpClient client = Handler_Data.CreateHttpClientWithSubscriptionKey();
 
             // prepare the string of the URI/URL 
             string uri = Handler_Data.CreateUriOfServerLocationForDataType(_serverLocation, _dataType);
-            MessageBox.Show("The url to be used is " + uri +".");
-            if(uri == "https://westeurope.tts.speech.microsoft.com/cognitiveservices/voices/list")
-            {
-                MessageBox.Show("The url is correct.");
-            }
-            else
-            {                
-                MessageBox.Show("The url is NOT correct.");
-                
-            }
+            string system_message = string.Empty;
+            string user_message = string.Empty;
+            system_message = "The url to be used is " + uri + ".";
+            if(uri == "https://westeurope.tts.speech.microsoft.com/cognitiveservices/voices/list") user_message = "The url is correct.";
+            else user_message = "The url is NOT correct.";
+            Form1.Inform_WithSystemMessage(system_message);
+            Form1.Inform_WithUserMessage(user_message);
             // get and store the response from the server with the URI 
-            HttpResponseMessage response = await GetResponseMessageFromClientWithUri(client, uri);
+            //HttpResponseMessage response = await GetResponseMessageFromClientWithUri(client, uri);
+
+            Form1.Inform_WithSystemMessage("Getting response");
+            Form1.Inform_WithSystemMessage("Awaiting response");
+            MessageBox.Show(client.ToString() + client.DefaultRequestHeaders.ToString());
+            // get and store the response from the server of the URI
+            HttpResponseMessage response = await client.GetAsync(uri); // In this case, it will be a Json file
+            if (response.IsSuccessStatusCode)
+            {
+                Form1.Inform_WithSystemMessage("Response successful");
+                //return response;
+            }
+            else Form1.Inform_WithSystemMessage("Response unsuccessful");
 
             return response;           
         }
@@ -70,12 +79,15 @@ namespace _Verbalize
         
         public static async Task<HttpResponseMessage> GetResponseMessageFromClientWithUri(HttpClient _client, string _Uri)
         {
-            HttpClient client = _client; 
-            
+            Form1.Inform_WithSystemMessage("Getting response");
             // get and store the response from the server of the URI
-            HttpResponseMessage response = await client.GetAsync(_Uri); // In this case, it will be a Json file
-
-            if (response.IsSuccessStatusCode) { return response; }
+            HttpResponseMessage response = await _client.GetAsync(_Uri); // In this case, it will be a Json file
+            Form1.Inform_WithSystemMessage("Awaiting response");
+            if (response.IsSuccessStatusCode) 
+            {
+                Form1.Inform_WithSystemMessage("Rresponse successful");
+                return response; 
+            }
             else return null;
         }
         

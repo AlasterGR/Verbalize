@@ -79,6 +79,8 @@
             tableLayoutPanel7 = new TableLayoutPanel();
             tableLayoutPanel8 = new TableLayoutPanel();
             panel4 = new Panel();
+            label17 = new Label();
+            label15 = new Label();
             tableLayoutPanel10 = new TableLayoutPanel();
             tableLayoutPanel9 = new TableLayoutPanel();
             panel3 = new Panel();
@@ -120,6 +122,7 @@
             tableLayoutPanel5.SuspendLayout();
             tableLayoutPanel7.SuspendLayout();
             tableLayoutPanel8.SuspendLayout();
+            panel4.SuspendLayout();
             tableLayoutPanel10.SuspendLayout();
             tableLayoutPanel9.SuspendLayout();
             menuStrip1.SuspendLayout();
@@ -847,12 +850,35 @@
             // 
             panel4.BackColor = Color.White;
             panel4.BackgroundImageLayout = ImageLayout.Stretch;
+            panel4.Controls.Add(label17);
+            panel4.Controls.Add(label15);
             panel4.Dock = DockStyle.Fill;
             panel4.Location = new Point(11, 596);
             panel4.Margin = new Padding(11, 13, 11, 13);
             panel4.Name = "panel4";
             panel4.Size = new Size(1240, 25);
             panel4.TabIndex = 47;
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Dock = DockStyle.Right;
+            label17.Location = new Point(1131, 0);
+            label17.Name = "label17";
+            label17.Size = new Size(109, 19);
+            label17.TabIndex = 1;
+            label17.Text = "User Messages";
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Dock = DockStyle.Left;
+            label15.Location = new Point(0, 0);
+            label15.Name = "label15";
+            label15.Size = new Size(125, 19);
+            label15.TabIndex = 0;
+            label15.Text = "System Messages";
+            label15.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // tableLayoutPanel10
             // 
@@ -1180,6 +1206,8 @@
             tableLayoutPanel7.ResumeLayout(false);
             tableLayoutPanel8.ResumeLayout(false);
             tableLayoutPanel8.PerformLayout();
+            panel4.ResumeLayout(false);
+            panel4.PerformLayout();
             tableLayoutPanel10.ResumeLayout(false);
             tableLayoutPanel10.PerformLayout();
             tableLayoutPanel9.ResumeLayout(false);
@@ -1272,5 +1300,7 @@
         private Button button13;
         private Button button14;
         private ComboBox comboBox7;
+        private Label label15;
+        private Label label17;
     }
 }
