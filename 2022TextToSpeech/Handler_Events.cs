@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace _Verbalize
+﻿namespace _Verbalize
 {
     internal class Handler_Events
     {

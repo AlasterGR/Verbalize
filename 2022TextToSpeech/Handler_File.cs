@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+﻿using System.Xml;
 
 namespace _Verbalize
 {
@@ -29,7 +22,7 @@ namespace _Verbalize
             if (!Directory.Exists(folderResources))
             {
                 Directory.CreateDirectory(folderResources);
-            }            
+            }
         }
         public static void SaveText(string outputTextFormat, string _textBoxText)
         {
@@ -39,7 +32,7 @@ namespace _Verbalize
                 if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     string pathFileSelected = saveFileDialog1.FileName;
-                    
+
                     XmlDocument SSMLDocument = Handler_Data.CreateSSML(_textBoxText);
                     SSMLDocument.Save(pathFileSelected);  // Save the XML document to a file
                     locationLoadedFile = pathFileSelected;
@@ -66,7 +59,7 @@ namespace _Verbalize
                 // make it into an event so that it gets automatically changed
                 label_FileName.Text = Path.GetFileName(locationLoadedFile); // Show the loaded file's name
                 activeForm.Text = applicationBrandName + " : " + label_FileName.Text /*+ Path.GetFileNameWithoutExtension(locationLoadedFile) + Path.GetExtension(locationLoadedFile)*/;
-                
+
                 label_FileName_in_menustrip.Visible = true;
                 label_FileName.Visible = true;
 

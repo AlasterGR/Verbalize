@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace _Verbalize
+﻿namespace _Verbalize
 {/// <summary> The custom control of a vertical Scrollbar with its values' marked on the side.</summary>
     public partial class Vertical_Scroll_Bar_with_markings : UserControl
     {

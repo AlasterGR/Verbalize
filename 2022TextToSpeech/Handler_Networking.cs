@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace _Verbalize
+﻿namespace _Verbalize
 {
     internal class Handler_Networking
     {
@@ -13,6 +6,14 @@ namespace _Verbalize
         private static string subscriptionKey = string.Empty;
         private static string serverLocation = string.Empty;
         private static string voicesListDefaultUriPart = string.Empty;
+        //private static Handler_Networking singleton;        
+        //public static Handler_Networking getInstance(Handler_Data handler_Data) { 
+        //    if (singleton == null) {
+        //        singleton = new Handler_Networking(handler_Data);
+        //    }
+        //    return singleton;
+        //}
+
         public static void Initialize()
         {
             subscriptionKey = Handler_Data.GetTheSubscriptionKey();
@@ -54,7 +55,7 @@ namespace _Verbalize
             string system_message = string.Empty;
             string user_message = string.Empty;
             system_message = "The url to be used is " + uri + ".";
-            if(uri == "https://westeurope.tts.speech.microsoft.com/cognitiveservices/voices/list") user_message = "The url is correct.";
+            if (uri == "https://westeurope.tts.speech.microsoft.com/cognitiveservices/voices/list") user_message = "The url is correct.";
             else user_message = "The url is NOT correct.";
             Form1.Inform_WithSystemMessage(system_message);
             Form1.Inform_WithUserMessage(user_message);
@@ -73,23 +74,23 @@ namespace _Verbalize
             }
             else Form1.Inform_WithSystemMessage("Response unsuccessful");
 
-            return response;           
+            return response;
         }
-        
-        
+
+
         public static async Task<HttpResponseMessage> GetResponseMessageFromClientWithUri(HttpClient _client, string _Uri)
         {
             Form1.Inform_WithSystemMessage("Getting response");
             // get and store the response from the server of the URI
             HttpResponseMessage response = await _client.GetAsync(_Uri); // In this case, it will be a Json file
             Form1.Inform_WithSystemMessage("Awaiting response");
-            if (response.IsSuccessStatusCode) 
+            if (response.IsSuccessStatusCode)
             {
                 Form1.Inform_WithSystemMessage("Rresponse successful");
-                return response; 
+                return response;
             }
             else return null;
         }
-        
+
     }
 }

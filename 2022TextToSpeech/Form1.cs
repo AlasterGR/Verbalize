@@ -1,17 +1,17 @@
 ﻿namespace _Verbalize
 {
+    using _Verbalize.Properties;
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
+    using System.Drawing.Drawing2D;
+    using System.Globalization;
     using System.IO;
+    using System.Net.Http; // for the supported languages of the voice    
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Windows.Forms;
     using System.Xml; // For constructing our xml file 
-    using System.Net.Http; // for the supported languages of the voice    
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Text.RegularExpressions;
-    using System.Drawing.Drawing2D;
-    using _Verbalize.Properties;
 
     //using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
@@ -19,7 +19,7 @@
     /// The main Form of the app
     /// </summary>
     public partial class Form1 : Form
-    {  
+    {
         #region The Prosody and assorted elements of speech
         // As per : https://learn.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup-voice. The https://www.w3.org/TR/speech-synthesis11/ is irrelevant so far.
         /// <summary>  Pitch is expressed in 3 ways. Here, for now, we are using just the absolute value from the range [-200, +200]</summary>
@@ -52,7 +52,7 @@
         public static TextBox textBox_Main_Single;
 
         public static bool soundTypeSelectorComboboxOrRadiogroup;
-        
+
         public static TableLayoutPanel table_LayoutPanel_MainGUIRow;
         public static Label label_FileName, label_FileName_in_menustrip, label_rate, label_pitch, label_system_messages, label_user_messages;
         public static VScrollBar vScrollBar_rate, vScrollBar_pitch, vScrollBar_volume;
@@ -65,10 +65,12 @@
         public static Image image_AttrColumnButton_Expand, image_AttrColumnButton_Recede;
         public static Icon icon_AppLogo;
 
+        // set up dependency injection. break it apart from initialization
         /// <summary>  The public class of the app's main Form, that is window. </summary>
         public Form1()
         {
             InitializeComponent();
+
             Assign_AbstractEntities();
             Subscribe_AbstractButtons();
             #region Load the voices file that lists the various speech voices          
@@ -482,7 +484,7 @@
             _voiceStylesComboBox.SelectedIndex = selectedIndex; // set the index on it
             ShowOrHideVoiceStylesRow(tableLayoutPanel8, 2, selectedIndex == 0); // show or hide the row which has the styles
         }
-        
+
         /// <summary> Voice Pitch slider </summary>
         private void ScrollBar_Pitch_ValueChanged(object sender, EventArgs e)
         {
@@ -594,10 +596,9 @@
 
         public static void LoadXMLtoApp(XmlDocument SSMLDocument) // Load all the markup of the XML onto the u.i.
         {
-            #region Initialize every mark to its default values
+            #region Initialize default values
             string styleSSML = "calm";
             string volumeSSML = "80";
-            //string pitchSSML = "default";
             string rateSSML = "default";
             string nameValue = "en-US-JennyNeural";
             string langValue = "en-US";
@@ -609,14 +610,19 @@
             #region Parse the loaded document and acquire the desired values. Add try-catch...
             XmlNamespaceManager nsMgr = new(SSMLDocument.NameTable);
             nsMgr.AddNamespace("speak", "http://www.w3.org/2001/10/synthesis");
+
             // Find the general default language of the entire document
             XmlNode? speakNode = SSMLDocument.SelectSingleNode("//speak:speak", nsMgr);
             value = speakNode?.Attributes["xml:lang"]?.Value;
             langValue = string.IsNullOrEmpty(value) ? langValue : value;
+            //langValue = speakNode?.Attributes["xml:lang"]?.Value ?? langValue;
+
             // Find the general default Voice of the entire document...
             XmlNode? voiceNode = SSMLDocument.SelectSingleNode("//speak:voice", nsMgr);
             value = voiceNode?.Attributes["name"]?.Value;
-            nameValue = string.IsNullOrEmpty(value) ? nameValue : value; // Select the <voice> element and get its "name" attribute value. Need to extract name value from < voice name = "en-US-JennyNeural" >
+            nameValue = string.IsNullOrEmpty(value) ? nameValue : value;
+            //nameValue = voiceNode?.Attributes["name"]?.Value ?? nameValue; // Select the <voice> element and get its "name" attribute value. Need to extract name value from < voice name = "en-US-JennyNeural" >
+
             // ... and its the Locale name and Display name
             foreach (XmlNode node in VoicesXML.DocumentElement.SelectNodes("Voice"))
             {
@@ -638,7 +644,7 @@
             pitch = prosodyNode?.Attributes["pitch"]?.Value ?? "default";
             //  ... the volume
 
-            if (prosodyNode.Attributes["volume"] is { Value: string _value })
+            if (prosodyNode?.Attributes["volume"] is { Value: string _value })
             {
                 volumeSSML = MyRegex().Replace(_value, "");
                 if (int.TryParse(volumeSSML, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out int parsedVolume))
@@ -648,7 +654,7 @@
 
             #region set the u.i. and config elements to the parsed values (which will be the default ones on whatever has failed)
 
-            Handler_AudioSynthesis.SetSpeechSynthesisVoiceName(nameValue) ;
+            Handler_AudioSynthesis.SetSpeechSynthesisVoiceName(nameValue);
             Handler_AudioSynthesis.SetSpeechSynthesisLanguage(langValue); //  Set the Speech Language to whatever is first on the xml file, which is the general one of the entire file
 
             comboBox_Languages.SelectedItem = localeName;
@@ -703,7 +709,7 @@
         {
             //button2.Enabled = !string.IsNullOrEmpty(label_filename.Text);// enable back when complete the code
             if (label_FileName.Text != string.Empty) label_FileName.Visible = true;
-        }       
+        }
 
         private void ComboBox_SoundTypes_SelectedIndexChanged(object sender, EventArgs e)
         { formatOutputSound = comboBox_SoundTypes?.SelectedItem?.ToString() ?? "None"; }
@@ -774,8 +780,8 @@
         private void Form1_Paint(object sender, PaintEventArgs e) { /*ReDrawEverything();*/ }
         /// <summary> Remove any extra unit from the string, keeping solely the number </summary>
         [GeneratedRegex("[^0-9-+]")]
-        private static partial Regex MyRegex();      
-        
+        private static partial Regex MyRegex();
+
         public static void Inform_WithSystemMessage(string _message)
         {
             label_system_messages.Text = _message;
@@ -851,7 +857,7 @@
         private void Button_MinimizeWindow_Click(object sender, EventArgs e)
         {
             MinimizeWindow();
-        }        
+        }
         private void Button_MaximizeWindow_Click(object sender, EventArgs e)
         {
             MaximizeWindow();

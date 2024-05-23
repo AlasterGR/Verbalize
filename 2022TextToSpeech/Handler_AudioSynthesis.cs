@@ -2,21 +2,14 @@
 // for the audio conversion - add an ogg vorbis encoder
 using NAudio.MediaFoundation;
 using NAudio.Wave;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Linq;
 
 namespace _Verbalize
 {
     internal class Handler_AudioSynthesis
     {
         /// <summary>  This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis </summary>
-        private static SpeechConfig config ;
+        private static SpeechConfig config;
         public static Task<SpeechSynthesisResult>? spokenTextSoundResult;
         public static CancellationTokenSource synthesisCancellationToken;
         public static SpeechSynthesisResult speechSynthesisResult = null;

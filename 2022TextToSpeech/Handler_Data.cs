@@ -1,13 +1,13 @@
-﻿using System.Xml;
+﻿using _Verbalize.Properties;
 using Microsoft.CognitiveServices.Speech;
 using Newtonsoft.Json;
-using _Verbalize.Properties;
+using System.Xml;
 
 namespace _Verbalize
 {
     internal class Handler_Data
     {
-        public static SpeechConfig config ;
+        public static SpeechConfig config;
         public static string pitch = string.Empty;
         /// <summary>  Rate is expressed in 2 ways, an absolute value (string) and a relative (as a number) one. For now, we will use it only as a number (-50% - +50%), I will incoroprate it as a string later </summary>
         public static string rate = string.Empty;
@@ -23,12 +23,12 @@ namespace _Verbalize
             rate = Form1.rate;
             volume = Form1.volume;
             style = Form1.style;
-            
+
         }
         public static string GetTheSubscriptionKey()
         {
             string subscriptionKey = (string)Resources.ResourceManager.GetObject("subscriptionKey1");
-            return subscriptionKey; 
+            return subscriptionKey;
         }
         public static string GetTheServerLocation()
         {
@@ -110,7 +110,7 @@ namespace _Verbalize
         public static string GetTheVoicesListDefaultUriPart()
         {
             string voicesListRetrieveUriPartDefault = (string)Resources.ResourceManager.GetObject("voicesListRetrieveUriPartDefault");
-            
+
             return voicesListRetrieveUriPartDefault;
         }
         public static HttpClient CreateHttpClientWithSubscriptionKey()
@@ -140,7 +140,7 @@ namespace _Verbalize
             string message = string.Empty;
             // turn the response into string data
             if (_message != null)
-            {                
+            {
                 using (Stream responseStream = await _message.Content.ReadAsStreamAsync())
                 {
                     using (StreamReader reader = new(responseStream))
@@ -152,6 +152,6 @@ namespace _Verbalize
             return message;
             //SSML_JSONtoXMLConvert(responseData);
         }
-       
+
     }
 }
