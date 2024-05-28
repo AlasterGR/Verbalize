@@ -6,6 +6,12 @@ using System.Reflection.Metadata;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
 using System;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
+using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics.X86;
+using Microsoft.VisualBasic.Logging;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
+using System.Windows.Forms;
 
 namespace _Verbalize
 {
@@ -81,8 +87,19 @@ namespace _Verbalize
         /// <param name="type">The type of viseme output. redlips_front – lip-sync with viseme ID and audio offset output. FacialExpression – blend shapes output</param>
         void AddViseme(string type);
 
-
-        void AddProsody(string rate, string pitch, string volume, string style);
+        /// <summary>
+        /// You can use the prosody element to specify changes to pitch, contour, range, rate, and volume for the text to speech output.
+        /// The prosody element can contain text and the following elements: audio, break, p, phoneme, prosody, say-as, sub, and s.
+        /// Because prosodic attribute values can vary over a wide range, the speech recognizer interprets the assigned values as a suggestion of what the actual prosodic values of the selected voice should be.Text to speech limits or substitutes values that aren't supported. 
+        /// Examples of unsupported values are a pitch of 1 MHz or a volume of 120.
+        /// https://learn.microsoft.com/en-us/azure/ai-services/speech-service/speech-synthesis-markup-voice#adjust-prosody
+        /// </summary>
+        /// <param name="contour">Contour represents changes in pitch. These changes are represented as an array of targets at specified time positions in the speech output. Sets of parameter pairs define each target. For example: <prosody contour = "(0%,+20Hz) (10%,-2st) (40%,+10Hz)" > The first value in each set of parameters specifies the location of the pitch change as a percentage of the duration of the text.The second value specifies the amount to raise or lower the pitch by using a relative value or an enumeration value for pitch.</param>
+        /// <param name="pitch"></param>
+        /// <param name="range">A value that represents the range of pitch for the text. You can express range by using the same absolute values, relative values, or enumeration values used to describe pitch.</param>
+        /// <param name="rate"></param>
+        /// <param name="volume"></param>
+        void AddProsody(string contour, string pitch, string range, string rate, string volume);
 
         XmlDocument Build();
     }

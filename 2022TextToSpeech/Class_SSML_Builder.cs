@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using System.Xml.Linq;
 
 namespace _Verbalize
 {
@@ -23,6 +24,12 @@ namespace _Verbalize
             _xmlBuilder.AddElement("voice", string.Empty);
             _xmlBuilder.AddAttribute("voice", "name", name);
             //_xmlBuilder.AddAttribute("voice", "xml:lang", lang); //this line might be needless
+        }
+
+        public void AddSilence(string type, string value)
+        {
+            _xmlBuilder.AddElement("mstts:silence", string.Empty);
+            _xmlBuilder.AddAttribute("voice", "name", name);
         }
 
         public void AddProsody(string rate = "default", string pitch = "default", string volume = "default", string style = "default")
