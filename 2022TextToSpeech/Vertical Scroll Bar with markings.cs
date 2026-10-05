@@ -1,4 +1,6 @@
-﻿namespace _Verbalize
+﻿using System.ComponentModel;
+
+namespace _Verbalize
 {/// <summary> The custom control of a vertical Scrollbar with its values' marked on the side.</summary>
     public partial class Vertical_Scroll_Bar_with_markings : UserControl
     {
@@ -9,6 +11,7 @@
         }
         private int _markerValue;
         /// <summary> The marker values.</summary>
+        [DefaultValue(0)]
         public int MarkerValue
         {
             get { return _markerValue; }

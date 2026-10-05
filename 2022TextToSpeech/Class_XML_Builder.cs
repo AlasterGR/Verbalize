@@ -88,6 +88,26 @@ namespace _Verbalize
             else { throw new InvalidOperationException($"Element '{elementName}' not found in the document."); }
         }
 
+        /// <summary> Sets the inner text of the specified element. </summary>
+        /// <param name="element">The xml element whose inner text will be set.</param>
+        /// <param name="innerText">The text to be set as the inner text of the element.</param>
+        public void SetInnerText(XmlElement element, string innerText)
+        {
+            if (_rootElement == null) { throw new InvalidOperationException("Root element is not set. Call SetRoot first."); }
+            if (element == null) { throw new InvalidOperationException("Element not found in the document."); }
+            element.InnerText = innerText;
+        }
+
+        /// <summary> Appends text to the specified element, after its existing content. </summary>
+        /// <param name="element">The xml element to which the text will be appended.</param>
+        /// <param name="innerText">The text to be appended.</param>
+        public void AddInnerText(XmlElement element, string innerText)
+        {
+            if (_rootElement == null) { throw new InvalidOperationException("Root element is not set. Call SetRoot first."); }
+            if (element == null) { throw new InvalidOperationException("Element not found in the document."); }
+            element.AppendChild(_xmlDocument.CreateTextNode(innerText));
+        }
+
         /// <summary> Builds and returns the constructed XML document. </summary>
         /// <returns>The constructed <see cref="XmlDocument"/> object.</returns>
         public XmlDocument Build()

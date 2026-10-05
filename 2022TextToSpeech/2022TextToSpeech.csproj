@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <!-- Lets the project restore and build on non-Windows machines (e.g. CI); the app itself still only runs on Windows. -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <RootNamespace>_Verbalize</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
@@ -38,11 +40,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.24.0" />
-    <PackageReference Include="NAudio" Version="2.1.0" />
-    <PackageReference Include="NAudio.Core" Version="2.1.0" />
+    <!-- Work in progress: does not yet implement Interface_SSML_Builder and nothing uses it. Remove this line once it is complete. -->
+    <Compile Remove="Class_SSML_Builder.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.52.0" />
+    <PackageReference Include="NAudio" Version="2.4.0" />
+    <PackageReference Include="NAudio.Core" Version="2.4.0" />
     <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
   <ItemGroup>
