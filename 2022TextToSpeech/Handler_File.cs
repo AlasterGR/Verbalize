@@ -1,4 +1,5 @@
 ﻿using System.Xml;
+using Verbalize.Core;
 
 namespace _Verbalize
 {
@@ -50,37 +51,44 @@ namespace _Verbalize
             }
         }
 
+        /// <summary> Lets the user pick a file, then shows its name and puts its speakable text in the main text box. If the file is SSML, its voice settings are loaded into the app too. </summary>
+        /// <param name="label_FileName">The label that shows the loaded file's name.</param>
+        /// <param name="activeForm">The app's window, whose title will show the file's name.</param>
+        /// <param name="applicationBrandName">The app's name, shown before the file's name in the window title.</param>
+        /// <param name="label_FileName_in_menustrip">The label in the menu bar that also shows the file's name.</param>
+        /// <param name="mainSingleTextBox">The main text box that receives the file's text.</param>
         public static void Load_Text(Label label_FileName, Form activeForm, string applicationBrandName, Label label_FileName_in_menustrip, System.Windows.Forms.TextBox mainSingleTextBox)
         {
+            //  Ask the user to pick a file, and stop if they cancel.
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                //  Show the chosen file's name in the label and in the window title.
                 locationLoadedFile = openFileDialog1.FileName;
-                // make it into an event so that it gets automatically changed
-                label_FileName.Text = Path.GetFileName(locationLoadedFile); // Show the loaded file's name
-                activeForm.Text = applicationBrandName + " : " + label_FileName.Text /*+ Path.GetFileNameWithoutExtension(locationLoadedFile) + Path.GetExtension(locationLoadedFile)*/;
+                label_FileName.Text = Path.GetFileName(locationLoadedFile);
+                activeForm.Text = applicationBrandName + " : " + label_FileName.Text;
 
+                //  Show the file's name in the menu bar as well.
                 label_FileName_in_menustrip.Visible = true;
                 label_FileName.Visible = true;
-
                 label_FileName_in_menustrip.Text = label_FileName.Text;
+
+                //  Read the file as XML, taking its speakable text and loading its voice settings into the app.
                 string fileContents = string.Empty;
-                //  Search further for advantages on using a rich text box instead. So far none found.
-                #region Parse the selected file's contents and save its speakable text to the textbox ~ it will acquire only the inner texts, should the selected file have an xml format.
                 XmlDocument SSMLDocument = new();
                 try
                 {
                     SSMLDocument.Load(locationLoadedFile);
-                    XmlNodeList? nodes = SSMLDocument?.SelectNodes("//text()[normalize-space()]");
-                    if (nodes?.Count > 0) { foreach (XmlNode node in nodes) { fileContents = node.InnerText; } }  // might need to put append instead of =, in order to support various voices within the text
-                    if (SSMLDocument != null) { Form1.LoadXMLtoApp(SSMLDocument); }
+                    fileContents = SsmlTextExtractor.GetSpeakableText(SSMLDocument);
+                    Form1.LoadXMLtoApp(SSMLDocument);
                 }
+                //  If the file is not XML, take its whole contents as plain text instead.
                 catch (XmlException)
-                { fileContents = File.ReadAllText(locationLoadedFile); }  // File.ReadAllText locks the file
-                mainSingleTextBox.Text = fileContents;
-                #endregion               
-            }
+                { fileContents = File.ReadAllText(locationLoadedFile); }
 
+                //  Put the text in the main text box.
+                mainSingleTextBox.Text = fileContents;
+            }
         }
 
         public static void CreateAudioFileFromTextFile()

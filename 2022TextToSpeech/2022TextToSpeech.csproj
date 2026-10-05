@@ -90,6 +90,10 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Verbalize.Core\Verbalize.Core.csproj" />
+  </ItemGroup>
+
 
 
 </Project>
