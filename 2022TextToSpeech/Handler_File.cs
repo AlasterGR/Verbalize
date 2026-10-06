@@ -79,7 +79,7 @@ namespace _Verbalize
                 try
                 {
                     SSMLDocument.Load(locationLoadedFile);
-                    fileContents = SsmlTextExtractor.GetSpeakableText(SSMLDocument);
+                    fileContents = SsmlTextExtractor.GetSpeakableText(SSMLDocument, Environment.NewLine);
                     Form1.LoadXMLtoApp(SSMLDocument);
                 }
                 //  If the file is not XML, take its whole contents as plain text instead.
