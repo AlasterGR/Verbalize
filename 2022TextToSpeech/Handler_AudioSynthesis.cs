@@ -3,6 +3,7 @@
 using NAudio.MediaFoundation;
 using NAudio.Wave;
 using System.Xml;
+using Verbalize.Core;
 
 namespace _Verbalize
 {
@@ -43,84 +44,105 @@ namespace _Verbalize
         {
             return config.SpeechSynthesisVoiceName;
         }
+        /// <summary> Turns a file into speech and saves it as a sound file next to it, with the same name. </summary>
+        /// <param name="soundfile">The file to speak: SSML, or plain text, which is spoken with the app's current voice settings.</param>
+        /// <param name="formatOutputSound">The sound format to save as: "mp3", "wav", or anything else to save nothing.</param>
+        /// <param name="_audioOn">Not used yet; the speech is never played aloud.</param>
+        /// <returns>A task that finishes once the sound file is saved.</returns>
+        /// <exception cref="InvalidOperationException">Azure could not create the speech.</exception>
         public static async Task SynthesizeAudioAsync(string soundfile, string formatOutputSound, bool _audioOn)
         {
-            #region Producing the sound data
-            XmlDocument xmlDoc = new();
-            xmlDoc.Load(soundfile);
+            //  Read the chosen file as SSML, wrapping it with the current voice settings if it is plain text.
+            XmlDocument xmlDoc = SsmlFileLoader.Load(soundfile, Handler_Data.CreateSSML);
             string ssmlText = xmlDoc.OuterXml;
+
+            //  Stop any speech that is playing, and prepare to make the speech in memory rather than play it.
             SoundPause();
-            if (!_audioOn) { speechSynthesizer = new SpeechSynthesizer(config, null); } // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
+            if (!_audioOn) { speechSynthesizer = new SpeechSynthesizer(config, null); }
             else { speechSynthesizer = new SpeechSynthesizer(config, null); }
+
+            //  Ask Azure to make the speech, and stop with its explanation if it could not.
             speechSynthesisResult = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
-            //SpeechSynthesisResult speechSynthesisResult = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
-            #endregion
-            #region Saving the sound data to the disk as a specific sound format
+            EnsureSynthesisCompleted(speechSynthesisResult);
+
+            //  Save the speech next to the original file, with the sound format's extension.
             string outputFile = Path.ChangeExtension(soundfile, "." + formatOutputSound);
-            using Stream stream = new MemoryStream(speechSynthesisResult.AudioData);
-            if (formatOutputSound != "None" || formatOutputSound != null)
-            {
-                switch (formatOutputSound)
-                {
-                    case "mp3":
-                        //outputFile = Path.ChangeExtension(outputFile, "."+formatOutputSound);
-                        MediaFoundationApi.Startup();
-                        var reader = new WaveFileReader(stream);  // Normally public WaveFileReader(Stream inputStream) ought to handle it properly but it does not accept it
-                        MediaFoundationEncoder.EncodeToMp3(reader, outputFile);
-                        break;
-
-                    case "wav":
-                        MediaFoundationApi.Startup();
-                        var reader1 = new WaveFileReader(stream);
-                        WaveFileWriter.CreateWaveFile(outputFile, reader1);
-                        break;
-
-                    case "ogg": // add an ogg vorbis encoder 
-                        break;
-                    default:
-                        break;
-                }
-            }
-            #endregion
+            SaveAudio(speechSynthesisResult.AudioData, outputFile, formatOutputSound);
         }
+
+        /// <summary> Turns an SSML document into speech and saves it as a sound file. </summary>
+        /// <param name="_xmlDoc">The SSML document to speak.</param>
+        /// <param name="soundfile">Where to save the sound; its extension is replaced by the sound format's.</param>
+        /// <param name="formatOutputSound">The sound format to save as: "mp3", "wav", or anything else to save nothing.</param>
+        /// <param name="_audioOn">Not used yet; the speech is never played aloud.</param>
+        /// <returns>A task that finishes once the sound file is saved.</returns>
+        /// <exception cref="InvalidOperationException">Azure could not create the speech.</exception>
         public static async Task SynthesizeAudioAsyncFromText(XmlDocument _xmlDoc, string soundfile, string formatOutputSound, bool _audioOn)
         {
-            #region Producing the sound data
-            //XmlDocument xmlDoc = new();
-            //_xmlDoc.LoadXml(soundfile);
+            //  Stop any speech that is playing, and prepare to make the speech in memory rather than play it.
             string ssmlText = _xmlDoc.OuterXml;
             SoundPause();
-            if (!_audioOn) { speechSynthesizer = new SpeechSynthesizer(config, null); } // Note : SpeechSynthesizer(speechConfig, null) gets a result as an in-memory stream
+            if (!_audioOn) { speechSynthesizer = new SpeechSynthesizer(config, null); }
             else { speechSynthesizer = new SpeechSynthesizer(config, null); }
+
+            //  Ask Azure to make the speech, and stop with its explanation if it could not.
             SpeechSynthesisResult result = await speechSynthesizer.SpeakSsmlAsync(ssmlText);
-            #endregion
-            #region Saving the sound data to the disk as a specific sound format
+            EnsureSynthesisCompleted(result);
+
+            //  Save the speech with the sound format's extension.
             string outputFile = Path.ChangeExtension(soundfile, "." + formatOutputSound);
-            using Stream stream = new MemoryStream(result.AudioData);
-            if (formatOutputSound != "None" || formatOutputSound != null)
+            SaveAudio(result.AudioData, outputFile, formatOutputSound);
+        }
+
+        /// <summary> Stops with Azure's explanation when it could not make the speech. </summary>
+        /// <param name="result">Azure's answer to a request for speech.</param>
+        /// <exception cref="InvalidOperationException">Azure could not create the speech.</exception>
+        private static void EnsureSynthesisCompleted(SpeechSynthesisResult result)
+        {
+            //  Carry on if Azure finished making the speech.
+            if (result.Reason == ResultReason.SynthesizingAudioCompleted) { return; }
+
+            //  Stop with a general message if Azure gave no reason.
+            if (result.Reason != ResultReason.Canceled)
             {
-                switch (formatOutputSound)
-                {
-                    case "mp3":
-                        //outputFile = Path.ChangeExtension(outputFile, "."+formatOutputSound);
-                        MediaFoundationApi.Startup();
-                        var reader = new WaveFileReader(stream);  // Normally public WaveFileReader(Stream inputStream) ought to handle it properly but it does not accept it
-                        MediaFoundationEncoder.EncodeToMp3(reader, outputFile);
-                        break;
-
-                    case "wav":
-                        MediaFoundationApi.Startup();
-                        var reader1 = new WaveFileReader(stream);
-                        WaveFileWriter.CreateWaveFile(outputFile, reader1);
-                        break;
-
-                    case "ogg": // add an ogg vorbis encoder 
-                        break;
-                    default:
-                        break;
-                }
+                throw new InvalidOperationException($"Azure did not finish creating the speech ({result.Reason}).");
             }
-            #endregion
+
+            //  Otherwise stop, passing on Azure's reason and details.
+            SpeechSynthesisCancellationDetails details = SpeechSynthesisCancellationDetails.FromResult(result);
+            throw new InvalidOperationException($"Azure could not create the speech ({details.Reason}, {details.ErrorCode}): {details.ErrorDetails}");
+        }
+
+        /// <summary> Saves speech made by Azure as a sound file. </summary>
+        /// <param name="audioData">The speech, as Azure returned it (a WAV recording).</param>
+        /// <param name="outputFile">Where to save the sound file.</param>
+        /// <param name="formatOutputSound">The sound format: "mp3", "wav", or anything else to save nothing.</param>
+        private static void SaveAudio(byte[] audioData, string outputFile, string formatOutputSound)
+        {
+            //  Read the speech as a WAV recording.
+            using Stream stream = new MemoryStream(audioData);
+            switch (formatOutputSound)
+            {
+                //  Convert it to MP3 using Windows' built-in encoder.
+                case "mp3":
+                    MediaFoundationApi.Startup();
+                    var reader = new WaveFileReader(stream);
+                    MediaFoundationEncoder.EncodeToMp3(reader, outputFile);
+                    break;
+
+                //  Save it as a WAV file as it is.
+                case "wav":
+                    MediaFoundationApi.Startup();
+                    var reader1 = new WaveFileReader(stream);
+                    WaveFileWriter.CreateWaveFile(outputFile, reader1);
+                    break;
+
+                //  Save nothing for OGG (not supported yet) or any other choice.
+                case "ogg":
+                    break;
+                default:
+                    break;
+            }
         }
 
         public static void SoundPause()

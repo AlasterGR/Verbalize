@@ -91,9 +91,10 @@ namespace _Verbalize
             }
         }
 
+        /// <summary> Lets the user pick an SSML or plain text file, then saves its speech as a sound file next to it. </summary>
         public static void CreateAudioFileFromTextFile()
         {
-
+            //  Ask the user to pick an SSML or text file, and stop if they cancel.
             OpenFileDialog openFileDialog1 = new()
             {
                 Filter = "XML Files (*.xml)|*.xml|Text Files (*.txt)|*.txt",
@@ -101,25 +102,47 @@ namespace _Verbalize
             };
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                //  Turn the file into speech in the background, telling the user if it fails.
                 string pathFileSelected = openFileDialog1.FileName;
                 string formatOutputSound = Form1.GetOutputFormatFromComboBox(Form1.comboBox_SoundTypes);
-                _ = Handler_AudioSynthesis.SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);  // "_= " is for discarding the result afterwards. Practically suppresses the warning.
+                _ = RunAndReportFailureAsync(() => Handler_AudioSynthesis.SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false));
             }
         }
+
+        /// <summary> Lets the user choose where to save, then saves the main text box's speech as a sound file. </summary>
         public static void CreateAudioFileFromTextBox()
         {
+            //  Go ahead only if a sound format is chosen.
             string formatOutputSound = Form1.GetOutputFormatFromComboBox(Form1.comboBox_SoundTypes);
-
             if (formatOutputSound != null && formatOutputSound != "None")
             {
+                //  Ask the user where to save the sound, and stop if they cancel.
                 SaveFileDialog saveFileDialog1 = new() { Filter = "Sound|*." + formatOutputSound, Title = "Save the spoken text as a sound file in your disk." };
                 if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
+                    //  Turn the text box's text into speech in the background, telling the user if it fails.
                     string text = Form1.textBox_Main_Single.Text;
                     XmlDocument SSMLDocument = Handler_Data.CreateSSML(text);
                     string pathFileSelected = saveFileDialog1.FileName;
-                    _ = Handler_AudioSynthesis.SynthesizeAudioAsyncFromText(SSMLDocument, pathFileSelected, formatOutputSound, false);
+                    _ = RunAndReportFailureAsync(() => Handler_AudioSynthesis.SynthesizeAudioAsyncFromText(SSMLDocument, pathFileSelected, formatOutputSound, false));
                 }
+            }
+        }
+
+        /// <summary> Runs a sound-file task and, if it fails, tells the user why instead of failing silently. </summary>
+        /// <param name="createSoundFile">The task that creates the sound file.</param>
+        /// <returns>A task that finishes once the sound file is created or the user has been told it failed.</returns>
+        private static async Task RunAndReportFailureAsync(Func<Task> createSoundFile)
+        {
+            //  Run the task, and show a message with the reason if anything goes wrong.
+            try
+            {
+                await createSoundFile();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("The sound file could not be created." + Environment.NewLine + Environment.NewLine + exception.Message,
+                    Form1.applicationBrandName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
