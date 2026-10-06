@@ -80,11 +80,15 @@
             Handler_Data.Initialize();
             Handler_File.Initialize();
         }
+        /// <summary> When the window first opens, sets up its controls and fills the language, voice and style lists. </summary>
         private void Form1_Load(object sender, EventArgs e)
         {
+            //  Give the controls their starting values and the window its icon.
             Assign_AbstractEntities_InitialValues();
-            this.Icon = icon_AppLogo; // The app's main icon. ActiveForm has not yet been instanced with focus (https://stackoverflow.com/questions/23826059/why-this-works-but-form-activeform-throws-nullrefernceexception).
-            VoicesLoad();  //  Load the voices onto the combo boxes            
+            this.Icon = icon_AppLogo; // ActiveForm has not yet been instanced with focus (https://stackoverflow.com/questions/23826059/why-this-works-but-form-activeform-throws-nullrefernceexception).
+
+            //  Fill the lists from the downloaded voice list, or the built-in one if there is none.
+            LoadVoiceListAndRefresh();
         }
 
         public void Assign_AbstractEntities()
@@ -210,17 +214,21 @@
         {
             CreateNarrationSoundFile();
         }
-        private void Button_PopulateVoicesAndStylesComboBoxes_Click(object sender, EventArgs e)
+        /// <summary> When the Populate button is clicked, fills the lists from the downloaded voice list. </summary>
+        private async void Button_PopulateVoicesAndStylesComboBoxes_Click(object sender, EventArgs e)
         {
-            PopulateVoicesAndStylesComboBoxes();
+            //  Fill the lists, downloading the voice list first if needed.
+            await PopulateVoicesAndStylesComboBoxesAsync();
         }
         private void Button_NarrateMainTextBox_Click(object sender, EventArgs e)
         {
             NarrateMainTextBox();
         }
+        /// <summary> When the Download button is clicked, downloads the latest voice list and fills the lists from it. </summary>
         private async void Button_RetrieveAndLoadVoices_Click(object sender, EventArgs e)
         {
-            RetrieveAndLoadVoices();
+            //  Download the voice list and refill the lists.
+            await RetrieveAndLoadVoicesAsync();
         }
         public static void LoadText()
         {
@@ -302,55 +310,85 @@
             //formatOutputSound = SetOutputSoundFormat();
             //_ = SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false);
         }
-        public static void PopulateVoicesAndStylesComboBoxes()
+        /// <summary> Fills the language, voice and style lists from the downloaded voice list, downloading it first if there is no usable copy. </summary>
+        /// <returns>A task that finishes once the lists are filled.</returns>
+        public static async Task PopulateVoicesAndStylesComboBoxesAsync()
         {
-            try
+            //  Download the voice list first if there is no usable downloaded copy.
+            if (!VoiceListStore.LoadOrDefault(Handler_File.locationOfVoicesFile).IsDownloadedList)
             {
-                VoicesXML.Load(Path.Combine(Handler_File.locationOfVoicesFile)); // Use Load because LoadXML command produces error
+                await Retrieve_Voices_AndSaveToDisk();
             }
-            catch (Exception)
-            {
-                _ = Retrieve_Voices_AndSaveToDisk();
-            }
-            VoicesLoad();
+
+            //  Fill the lists from the downloaded list, or the built-in one if there is still none.
+            LoadVoiceListAndRefresh();
         }
         public static void NarrateMainTextBox()
         {
             Handler_AudioSynthesis.SpeakFromTextBox(textBox_Main_Single);
         }
-        /// <summary> Retrieve the list of voices from speech.microsoft.com and reload the voices into the boxes </summary>
-        public async void RetrieveAndLoadVoices()
+        /// <summary> Downloads the latest voice list from Azure and, if that works, refills the language, voice and style lists from it. </summary>
+        /// <returns>A task that finishes once the lists are refilled or the user has been told the download failed.</returns>
+        public static async Task RetrieveAndLoadVoicesAsync()
         {
-            // will need to abstract it further and move into other classes in order to work correctly
-            await Retrieve_Voices_AndSaveToDisk();
-            //VoicesLoad();
-        }
-        public static async Task Retrieve_Voices_AndSaveToDisk()  // need to make it wait until it is finished
-        {
-            HttpClient client = new HttpClient();
-            string subscriptionKey = Handler_Data.GetTheSubscriptionKey();
-            string serverLocation = Handler_Data.GetTheServerLocation();
-            //older code to deprecate
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
-            string listVoicesLocationURL = "https://" + serverLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
-            HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
-            if (response.IsSuccessStatusCode)
+            //  Download the list, and refill the lists only if the download worked.
+            if (await Retrieve_Voices_AndSaveToDisk())
             {
-                using (Stream responseStream = await response.Content.ReadAsStreamAsync())
-                {
-                    using (StreamReader reader = new(responseStream))
-                    {
-                        string responseData = reader.ReadToEnd();
-                        Handler_Data.Convert_JSONtoXML_AndSaveToDisk(responseData);
-                    }
-                }
+                LoadVoiceListAndRefresh();
             }
-            //newer code to switch to
-            //HttpResponseMessage responseMessage = Handler_Networking.RetrieveDataFromServer("VoicesList", serverLocation, subscriptionKey).Result;
-
-            //String jsonResponseData = Handler_Data.TransformHttpResponceIntoString(responseMessage).Result;
-            //Handler_Data.Convert_JSONtoXML_AndSaveToDisk(jsonResponseData);
         }
+
+        /// <summary> Downloads the list of voices from Azure and saves it in the app's Resources folder. </summary>
+        /// <returns>True if the list was downloaded and saved; false if it failed, in which case the user has been told why.</returns>
+        public static async Task<bool> Retrieve_Voices_AndSaveToDisk()
+        {
+            try
+            {
+                //  Ask Azure for the list of voices in the app's region.
+                using HttpClient client = new HttpClient();
+                string subscriptionKey = Handler_Data.GetTheSubscriptionKey();
+                string serverLocation = Handler_Data.GetTheServerLocation();
+                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
+                string listVoicesLocationURL = "https://" + serverLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
+                HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
+
+                //  Save the list if Azure sent it.
+                if (response.IsSuccessStatusCode)
+                {
+                    string responseData = await response.Content.ReadAsStringAsync();
+                    Handler_Data.Convert_JSONtoXML_AndSaveToDisk(responseData);
+                    return true;
+                }
+
+                //  Tell the user if Azure refused to send it.
+                ShowVoiceListDownloadError($"Azure answered {(int)response.StatusCode} ({response.ReasonPhrase}).");
+                return false;
+            }
+            //  Tell the user if the list could not be fetched or saved, for example without an internet connection.
+            catch (Exception exception)
+            {
+                ShowVoiceListDownloadError(exception.Message);
+                return false;
+            }
+        }
+
+        /// <summary> Tells the user that the voice list could not be downloaded, and why. </summary>
+        /// <param name="reason">Why the download failed.</param>
+        private static void ShowVoiceListDownloadError(string reason)
+        {
+            //  Show the reason in an error message.
+            MessageBox.Show("The voice list could not be downloaded, so the app will keep using the voices it already has." + Environment.NewLine + Environment.NewLine + reason,
+                applicationBrandName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        /// <summary> Loads the downloaded voice list, or the built-in one if there is none, and refills the language, voice and style lists from it. </summary>
+        public static void LoadVoiceListAndRefresh()
+        {
+            //  Pick the voice list to use, then refill the lists from it.
+            VoicesXML = VoiceListStore.LoadOrDefault(Handler_File.locationOfVoicesFile).Voices;
+            VoicesLoad();
+        }
+
         /// <summary> Fills the Languages list from the loaded voice list, falling back to the built-in voice list if none has been loaded. </summary>
         public static void VoicesLoad()
         {
@@ -461,10 +499,8 @@
             _voiceStylesComboBox.Items.Clear();
             _voiceStylesComboBox.Text = string.Empty;
 
-            //  Look up the voice's styles in the built-in voice list and add them to the list.
-            XmlDocument voicesBasicXml = new XmlDocument();
-            voicesBasicXml.LoadXml(VoicesBasic);
-            foreach (string voiceStyle in VoiceCatalog.GetStyles(voicesBasicXml, _selectedVoice))
+            //  Look up the voice's styles in the voice list in use and add them to the list.
+            foreach (string voiceStyle in VoiceCatalog.GetStyles(VoicesXML, _selectedVoice))
             {
                 _voiceStylesComboBox.Items.Add(voiceStyle);
             }
@@ -757,9 +793,11 @@
         {
             Save_MainTextBoxText_ToFile();
         }
-        private void DownloadVoicesListToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary> When "Download voices list" is chosen in the menu, downloads the latest voice list and fills the lists from it. </summary>
+        private async void DownloadVoicesListToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RetrieveAndLoadVoices();
+            //  Download the voice list and refill the lists.
+            await RetrieveAndLoadVoicesAsync();
         }
         private void LoadToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -797,9 +835,11 @@
         {
 
         }
-        private void PopulateVoicesAndStylesComboBoxesToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary> When "Populate" is chosen in the menu, fills the lists from the downloaded voice list. </summary>
+        private async void PopulateVoicesAndStylesComboBoxesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PopulateVoicesAndStylesComboBoxes();
+            //  Fill the lists, downloading the voice list first if needed.
+            await PopulateVoicesAndStylesComboBoxesAsync();
         }
         private void PresetLanguageToolStripMenuItem_Click(object sender, EventArgs e)
         {
