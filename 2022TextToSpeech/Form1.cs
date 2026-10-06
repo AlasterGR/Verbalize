@@ -475,11 +475,14 @@
             ShowOrHideVoiceStylesRow(tableLayoutPanel8, 2, selectedIndex == 0);
         }
 
-        /// <summary> Voice Pitch slider </summary>
+        /// <summary> When the pitch slider moves, uses its position as a change in pitch and clears the named pitch choice. </summary>
         private void ScrollBar_Pitch_ValueChanged(object sender, EventArgs e)
         {
-            pitch = vScrollBar_pitch.Value.ToString() + "Hz";
+            //  Turn the slider position into a pitch change and show it.
+            pitch = ProsodyFormatter.FormatRelativePitch(vScrollBar_pitch.Value);
             label_pitch.Text = "Pitch = " + pitch;
+
+            //  Clear the named pitch choice, since the slider now decides the pitch.
             comboBox_Pitch.SelectedItem = null;
         }
         /// <summary> Voice Rate slider </summary>
