@@ -475,9 +475,10 @@
         /// <summary> When a voice is chosen, sets it as the speaking voice, shows its local name and gender, and lists its speaking styles. </summary>
         private void ComboBox_Voices_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //  Find the chosen voice in the voice list.
+            //  Find the chosen voice among the chosen language's voices.
             string selectedDisplayName = comboBox_Voices?.SelectedItem?.ToString() ?? string.Empty;
-            VoiceIdentity? voice = VoiceCatalog.FindVoiceByDisplayName(VoicesXML, selectedDisplayName);
+            string? selectedLocaleName = comboBox_Languages?.SelectedItem?.ToString();
+            VoiceIdentity? voice = VoiceCatalog.FindVoiceByDisplayName(VoicesXML, selectedDisplayName, selectedLocaleName);
 
             //  Use it as the speaking voice and show its local name and gender.
             if (voice != null)
@@ -487,20 +488,21 @@
             }
 
             //  List the speaking styles that the chosen voice supports.
-            PopulateSingleVoiceStylesComboBox(comboBox_VoiceStyles, comboBox_Voices.SelectedItem?.ToString());
+            PopulateSingleVoiceStylesComboBox(comboBox_VoiceStyles, comboBox_Voices.SelectedItem?.ToString(), selectedLocaleName);
         }
         #endregion
         /// <summary> Lists the speaking styles of a voice, hiding the styles row if the voice has none. </summary>
         /// <param name="_voiceStylesComboBox">The list to fill with the styles.</param>
         /// <param name="_selectedVoice">The display name of the voice.</param>
-        private void PopulateSingleVoiceStylesComboBox(ComboBox _voiceStylesComboBox, string? _selectedVoice)
+        /// <param name="_selectedLocaleName">The voice's language, or null to look in every language.</param>
+        private void PopulateSingleVoiceStylesComboBox(ComboBox _voiceStylesComboBox, string? _selectedVoice, string? _selectedLocaleName)
         {
             //  Empty the styles list, including any text showing in it.
             _voiceStylesComboBox.Items.Clear();
             _voiceStylesComboBox.Text = string.Empty;
 
             //  Look up the voice's styles in the voice list in use and add them to the list.
-            foreach (string voiceStyle in VoiceCatalog.GetStyles(VoicesXML, _selectedVoice))
+            foreach (string voiceStyle in VoiceCatalog.GetStyles(VoicesXML, _selectedVoice, _selectedLocaleName))
             {
                 _voiceStylesComboBox.Items.Add(voiceStyle);
             }

@@ -65,18 +65,19 @@ namespace Verbalize.Core
             return new VoicesInLocale(displayNames, locale);
         }
 
-        /// <summary> Finds a voice by its display name. </summary>
+        /// <summary> Finds a voice by its display name, optionally only among the voices of one language. </summary>
         /// <param name="voices">The voice list.</param>
         /// <param name="displayName">The display name, for example "Jenny".</param>
+        /// <param name="localeName">The language to look in, for example "English (United States)", or null or empty to look in every language.</param>
         /// <returns>The voice's identity, or null if no voice has that display name.</returns>
-        public static VoiceIdentity? FindVoiceByDisplayName(XmlDocument voices, string displayName)
+        public static VoiceIdentity? FindVoiceByDisplayName(XmlDocument voices, string displayName, string? localeName = null)
         {
-            //  Go through every voice, keeping the last one whose display name matches.
+            //  Go through every voice, keeping the last one whose display name, and language if given, match.
             VoiceIdentity? match = null;
             foreach (XmlNode node in SelectVoices(voices))
             {
                 string nodeDisplayName = node.SelectSingleNode("DisplayName")?.InnerText ?? string.Empty;
-                if (nodeDisplayName == displayName)
+                if (nodeDisplayName == displayName && IsInLocale(node, localeName))
                 {
                     match = new VoiceIdentity(
                         node.SelectSingleNode("ShortName")!.InnerText,
@@ -110,12 +111,14 @@ namespace Verbalize.Core
         /// <summary> Lists the speaking styles, such as "cheerful" or "sad", that a voice supports. </summary>
         /// <param name="voices">The voice list.</param>
         /// <param name="displayName">The voice's display name, for example "Jenny".</param>
+        /// <param name="localeName">The language to look in, for example "English (United States)", or null or empty to look in every language.</param>
         /// <returns>The style names, or an empty list if the voice is not found or has no styles.</returns>
-        public static IReadOnlyList<string> GetStyles(XmlDocument voices, string? displayName)
+        public static IReadOnlyList<string> GetStyles(XmlDocument voices, string? displayName, string? localeName = null)
         {
-            //  Find the first voice with this display name.
+            //  Find the first voice with this display name, and language if given.
             List<string> styles = new();
-            XmlNode? voiceNode = voices.SelectSingleNode($"//Voice[DisplayName='{displayName}']");
+            XmlNode? voiceNode = SelectVoices(voices).FirstOrDefault(node =>
+                (node.SelectSingleNode("DisplayName")?.InnerText ?? string.Empty) == (displayName ?? string.Empty) && IsInLocale(node, localeName));
 
             //  Collect each of its styles, in list order.
             if (voiceNode != null)
@@ -126,6 +129,16 @@ namespace Verbalize.Core
                 }
             }
             return styles;
+        }
+
+        /// <summary> Checks whether a voice belongs to a language. </summary>
+        /// <param name="voiceNode">The voice entry.</param>
+        /// <param name="localeName">The language name, or null or empty to accept every language.</param>
+        /// <returns>True if no language is given or the voice's language matches it.</returns>
+        private static bool IsInLocale(XmlNode voiceNode, string? localeName)
+        {
+            //  Accept every voice when no language is given, otherwise only voices of that language.
+            return string.IsNullOrEmpty(localeName) || voiceNode.SelectSingleNode("LocaleName")?.InnerText == localeName;
         }
 
         /// <summary> Returns every voice entry directly under the top of the voice list. </summary>

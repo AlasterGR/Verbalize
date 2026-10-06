@@ -121,6 +121,65 @@ namespace Verbalize.Core.Tests
             Assert.Null(VoiceCatalog.FindVoiceByShortName(LoadSample(), "xx-XX-NobodyNeural"));
         }
 
+        /// <summary> Two voices that share a display name in different languages, like Azure's two "Yunxi" voices, each with their own styles. </summary>
+        private const string SharedNameVoicesXml = """
+            <Voices>
+              <Voice><DisplayName>Yunxi</DisplayName><LocalName>云希</LocalName><ShortName>zh-CN-YunxiNeural</ShortName><Gender>Male</Gender><Locale>zh-CN</Locale><LocaleName>Chinese (Mandarin, Simplified)</LocaleName><StyleList>cheerful</StyleList></Voice>
+              <Voice><DisplayName>Yunxi</DisplayName><LocalName>云希 四川</LocalName><ShortName>zh-CN-sichuan-YunxiNeural</ShortName><Gender>Male</Gender><Locale>zh-CN-sichuan</Locale><LocaleName>Chinese (Southwestern Mandarin, Simplified)</LocaleName></Voice>
+              <Voice><DisplayName>Conan O'Brien</DisplayName><LocalName>Conan</LocalName><ShortName>en-US-ConanNeural</ShortName><Gender>Male</Gender><Locale>en-US</Locale><LocaleName>English (United States)</LocaleName><StyleList>witty</StyleList></Voice>
+            </Voices>
+            """;
+
+        /// <summary> Loads the voice list with a shared display name. </summary>
+        /// <returns>The voice list as a document.</returns>
+        private static XmlDocument LoadSharedNameSample()
+        {
+            //  Parse the sample text into a document.
+            XmlDocument document = new();
+            document.LoadXml(SharedNameVoicesXml);
+            return document;
+        }
+
+        /// <summary> When a language is given, the voice is found within that language, even if another language has a voice with the same name. </summary>
+        [Theory]
+        [InlineData("Chinese (Mandarin, Simplified)", "zh-CN-YunxiNeural")]
+        [InlineData("Chinese (Southwestern Mandarin, Simplified)", "zh-CN-sichuan-YunxiNeural")]
+        public void FindVoiceByDisplayName_FindsTheVoiceInTheChosenLanguage(string localeName, string expectedShortName)
+        {
+            //  Look up Yunxi within the given language, and check the right one is found.
+            Assert.Equal(expectedShortName, VoiceCatalog.FindVoiceByDisplayName(LoadSharedNameSample(), "Yunxi", localeName)?.ShortName);
+        }
+
+        /// <summary> Without a language, the last voice with that name is found, as before. </summary>
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void FindVoiceByDisplayName_WithoutALanguageUsesTheLastMatch(string? localeName)
+        {
+            //  Look up Yunxi without a language, and check the last one is found.
+            Assert.Equal("zh-CN-sichuan-YunxiNeural", VoiceCatalog.FindVoiceByDisplayName(LoadSharedNameSample(), "Yunxi", localeName)?.ShortName);
+        }
+
+        /// <summary> When a language is given, the styles come from the voice in that language. </summary>
+        [Fact]
+        public void GetStyles_UsesTheVoiceInTheChosenLanguage()
+        {
+            //  Look up the styles of each Yunxi.
+            XmlDocument voices = LoadSharedNameSample();
+
+            //  Check only the Mandarin one has styles.
+            Assert.Equal(new[] { "cheerful" }, VoiceCatalog.GetStyles(voices, "Yunxi", "Chinese (Mandarin, Simplified)"));
+            Assert.Empty(VoiceCatalog.GetStyles(voices, "Yunxi", "Chinese (Southwestern Mandarin, Simplified)"));
+        }
+
+        /// <summary> A display name with an apostrophe in it is looked up like any other. </summary>
+        [Fact]
+        public void GetStyles_HandlesAnApostropheInTheName()
+        {
+            //  Look up the styles of a voice whose name has an apostrophe, and check they are found.
+            Assert.Equal(new[] { "witty" }, VoiceCatalog.GetStyles(LoadSharedNameSample(), "Conan O'Brien"));
+        }
+
         /// <summary> A voice's styles are listed in order, taken from the first entry with that name. </summary>
         [Fact]
         public void GetStyles_ListsTheVoicesStyles()
