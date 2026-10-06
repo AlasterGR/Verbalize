@@ -15,7 +15,7 @@ dotnet build Verbalize.sln
 dotnet test Verbalize.Core.Tests
 ```
 
-Both work on Linux; the app sets `EnableWindowsTargeting`. In a cloud session without .NET, install it with `apt-get install -y dotnet-sdk-10.0`. The app itself can only be run on Windows.
+Both work on Linux; the app sets `EnableWindowsTargeting`. Cloud sessions install the .NET 10 SDK automatically through `.claude/hooks/session-start.sh`. The app itself can only be run on Windows.
 
 ## Coding conventions
 
