@@ -25,15 +25,43 @@ namespace _Verbalize
             style = Form1.style;
 
         }
+        /// <summary> The Azure key and region, found once when first needed. </summary>
+        private static readonly Lazy<SpeechCredentials> speechCredentials = new(LoadSpeechCredentials);
+
+        /// <summary> Where the user's settings file, which can hold the Azure key and region, is kept. </summary>
+        public static string SettingsFilePath => SpeechCredentialsResolver.DefaultSettingsFilePath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+
+        /// <summary> Finds the Azure key and region from the environment variables or the user's settings file, outside the app's code. </summary>
+        /// <returns>The key and region, and any problem found with the settings file.</returns>
+        private static SpeechCredentials LoadSpeechCredentials()
+        {
+            //  Look in the environment variables, then the settings file, falling back to the app's usual region.
+            string defaultRegion = (string)Resources.ResourceManager.GetObject("serverLocation")!;
+            return SpeechCredentialsResolver.Resolve(Environment.GetEnvironmentVariable, SettingsFilePath, defaultRegion);
+        }
+
+        /// <summary> Returns the Azure key and region, and any problem found while looking for them. </summary>
+        /// <returns>The key and region.</returns>
+        public static SpeechCredentials GetSpeechCredentials()
+        {
+            //  Give back the values found the first time they were needed.
+            return speechCredentials.Value;
+        }
+
+        /// <summary> Returns the Azure subscription key. </summary>
+        /// <returns>The key, or an empty string if none is set.</returns>
         public static string GetTheSubscriptionKey()
         {
-            string subscriptionKey = (string)Resources.ResourceManager.GetObject("subscriptionKey1");
-            return subscriptionKey;
+            //  Give back the key, or nothing if it is not set.
+            return speechCredentials.Value.Key ?? string.Empty;
         }
+
+        /// <summary> Returns the Azure region the app talks to. </summary>
+        /// <returns>The region, for example "westeurope".</returns>
         public static string GetTheServerLocation()
         {
-            string serverLocation = (string)Resources.ResourceManager.GetObject("serverLocation");
-            return serverLocation;
+            //  Give back the region.
+            return speechCredentials.Value.Region;
         }
         /// <summary> Creates an SSML document that speaks the given text with the voice settings currently chosen in the app. </summary>
         /// <param name="text">The text to be spoken.</param>

@@ -34,4 +34,4 @@ These apply to all code written or changed in this repo, tests included. Generat
 ## Notes
 
 - `Class_SSML_Builder.cs` is unfinished work and is excluded from the build in the `.csproj`.
-- The Azure subscription keys in `Properties/Resources.resx` and `App.config` are due to be rotated and moved out of the repo.
+- The Azure key and region are read from the `VERBALIZE_SPEECH_KEY` / `VERBALIZE_SPEECH_REGION` environment variables or `%APPDATA%\Verbalize\settings.json` (see `SpeechCredentialsResolver` and the README). Never put keys in the code. The keys that were once committed are still in git history and are due to be rotated.

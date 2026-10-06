@@ -15,12 +15,18 @@ namespace _Verbalize
         public static CancellationTokenSource synthesisCancellationToken;
         public static SpeechSynthesisResult speechSynthesisResult = null;
         public static SpeechSynthesizer speechSynthesizer;
+        /// <summary> A stand-in key used when none is set, because the speech service refuses an empty one. Requests made with it fail with a clear error instead of the app failing to open. </summary>
+        private const string MissingKeyPlaceholder = "not-configured";
+
+        /// <summary> Prepares the connection to Azure's speech service with the user's key and region. </summary>
         public static void Initialize()
         {
+            //  Use the user's key and region, or a stand-in key if none is set, so the app can still open.
             string subscriptionKey = Handler_Data.GetTheSubscriptionKey();
             string serverLocation = Handler_Data.GetTheServerLocation();
-            config = SpeechConfig.FromSubscription(subscriptionKey, serverLocation);
-            // Initialize your synthesizer and other components
+            config = SpeechConfig.FromSubscription(string.IsNullOrEmpty(subscriptionKey) ? MissingKeyPlaceholder : subscriptionKey, serverLocation);
+
+            //  Prepare the speech maker and the means to cancel it.
             speechSynthesizer = new SpeechSynthesizer(config);
             synthesisCancellationToken = new CancellationTokenSource();
         }

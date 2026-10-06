@@ -89,6 +89,30 @@
 
             //  Fill the lists from the downloaded voice list, or the built-in one if there is none.
             LoadVoiceListAndRefresh();
+
+            //  Explain how to set up the Azure key if it is missing or its settings file is damaged.
+            WarnIfSpeechKeyMissing();
+        }
+
+        /// <summary> Tells the user how to set up their Azure key when none is set or the settings file cannot be read. </summary>
+        private static void WarnIfSpeechKeyMissing()
+        {
+            //  Say nothing when a key is set and the settings file is fine.
+            SpeechCredentials credentials = Handler_Data.GetSpeechCredentials();
+            if (credentials.HasKey && credentials.Problem == null) { return; }
+
+            //  Otherwise explain what will not work and the two ways to set the key.
+            string message = credentials.HasKey ? string.Empty
+                : "No Azure Speech key is set, so speaking, exporting sound and downloading voices will not work yet." + Environment.NewLine + Environment.NewLine
+                + "Set the " + SpeechCredentialsResolver.KeyVariable + " environment variable (and optionally " + SpeechCredentialsResolver.RegionVariable + "), or create the file" + Environment.NewLine
+                + Handler_Data.SettingsFilePath + Environment.NewLine
+                + "containing:" + Environment.NewLine
+                + "{ \"" + SpeechCredentialsResolver.KeySetting + "\": \"your key\", \"" + SpeechCredentialsResolver.RegionSetting + "\": \"" + credentials.Region + "\" }";
+            if (credentials.Problem != null)
+            {
+                message += (message.Length > 0 ? Environment.NewLine + Environment.NewLine : string.Empty) + credentials.Problem;
+            }
+            MessageBox.Show(message, applicationBrandName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
         public void Assign_AbstractEntities()

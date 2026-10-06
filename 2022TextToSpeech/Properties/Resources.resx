@@ -706,12 +706,6 @@
   <data name="serverLocation" xml:space="preserve">
     <value>westeurope</value>
   </data>
-  <data name="subscriptionKey1" xml:space="preserve">
-    <value>5521b17037c34b96aa88e1ab83b34fb3</value>
-  </data>
-  <data name="subscriptionKey2" xml:space="preserve">
-    <value>1491bf9d70da4dedab0f0f375beae896</value>
-  </data>
   <data name="tableLayoutPanel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
