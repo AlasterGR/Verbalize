@@ -213,9 +213,11 @@
         {
             ClearTextBoxAndLoadedFile();
         }
+        /// <summary> When the Stop button is clicked, stops the speech playing aloud. </summary>
         private async void Button_MuteSpokenNarration_Click(object sender, EventArgs e)
         {
-            MuteSpokenNarration();
+            //  Stop the speech and wait until it has stopped.
+            await MuteSpokenNarrationAsync();
         }
         private void Button_SaveTextToFile_Click(object sender, EventArgs e)
         {
@@ -244,9 +246,11 @@
             //  Fill the lists, downloading the voice list first if needed.
             await PopulateVoicesAndStylesComboBoxesAsync();
         }
-        private void Button_NarrateMainTextBox_Click(object sender, EventArgs e)
+        /// <summary> When the Speak button is clicked, speaks the main text box aloud. </summary>
+        private async void Button_NarrateMainTextBox_Click(object sender, EventArgs e)
         {
-            NarrateMainTextBox();
+            //  Speak the text, and tell the user if it fails.
+            await NarrateMainTextBoxAsync();
         }
         /// <summary> When the Download button is clicked, downloads the latest voice list and fills the lists from it. </summary>
         private async void Button_RetrieveAndLoadVoices_Click(object sender, EventArgs e)
@@ -313,9 +317,12 @@
             label_FileName.Text = string.Empty;
             label_FileName.Visible = false; // remove this when implement the label's automatic behaviour through events
         }
-        public static void MuteSpokenNarration()
+        /// <summary> Stops the speech playing aloud, if any. </summary>
+        /// <returns>A task that finishes once the speech has stopped.</returns>
+        public static Task MuteSpokenNarrationAsync()
         {
-            Handler_AudioSynthesis.SoundPause();
+            //  Ask the speech handler to stop speaking.
+            return Handler_AudioSynthesis.StopSpeakingAsync();
         }
         public static void CreateAudioFromTextFile()
         {
@@ -347,9 +354,12 @@
             //  Fill the lists from the downloaded list, or the built-in one if there is still none.
             LoadVoiceListAndRefresh();
         }
-        public static void NarrateMainTextBox()
+        /// <summary> Speaks the main text box's selected text aloud, or all of it if none is selected. </summary>
+        /// <returns>A task that finishes once the speech has ended, been stopped, or the user has been told it failed.</returns>
+        public static Task NarrateMainTextBoxAsync()
         {
-            Handler_AudioSynthesis.SpeakFromTextBox(textBox_Main_Single);
+            //  Ask the speech handler to speak the text box.
+            return Handler_AudioSynthesis.SpeakFromTextBoxAsync(textBox_Main_Single);
         }
         /// <summary> Downloads the latest voice list from Azure and, if that works, refills the language, voice and style lists from it. </summary>
         /// <returns>A task that finishes once the lists are refilled or the user has been told the download failed.</returns>
