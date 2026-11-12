@@ -135,7 +135,7 @@
     <value>1000, 929</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>Text to Speech by Diadrasis</value>
+    <value>Verbalize</value>
   </data>
   <data name="bttn3_LoadText.Font" type="System.Drawing.Font, System.Drawing">
     <value>Calibri, 14.25pt</value>

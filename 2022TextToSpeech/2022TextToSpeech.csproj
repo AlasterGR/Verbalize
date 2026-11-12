@@ -25,8 +25,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\ARPhymedesLogo.png" />
-    <None Remove="Resources\ARPhymedesPlusLogo.png" />
     <None Remove="Resources\Clear.png" />
     <None Remove="Resources\exit_512px.png" />
     <None Remove="Resources\intro_background_2048px-01.png" />
