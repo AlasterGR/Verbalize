@@ -60,7 +60,7 @@
         public static float attributesColumnInitialWidth, attributesColumnCurrentWidth = 451f;
         public static SizeType attributesColumnInitialSizeType;
         public static Size attributesColumnInitialMinimumSize;
-        public static Button button_NarrateMainTextBox, button_SaveTextToFile, button_MuteSpokenNarration, button_PopulateVoicesAndStylesComboBoxes, button_LoadText, button_ClearTextBoxAndLoadedFile, button_HideGuiMarkup, button_CreateAudioFromTextFile, button_CreateNarrationSoundFile, button_UpdateTextFile, button_ShowHelp, button_MinimizeWindow, button_MaximizeWindow, button_QuitApplication, button_RetrieveAndLoadVoices;
+        public static Button button_NarrateMainTextBox, button_SaveTextToFile, button_PopulateVoicesAndStylesComboBoxes, button_LoadText, button_ClearTextBoxAndLoadedFile, button_HideGuiMarkup, button_CreateAudioFromTextFile, button_CreateNarrationSoundFile, button_UpdateTextFile, button_ShowHelp, button_MinimizeWindow, button_MaximizeWindow, button_QuitApplication, button_RetrieveAndLoadVoices;
         public static Image image_AttrColumnButton_Expand, image_AttrColumnButton_Recede;
         public static Icon icon_AppLogo;
         /// <summary> The strip above the text box that shows the app's messages. </summary>
@@ -103,8 +103,9 @@
             //  Explain how to set up the Azure key if it is missing or its settings file is damaged.
             ShowSpeechSetupMessageIfNeeded();
 
-            //  Watch the internet connection, and offer only the buttons that can work right now.
+            //  Watch the internet connection and the speech, and offer only the buttons that can work right now.
             StartWatchingConnection();
+            Handler_AudioSynthesis.SpeakingChanged += UpdateActionAvailability;
             UpdateActionAvailability();
 
             //  Give the buttons their hints.
@@ -174,8 +175,6 @@
             statusHints.SetToolTip(button_ClearTextBoxAndLoadedFile, ControlHints.Clear);
             statusHints.SetToolTip(button_RetrieveAndLoadVoices, ControlHints.DownloadVoices);
             statusHints.SetToolTip(button_PopulateVoicesAndStylesComboBoxes, ControlHints.RefreshVoiceLists);
-            statusHints.SetToolTip(button_NarrateMainTextBox, ControlHints.Speak);
-            statusHints.SetToolTip(button_MuteSpokenNarration, ControlHints.Stop);
             statusHints.SetToolTip(button_CreateNarrationSoundFile, ControlHints.SaveSound);
             statusHints.SetToolTip(button_SaveTextToFile, ControlHints.SaveText);
             statusHints.SetToolTip(button_CreateAudioFromTextFile, ControlHints.SaveSoundFromFile);
@@ -240,8 +239,14 @@
             bool canSpeakText = ActionAvailability.CanSpeakText(conditions);
             bool canReachAzure = ActionAvailability.CanReachAzure(conditions);
 
-            //  Speaking and exporting the text box need text as well as Azure.
-            button_NarrateMainTextBox.Enabled = button_CreateNarrationSoundFile.Enabled = soundToolStripMenuItem.Enabled = canSpeakText;
+            //  Make the Speak/Stop button read Stop while speaking, and Speak otherwise.
+            SpeakButtonState speakButton = SpeakButton.Describe(Handler_AudioSynthesis.IsSpeaking, conditions);
+            button_NarrateMainTextBox.Text = speakButton.Text;
+            button_NarrateMainTextBox.Enabled = speakButton.Enabled;
+            statusHints.SetToolTip(button_NarrateMainTextBox, speakButton.Hint);
+
+            //  Exporting the text box needs text as well as Azure.
+            button_CreateNarrationSoundFile.Enabled = soundToolStripMenuItem.Enabled = canSpeakText;
 
             //  Exporting a file and downloading voices need only Azure.
             button_CreateAudioFromTextFile.Enabled = batchAudioToolStripMenuItem.Enabled = canReachAzure;
@@ -288,7 +293,6 @@
             button_QuitApplication = button13;
             button_RetrieveAndLoadVoices = button8;
             button_PopulateVoicesAndStylesComboBoxes = button9;
-            button_MuteSpokenNarration = button5;
             button_SaveTextToFile = button7;
             button_HideGuiMarkup = button10;
             button_NarrateMainTextBox = button12;
@@ -337,7 +341,6 @@
             button_QuitApplication.Click += Button_QuitApplication_Click;
             button_RetrieveAndLoadVoices.Click += Button_RetrieveAndLoadVoices_Click;
             button_PopulateVoicesAndStylesComboBoxes.Click += Button_PopulateVoicesAndStylesComboBoxes_Click;
-            button_MuteSpokenNarration.Click += Button_MuteSpokenNarration_Click;
             button_SaveTextToFile.Click += Button_SaveTextToFile_Click;
             button_HideGuiMarkup.Click += Button_HideGuiMarkup_Click;
             button_NarrateMainTextBox.Click += Button_NarrateMainTextBox_Click;
@@ -350,12 +353,6 @@
         private void Button_ClearTextBoxAndLoadedFile_Click(object sender, EventArgs e)
         {
             ClearTextBoxAndLoadedFile();
-        }
-        /// <summary> When the Stop button is clicked, stops the speech playing aloud. </summary>
-        private async void Button_MuteSpokenNarration_Click(object sender, EventArgs e)
-        {
-            //  Stop the speech and wait until it has stopped.
-            await MuteSpokenNarrationAsync();
         }
         private void Button_SaveTextToFile_Click(object sender, EventArgs e)
         {
@@ -384,11 +381,50 @@
             //  Fill the lists, downloading the voice list first if needed.
             await PopulateVoicesAndStylesComboBoxesAsync();
         }
-        /// <summary> When the Speak button is clicked, speaks the main text box aloud. </summary>
+        /// <summary> When the Speak/Stop button is clicked, stops the speech if it is playing, or otherwise speaks the main text box aloud. </summary>
         private async void Button_NarrateMainTextBox_Click(object sender, EventArgs e)
         {
-            //  Speak the text, and tell the user if it fails.
-            await NarrateMainTextBoxAsync();
+            //  Stop or speak, depending on what the button offers right now.
+            await SpeakOrStopAsync();
+        }
+
+        /// <summary> Stops the speech if it is playing; otherwise speaks the main text box, but only when that can work. </summary>
+        /// <returns>A task that finishes once the speech has stopped, or has ended, been stopped or failed.</returns>
+        private static async Task SpeakOrStopAsync()
+        {
+            //  Stop the speech if it is playing.
+            if (Handler_AudioSynthesis.IsSpeaking)
+            {
+                await MuteSpokenNarrationAsync();
+                return;
+            }
+
+            //  Otherwise speak, if the Speak button is available.
+            if (button_NarrateMainTextBox.Enabled) { await NarrateMainTextBoxAsync(); }
+        }
+
+        /// <summary> Handles the keyboard shortcuts before any control sees them: Ctrl+Enter speaks and Esc stops the speech. </summary>
+        /// <param name="msg">The keyboard message.</param>
+        /// <param name="keyData">The key pressed, with any modifier keys.</param>
+        /// <returns>True if the shortcut was handled.</returns>
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            //  Speak with Ctrl+Enter, which would otherwise add a line break to the text.
+            if (keyData == (Keys.Control | Keys.Enter) && !Handler_AudioSynthesis.IsSpeaking)
+            {
+                _ = SpeakOrStopAsync();
+                return true;
+            }
+
+            //  Stop with Esc while speaking, leaving Esc to work as usual otherwise.
+            if (keyData == Keys.Escape && Handler_AudioSynthesis.IsSpeaking)
+            {
+                _ = MuteSpokenNarrationAsync();
+                return true;
+            }
+
+            //  Let every other key work as usual.
+            return base.ProcessCmdKey(ref msg, keyData);
         }
         /// <summary> When the Download button is clicked, downloads the latest voice list and fills the lists from it. </summary>
         private async void Button_RetrieveAndLoadVoices_Click(object sender, EventArgs e)

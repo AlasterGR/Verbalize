@@ -53,7 +53,6 @@
             label10 = new Label();
             label11 = new Label();
             button1 = new Button();
-            button5 = new Button();
             comboBox6 = new ComboBox();
             panel1 = new Panel();
             panel2 = new Panel();
@@ -61,8 +60,6 @@
             comboBox5 = new ComboBox();
             label9 = new Label();
             tableLayoutPanel1 = new TableLayoutPanel();
-            tableLayoutPanel13 = new TableLayoutPanel();
-            label13 = new Label();
             label14 = new Label();
             tableLayoutPanel2 = new TableLayoutPanel();
             button6 = new Button();
@@ -114,7 +111,6 @@
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
-            tableLayoutPanel13.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel16.SuspendLayout();
             panel5.SuspendLayout();
@@ -380,12 +376,12 @@
             // 
             button12.BackColor = Color.Transparent;
             button12.Dock = DockStyle.Fill;
-            button12.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            button12.Location = new Point(8, 72);
+            button12.Font = new Font("Calibri", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+            button12.Location = new Point(8, 8);
             button12.Margin = new Padding(3, 4, 3, 4);
             button12.Name = "button12";
             button12.Padding = new Padding(3, 4, 3, 4);
-            button12.Size = new Size(105, 37);
+            button12.Size = new Size(105, 101);
             button12.TabIndex = 30;
             button12.Text = "Sp&eak";
             button12.UseVisualStyleBackColor = false;
@@ -431,19 +427,6 @@
             button1.TabIndex = 35;
             button1.Text = "&Clear";
             button1.UseVisualStyleBackColor = true;
-            // 
-            // button5
-            // 
-            button5.BackgroundImage = (Image)resources.GetObject("button5.BackgroundImage");
-            button5.BackgroundImageLayout = ImageLayout.Zoom;
-            button5.Dock = DockStyle.Fill;
-            button5.Location = new Point(5, 4);
-            button5.Margin = new Padding(5, 4, 5, 4);
-            button5.Name = "button5";
-            button5.Size = new Size(91, 20);
-            button5.TabIndex = 37;
-            button5.Text = " ";
-            button5.UseVisualStyleBackColor = true;
             // 
             // comboBox6
             // 
@@ -528,8 +511,7 @@
             tableLayoutPanel1.BackColor = Color.FromArgb(192, 255, 192);
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(tableLayoutPanel13, 0, 0);
-            tableLayoutPanel1.Controls.Add(button12, 0, 1);
+            tableLayoutPanel1.Controls.Add(button12, 0, 0);
             tableLayoutPanel1.Controls.Add(label14, 0, 2);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 3);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel16, 0, 4);
@@ -540,6 +522,7 @@
             tableLayoutPanel1.MinimumSize = new Size(121, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.Padding = new Padding(5, 4, 5, 4);
+            tableLayoutPanel1.SetRowSpan(button12, 2);
             tableLayoutPanel1.RowCount = 6;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 64F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 45F));
@@ -549,38 +532,6 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 149F));
             tableLayoutPanel1.Size = new Size(121, 532);
             tableLayoutPanel1.TabIndex = 45;
-            // 
-            // tableLayoutPanel13
-            // 
-            tableLayoutPanel13.BackColor = Color.FromArgb(255, 224, 192);
-            tableLayoutPanel13.ColumnCount = 1;
-            tableLayoutPanel13.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel13.Controls.Add(label13, 0, 1);
-            tableLayoutPanel13.Controls.Add(button5, 0, 0);
-            tableLayoutPanel13.Dock = DockStyle.Fill;
-            tableLayoutPanel13.Location = new Point(10, 8);
-            tableLayoutPanel13.Margin = new Padding(5, 4, 5, 4);
-            tableLayoutPanel13.Name = "tableLayoutPanel13";
-            tableLayoutPanel13.RowCount = 2;
-            tableLayoutPanel13.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel13.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel13.Size = new Size(101, 56);
-            tableLayoutPanel13.TabIndex = 1;
-            // 
-            // label13
-            // 
-            label13.AutoSize = true;
-            label13.Dock = DockStyle.Fill;
-            label13.Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            label13.ImeMode = ImeMode.NoControl;
-            label13.Location = new Point(5, 32);
-            label13.Margin = new Padding(5, 4, 5, 4);
-            label13.Name = "label13";
-            label13.RightToLeft = RightToLeft.No;
-            label13.Size = new Size(91, 20);
-            label13.TabIndex = 38;
-            label13.Text = "&Mute";
-            label13.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // label14
             // 
@@ -1208,8 +1159,6 @@
             panel2.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
-            tableLayoutPanel13.ResumeLayout(false);
-            tableLayoutPanel13.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             tableLayoutPanel16.ResumeLayout(false);
@@ -1262,7 +1211,6 @@
         private Label label10;
         private Label label11;
         private Button button1;
-        private Button button5;
         private ComboBox comboBox6;
         private Panel panel1;
         private Panel panel2;
@@ -1281,8 +1229,6 @@
         private TableLayoutPanel tableLayoutPanel11;
         private TableLayoutPanel tableLayoutPanel9;
         private Panel panel3;
-        private TableLayoutPanel tableLayoutPanel13;
-        private Label label13;
         private VScrollBar vScrollBar3;
         private Label label14;
         private Button button6;

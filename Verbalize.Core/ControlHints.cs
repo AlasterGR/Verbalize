@@ -12,9 +12,9 @@ namespace Verbalize.Core
         /// <summary> Hint for the button that refills the language, voice and style lists. </summary>
         public const string RefreshVoiceLists = "Refill the language, voice and style lists, downloading the voice list first if there is none.";
         /// <summary> Hint for the Speak button. </summary>
-        public const string Speak = "Read the selected text aloud, or all of it if nothing is selected (needs text, the internet and a Speech key).";
-        /// <summary> Hint for the button that stops the speech. </summary>
-        public const string Stop = "Stop the speech that is playing.";
+        public const string Speak = "Read the selected text aloud, or all of it if nothing is selected (Ctrl+Enter). Needs text, the internet and a Speech key.";
+        /// <summary> Hint for the button while it stops the speech. </summary>
+        public const string Stop = "Stop the speech that is playing (Esc).";
         /// <summary> Hint for the button that saves the text box as a sound file. </summary>
         public const string SaveSound = "Save the text as a sound file in the chosen format (needs text, the internet and a Speech key).";
         /// <summary> Hint for the button that saves the text box as a text file. </summary>

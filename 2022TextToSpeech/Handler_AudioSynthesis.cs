@@ -12,8 +12,26 @@ namespace _Verbalize
     {
         /// <summary>  This is the single most valuable object of the app, as it holds all the important properties for the speech synthesis </summary>
         private static SpeechConfig config;
-        /// <summary> The speech currently playing aloud, or null when nothing is being spoken. </summary>
+        /// <summary> The speech currently playing aloud, or null when nothing is being spoken. Change it only through SetCurrentSpeech, so listeners hear about it. </summary>
         private static SpokenSpeech? currentSpeech;
+
+        /// <summary> Raised when speech starts or stops, so the Speak/Stop button can follow. </summary>
+        public static event Action? SpeakingChanged;
+
+        /// <summary> True while speech is playing aloud. </summary>
+        public static bool IsSpeaking => currentSpeech != null;
+
+        /// <summary> Records the speech playing aloud, or null when none is, and tells listeners if that changed. </summary>
+        /// <param name="speech">The speech now playing, or null.</param>
+        private static void SetCurrentSpeech(SpokenSpeech? speech)
+        {
+            //  Do nothing if it is the same speech.
+            if (currentSpeech == speech) { return; }
+
+            //  Remember it and let listeners know.
+            currentSpeech = speech;
+            SpeakingChanged?.Invoke();
+        }
 
         /// <summary> Speech playing aloud: the speech maker playing it and, once asked, the request to stop it. </summary>
         /// <param name="synthesizer">The speech maker playing the speech.</param>
@@ -188,7 +206,7 @@ namespace _Verbalize
             if (speech == null) { return; }
 
             //  Mark the speech as stopped, so its end is not reported as a failure, then stop it and wait.
-            currentSpeech = null;
+            SetCurrentSpeech(null);
             speech.StopRequest = speech.Synthesizer.StopSpeakingAsync();
             try { await speech.StopRequest; }
             //  Ignore a failure to stop, since the speech maker is closed straight after anyway.
@@ -210,7 +228,7 @@ namespace _Verbalize
             //  Speak it aloud through the speakers, remembering the speech so it can be stopped.
             using SpeechSynthesizer synthesizer = new(config);
             SpokenSpeech speech = new(synthesizer);
-            currentSpeech = speech;
+            SetCurrentSpeech(speech);
             Form1.SetActivity(AppActivity.Speaking);
             string? failure;
             try
@@ -225,7 +243,7 @@ namespace _Verbalize
             }
 
             //  Forget the speech if it ended by itself.
-            if (currentSpeech == speech) { currentSpeech = null; }
+            if (currentSpeech == speech) { SetCurrentSpeech(null); }
 
             //  Show Ready again, unless newer speech has already started.
             if (currentSpeech == null) { Form1.EndActivity(AppActivity.Speaking); }
