@@ -42,6 +42,32 @@ namespace Verbalize.Core.Tests
             return SpeechCredentialsResolver.Resolve(environment, SettingsFilePath, "westeurope");
         }
 
+        /// <summary> A region that is not a plain name is refused, the default is used, and the user is told, so the key cannot be sent to another address. </summary>
+        [Fact]
+        public void Resolve_RefusesARegionThatIsNotAPlainName()
+        {
+            //  Set a region that would point the address elsewhere.
+            SpeechCredentials credentials = Resolve(Environment(key: "k", region: "evil.example.com/x?"));
+
+            //  Check the default region is used and the problem is named.
+            Assert.Equal("westeurope", credentials.Region);
+            Assert.Contains("evil.example.com/x?", credentials.Problem);
+        }
+
+        /// <summary> Plain region names are accepted, and anything with other characters is not. </summary>
+        [Theory]
+        [InlineData("westeurope", true)]
+        [InlineData("eastus2", true)]
+        [InlineData("", false)]
+        [InlineData("west europe", false)]
+        [InlineData("westeurope.evil.com", false)]
+        [InlineData("west-europe", false)]
+        public void IsPlainRegionName_AllowsOnlyLettersAndDigits(string region, bool expected)
+        {
+            //  Check the region against the rule.
+            Assert.Equal(expected, SpeechCredentialsResolver.IsPlainRegionName(region));
+        }
+
         /// <summary> With nothing set anywhere, there is no key and the default region is used. </summary>
         [Fact]
         public void Resolve_HasNoKeyWhenNothingIsSet()

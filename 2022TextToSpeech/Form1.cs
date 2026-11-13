@@ -735,13 +735,13 @@
         {
             try
             {
-                VoicesXML.Load(Handler_File.locationOfVoicesFile);
+                SafeXml.LoadInto(VoicesXML, Handler_File.locationOfVoicesFile);
             }
             catch (Exception)
             {
                 try
                 {
-                    VoicesXML.Load(Handler_File.locationOfVoicesFileBackup);
+                    SafeXml.LoadInto(VoicesXML, Handler_File.locationOfVoicesFileBackup);
                 }
                 catch
                 {

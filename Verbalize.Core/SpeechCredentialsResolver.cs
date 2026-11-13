@@ -67,7 +67,23 @@ namespace Verbalize.Core
             //  Take each value from its environment variable first, then the file, then the default region.
             string? key = FirstNonBlank(getEnvironmentVariable(KeyVariable), fileKey);
             string region = FirstNonBlank(getEnvironmentVariable(RegionVariable), fileRegion) ?? defaultRegion;
+
+            //  Accept only a plain region name, so the key can only ever be sent to an Azure address, and say so if one was refused.
+            if (!IsPlainRegionName(region))
+            {
+                problem = (problem == null ? string.Empty : problem + Environment.NewLine) + $"The Speech region \"{region}\" is not a region name such as \"westeurope\", so {defaultRegion} is used instead.";
+                region = defaultRegion;
+            }
             return new SpeechCredentials(key, region, problem);
+        }
+
+        /// <summary> Tells whether a region is a plain Azure region name, made only of letters and digits, for example "westeurope" or "eastus2". </summary>
+        /// <param name="region">The region to check.</param>
+        /// <returns>True if it is a plain region name.</returns>
+        public static bool IsPlainRegionName(string region)
+        {
+            //  Allow only English letters and digits, and a sensible length.
+            return region.Length is > 0 and <= 40 && region.All(character => char.IsAsciiLetterOrDigit(character));
         }
 
         /// <summary> Reads a text value from the settings, matching its name regardless of capitals. </summary>

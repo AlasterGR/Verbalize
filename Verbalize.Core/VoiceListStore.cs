@@ -20,8 +20,7 @@ namespace Verbalize.Core
             {
                 try
                 {
-                    XmlDocument downloaded = new();
-                    downloaded.Load(path);
+                    XmlDocument downloaded = SafeXml.Load(path);
                     if (downloaded.DocumentElement?.SelectNodes("Voice")?.Count > 0)
                     {
                         return new VoiceListLoadResult(downloaded, true);

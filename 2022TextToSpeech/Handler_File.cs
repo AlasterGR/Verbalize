@@ -86,7 +86,7 @@ namespace _Verbalize
                 XmlDocument SSMLDocument = new();
                 try
                 {
-                    SSMLDocument.Load(locationLoadedFile);
+                    SafeXml.LoadInto(SSMLDocument, locationLoadedFile);
                     fileContents = SsmlTextExtractor.GetSpeakableText(SSMLDocument, Environment.NewLine);
                     Form1.LoadXMLtoApp(SSMLDocument);
                 }

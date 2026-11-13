@@ -12,13 +12,11 @@ namespace Verbalize.Core
         public static XmlDocument Load(string path, Func<string, XmlDocument> createFromText)
         {
             //  Try to read the file as XML, which also honours any character encoding the file declares.
-            XmlDocument document = new();
             try
             {
-                document.Load(path);
-                return document;
+                return SafeXml.Load(path);
             }
-            //  If it is not XML, take its whole contents as plain text and wrap them.
+            //  If it is not XML, or is XML of a kind that is refused, take its whole contents as plain text and wrap them.
             catch (XmlException)
             {
                 return createFromText(File.ReadAllText(path));

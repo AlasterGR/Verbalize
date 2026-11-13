@@ -74,6 +74,19 @@ namespace Verbalize.Core.Tests
             Assert.False(result.IsDownloadedList);
         }
 
+        /// <summary> A voice list file with a document type definition is refused, and the built-in list is used. </summary>
+        [Fact]
+        public void LoadOrDefault_RefusesAFileWithADocumentTypeDefinition()
+        {
+            //  Write a voice list that carries a definition.
+            string path = WriteVoicesFile("<!DOCTYPE Voices [<!ENTITY x \"x\">]><Voices><Voice><Locale>&x;</Locale></Voice></Voices>");
+
+            //  Check the built-in list is used instead.
+            VoiceListLoadResult result = VoiceListStore.LoadOrDefault(path);
+            Assert.False(result.IsDownloadedList);
+            Assert.Equal(DefaultVoicesLocaleNames(), VoiceCatalog.GetLocaleNames(result.Voices));
+        }
+
         /// <summary> Lists the languages in the built-in voice list. </summary>
         /// <returns>The built-in list's language names.</returns>
         private static IReadOnlyList<string?> DefaultVoicesLocaleNames()

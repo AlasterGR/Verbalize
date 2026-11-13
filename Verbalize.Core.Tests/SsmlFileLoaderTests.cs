@@ -93,5 +93,18 @@ namespace Verbalize.Core.Tests
             //  Try to load a file that does not exist, and check the error says so.
             Assert.Throws<FileNotFoundException>(() => SsmlFileLoader.Load(Path.Combine(folder, "missing.txt"), WrapText));
         }
+
+        /// <summary> A file with a document type definition is not read as SSML, only as plain text, so its definitions do nothing. </summary>
+        [Fact]
+        public void Load_TreatsAFileWithADocumentTypeDefinitionAsText()
+        {
+            //  Write a file whose definition would expand an entity.
+            string contents = "<!DOCTYPE speak [<!ENTITY lol \"lol\">]><speak>&lol;</speak>";
+            XmlDocument document = SsmlFileLoader.Load(WriteFile("crafted.xml", contents), WrapText);
+
+            //  Check its raw text was wrapped, with nothing expanded.
+            Assert.Equal("wrapped", document.DocumentElement!.Name);
+            Assert.Equal(contents, document.DocumentElement.InnerText);
+        }
     }
 }
