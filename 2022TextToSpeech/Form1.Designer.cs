@@ -293,7 +293,7 @@
             button8.Name = "button8";
             button8.Size = new Size(71, 122);
             button8.TabIndex = 20;
-            button8.Text = "Download Voices list";
+            button8.Text = "&Get voices";
             button8.UseVisualStyleBackColor = true;
             // 
             // button9
@@ -304,7 +304,7 @@
             button9.Name = "button9";
             button9.Size = new Size(71, 122);
             button9.TabIndex = 21;
-            button9.Text = "Populate the combo boxes";
+            button9.Text = "&Refresh voices";
             button9.UseVisualStyleBackColor = true;
             // 
             // label6
@@ -319,6 +319,7 @@
             label6.Size = new Size(138, 49);
             label6.TabIndex = 22;
             label6.Text = "Locale";
+            label6.Visible = false;
             // 
             // label7
             // 
@@ -369,7 +370,7 @@
             button2.Name = "button2";
             button2.Size = new Size(433, 36);
             button2.TabIndex = 28;
-            button2.Text = "&Update this file";
+            button2.Text = "&Update file";
             button2.UseVisualStyleBackColor = true;
             // 
             // button12
@@ -503,7 +504,7 @@
             label9.Name = "label9";
             label9.Size = new Size(91, 39);
             label9.TabIndex = 44;
-            label9.Text = "Soundfile type :";
+            label9.Text = "Save sound as";
             label9.TextAlign = ContentAlignment.BottomCenter;
             // 
             // tableLayoutPanel1
@@ -545,7 +546,7 @@
             label14.Name = "label14";
             label14.Size = new Size(101, 1);
             label14.TabIndex = 47;
-            label14.Text = "Export spoken text";
+            label14.Text = "Save your text";
             label14.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // tableLayoutPanel2
@@ -578,7 +579,7 @@
             button6.Name = "button6";
             button6.Size = new Size(95, 30);
             button6.TabIndex = 51;
-            button6.Text = "Export Sound";
+            button6.Text = "Save &sound";
             button6.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel16
@@ -610,7 +611,7 @@
             label16.Padding = new Padding(3, 4, 3, 4);
             label16.Size = new Size(99, 25);
             label16.TabIndex = 0;
-            label16.Text = "Textfile type :";
+            label16.Text = "Save text as";
             // 
             // button7
             // 
@@ -623,7 +624,7 @@
             button7.Name = "button7";
             button7.Size = new Size(95, 25);
             button7.TabIndex = 24;
-            button7.Text = "Export Text";
+            button7.Text = "Save &text";
             button7.UseVisualStyleBackColor = false;
             // 
             // comboBox7
@@ -647,7 +648,7 @@
             button4.Name = "button4";
             button4.Size = new Size(101, 67);
             button4.TabIndex = 36;
-            button4.Text = "Export audio from a local file";
+            button4.Text = "Turn a &file into sound…";
             button4.UseVisualStyleBackColor = true;
             // 
             // panel5
@@ -929,14 +930,14 @@
             // 
             loadToolStripMenuItem.Name = "loadToolStripMenuItem";
             loadToolStripMenuItem.Size = new Size(136, 28);
-            loadToolStripMenuItem.Text = "Load";
+            loadToolStripMenuItem.Text = "Load text";
             loadToolStripMenuItem.Click += LoadToolStripMenuItem_Click;
             // 
             // updateToolStripMenuItem
             // 
             updateToolStripMenuItem.Name = "updateToolStripMenuItem";
             updateToolStripMenuItem.Size = new Size(136, 28);
-            updateToolStripMenuItem.Text = "Update";
+            updateToolStripMenuItem.Text = "Update file";
             updateToolStripMenuItem.Click += UpdateToolStripMenuItem_Click;
             // 
             // deleteToolStripMenuItem
@@ -950,13 +951,13 @@
             exportToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { soundToolStripMenuItem, textToolStripMenuItem, batchAudioToolStripMenuItem });
             exportToolStripMenuItem.Name = "exportToolStripMenuItem";
             exportToolStripMenuItem.Size = new Size(72, 31);
-            exportToolStripMenuItem.Text = "Export";
+            exportToolStripMenuItem.Text = "Save as";
             // 
             // soundToolStripMenuItem
             // 
             soundToolStripMenuItem.Name = "soundToolStripMenuItem";
             soundToolStripMenuItem.Size = new Size(170, 28);
-            soundToolStripMenuItem.Text = "Narration";
+            soundToolStripMenuItem.Text = "Sound";
             soundToolStripMenuItem.Click += ExportSoundToolStripMenuItem_Click;
             // 
             // textToolStripMenuItem
@@ -970,7 +971,7 @@
             // 
             batchAudioToolStripMenuItem.Name = "batchAudioToolStripMenuItem";
             batchAudioToolStripMenuItem.Size = new Size(170, 28);
-            batchAudioToolStripMenuItem.Text = "Batch audio";
+            batchAudioToolStripMenuItem.Text = "Turn a file into sound…";
             batchAudioToolStripMenuItem.Click += ExportBatchAudioToolStripMenuItem_Click;
             // 
             // viewToolStripMenuItem
@@ -1019,14 +1020,14 @@
             // 
             downloadVoicesListToolStripMenuItem.Name = "downloadVoicesListToolStripMenuItem";
             downloadVoicesListToolStripMenuItem.Size = new Size(388, 28);
-            downloadVoicesListToolStripMenuItem.Text = "Download Voices list";
+            downloadVoicesListToolStripMenuItem.Text = "Get voices";
             downloadVoicesListToolStripMenuItem.Click += DownloadVoicesListToolStripMenuItem_Click;
             // 
             // populateTheComboBoxesToolStripMenuItem
             // 
             populateTheComboBoxesToolStripMenuItem.Name = "populateTheComboBoxesToolStripMenuItem";
             populateTheComboBoxesToolStripMenuItem.Size = new Size(388, 28);
-            populateTheComboBoxesToolStripMenuItem.Text = "Populate Voices and Styles combo boxes";
+            populateTheComboBoxesToolStripMenuItem.Text = "Refresh voices";
             populateTheComboBoxesToolStripMenuItem.Click += PopulateVoicesAndStylesComboBoxesToolStripMenuItem_Click;
             // 
             // presetLanguageToolStripMenuItem

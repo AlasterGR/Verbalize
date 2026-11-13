@@ -64,9 +64,10 @@ The window has two spaces for messages: the bar above the text box, and the "Sys
 | Clear | P3 | Wipes the text with no undo or warning | Make it undoable (Ctrl+Z), or offer "Undo" in the status bar |
 | Load text | P3 | Replaces unsaved text without warning | Warn, or offer undo |
 | Mute + Speak | P2, P6 | Two buttons for one job; "Mute" actually stops | Merge (decided) |
-| "Populate the combo boxes" | P7 | Developer wording; the lists already fill themselves | Remove, or rename to "Refresh voices" |
-| "Download Voices list" | P7 | Breaks mid-word ("Downloa d") | Shorter label, or move to Options |
-| Locale code ("af-ZA") | P7 | Code shown to users | Remove, or show as a tooltip |
+| "Populate the combo boxes" | P7 | Developer wording; the lists already fill themselves | Done: renamed to "Refresh voices" (button and Options menu) |
+| "Download Voices list" | P7 | Breaks mid-word ("Downloa d") | Done: renamed to "Get voices" (button and Options menu) |
+| Locale code ("af-ZA") | P7 | Code shown to users | Done: hidden; the code is the language list's tooltip |
+| "Export Sound", "Export Text", "Export audio from a local file", "Soundfile type :", "Textfile type :" | P6, P7 | "Export" and "Save" mixed; file-system wording | Done: one verb, "Save sound", "Save text", "Turn a file into sound…", "Save sound as", "Save text as"; the Export menu is "Save as" |
 | Language list | P2 | Starts at Afrikaans | Start at the user's language (decided) |
 | Rate/Pitch | P2, P6 | A list and a slider for the same setting | One control each, with "Reset" |
 | Panel colours | P6 | Green, blue and peach panels with no meaning | One calm palette and one accent for the main action |
@@ -77,7 +78,7 @@ The window has two spaces for messages: the bar above the text box, and the "Sys
 1. ~~Message placement (P4).~~ Done. Still to do: show the hovered control's hint on the left of the status bar, including for disabled buttons.
 2. ~~Merge Mute and Speak into Speak/Stop, with Ctrl+Enter to speak and Esc to stop (P2).~~ Done.
 3. ~~Undo for Clear and for Load over existing text (P3).~~ Done. Known debt (grade C): Undo after Load brings back the text and file name, but not voice settings the loaded SSML file changed.
-4. Plain labels throughout, one word per action (P6, P7).
+4. ~~Plain labels throughout, one word per action (P6, P7).~~ Done. Hints in `ControlHints` match the new names.
 5. Language list starts at the user's language; remember the last voice and settings (P2, P5).
 6. Finish the custom title bar (P5, P6).
 7. Progressive disclosure: put Rate, Pitch and Volume under a collapsible "Fine-tune" section, one control each (P1, P2).

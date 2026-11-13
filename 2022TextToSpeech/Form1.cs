@@ -429,7 +429,7 @@
         {
             CreateNarrationSoundFile();
         }
-        /// <summary> When the Populate button is clicked, fills the lists from the downloaded voice list. </summary>
+        /// <summary> When the Refresh voices button is clicked, fills the lists from the downloaded voice list. </summary>
         private async void Button_PopulateVoicesAndStylesComboBoxes_Click(object sender, EventArgs e)
         {
             //  Fill the lists, downloading the voice list first if needed.
@@ -741,10 +741,11 @@
             string selectedLocaleName = comboBox_Languages?.SelectedItem?.ToString() ?? string.Empty;
             VoicesInLocale voicesInLocale = VoiceCatalog.GetVoicesInLocale(VoicesXML, selectedLocaleName);
 
-            //  Show the language's code and use it as the speech language.
+            //  Keep the language's code in the hidden label and the list's hint, and use it as the speech language.
             if (voicesInLocale.Locale != null)
             {
                 this.label6.Text = voicesInLocale.Locale;
+                if (comboBox_Languages != null) { statusHints.SetToolTip(comboBox_Languages, ControlHints.LanguageCode(voicesInLocale.Locale)); }
                 Handler_AudioSynthesis.SetSpeechSynthesisLanguage(voicesInLocale.Locale);
             }
 
@@ -1119,7 +1120,7 @@
         {
 
         }
-        /// <summary> When "Populate" is chosen in the menu, fills the lists from the downloaded voice list. </summary>
+        /// <summary> When "Refresh voices" is chosen in the menu, fills the lists from the downloaded voice list. </summary>
         private async void PopulateVoicesAndStylesComboBoxesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //  Fill the lists, downloading the voice list first if needed.
