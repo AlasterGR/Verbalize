@@ -35,4 +35,4 @@ These apply to all code written or changed in this repo, tests included. Generat
 
 - UI changes follow `docs/ui-plan.md` (Joe Natoli's principles); work through its steps in order. Show messages to the user in the message bar (`Form1.ShowUserMessage` with `Verbalize.Core.UserMessages`), never in pop-up windows.
 - `Class_SSML_Builder.cs` is unfinished work and is excluded from the build in the `.csproj`.
-- The Azure key and region are read from the `VERBALIZE_SPEECH_KEY` / `VERBALIZE_SPEECH_REGION` environment variables or `%APPDATA%\Verbalize\settings.json` (see `SpeechCredentialsResolver` and the README). Never put keys in the code. The keys that were once committed are still in git history and are due to be rotated.
+- The Azure key and region are read from the `VERBALIZE_SPEECH_KEY` / `VERBALIZE_SPEECH_REGION` environment variables or `%APPDATA%\Verbalize\settings.json` (see `SpeechCredentialsResolver` and the README). Never put keys in the code. The keys that were once committed are still in git history, but their Azure resource was deleted and purged on 2026-11-13, so they no longer work.
