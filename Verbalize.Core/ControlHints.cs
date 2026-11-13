@@ -23,6 +23,16 @@ namespace Verbalize.Core
         public const string SaveSoundFromFile = "Choose a text or SSML file and save its speech as a sound file next to it.";
         /// <summary> Hint for the arrow that shows or hides the voice settings panel. </summary>
         public const string ToggleSettingsPanel = "Show or hide the voice settings.";
+        /// <summary> Hint for the Help button in the title bar. </summary>
+        public const string Help = "Show the keyboard shortcuts and how to set up the Speech key.";
+        /// <summary> Hint for the Minimise button in the title bar. </summary>
+        public const string Minimize = "Minimize";
+        /// <summary> Hint for the Maximise button while the window is not maximised. </summary>
+        public const string Maximize = "Maximize";
+        /// <summary> Hint for the Maximise button while the window is maximised. </summary>
+        public const string Restore = "Restore down";
+        /// <summary> Hint for the Close button in the title bar. </summary>
+        public const string Close = "Close";
         /// <summary> Hint for controls that are not built yet. </summary>
         public const string ComingLater = "Coming later.";
 

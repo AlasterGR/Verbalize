@@ -128,6 +128,9 @@
 
             //  Give the buttons their hints.
             AddButtonHints();
+
+            //  Make the top row work as the window's title bar.
+            SetUpTitleBar();
         }
 
         /// <summary> Shows a message where it belongs: warnings and errors in the bar above the text box, outcomes such as "Saved…" on the right of the status bar. </summary>
@@ -198,7 +201,6 @@
             statusHints.SetToolTip(button_CreateAudioFromTextFile, ControlHints.SaveSoundFromFile);
             statusHints.SetToolTip(button_HideGuiMarkup, ControlHints.ToggleSettingsPanel);
             statusHints.SetToolTip(button_UpdateTextFile, ControlHints.ComingLater);
-            statusHints.SetToolTip(button_ShowHelp, ControlHints.ComingLater);
         }
 
         /// <summary> Tells the user how to set up their Azure key when none is set or the settings file cannot be read. </summary>
@@ -518,20 +520,11 @@
 
         #region Button functions.
 
-        /// <summary> This is the function which changes the form fullscreen -- normalscreen </summary>
+        /// <summary> Maximises the window, or restores it to the size it had before if it is already maximised. </summary>
         public void MaximizeWindow()
         {
-            if (WindowState == FormWindowState.Maximized)
-            {
-                WindowState = FormWindowState.Normal;
-                Size = new Size(1278, 718);  //This is the minimum size as set at the editor. Will change this to remember the size while in normal screen and revert to that
-                fullScreenToolStripMenuItem.Text = "Full Screen";
-            }
-            else if (WindowState == FormWindowState.Normal)
-            {
-                WindowState = FormWindowState.Maximized;
-                fullScreenToolStripMenuItem.Text = "Normal Screen";
-            }
+            //  Switch between filling the screen and the earlier size; the button and the View menu follow when the size changes.
+            WindowState = WindowState == FormWindowState.Maximized ? FormWindowState.Normal : FormWindowState.Maximized;
         }
         public void MinimizeWindow()
         {
@@ -1184,9 +1177,11 @@
         #endregion
 
         #region Window buttons - Help, Minimize, Maximize, Quit
+        /// <summary> When Help is clicked, shows the keyboard shortcuts and how to set up the Speech key in the message bar. </summary>
         private void Button_ShowHelp_Click(object sender, EventArgs e)
         {
-
+            //  Show the help until the user closes it.
+            message_Bar.ShowMessage(UserMessages.Help());
         }
         private void Button_MinimizeWindow_Click(object sender, EventArgs e)
         {

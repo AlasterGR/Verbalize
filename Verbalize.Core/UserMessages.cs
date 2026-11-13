@@ -9,6 +9,19 @@ namespace Verbalize.Core
         public const string SpeechSetupTopic = "speech-setup";
         /// <summary> The topic of the message that offers to undo a Clear or a Load, so it can be removed once the user edits the text. </summary>
         public const string UndoTopic = "undo";
+        /// <summary> The topic of the help message, so it stays until the user closes it. </summary>
+        public const string HelpTopic = "help";
+
+        /// <summary> Gives short help: the keyboard shortcuts and where the Speech key goes. </summary>
+        /// <returns>The information message.</returns>
+        public static UserMessage Help()
+        {
+            //  List the shortcuts and point to the key setup.
+            return new UserMessage(MessageSeverity.Information,
+                "Ctrl+Enter speaks the text, or just the selected part, and Esc stops. Alt and an underlined letter presses that button. " +
+                "The Speech key goes in VERBALIZE_SPEECH_KEY and VERBALIZE_SPEECH_REGION, or in %APPDATA%\\Verbalize\\settings.json.",
+                HelpTopic);
+        }
 
         /// <summary> Says the text was cleared, alongside an Undo button. </summary>
         /// <returns>The information message.</returns>

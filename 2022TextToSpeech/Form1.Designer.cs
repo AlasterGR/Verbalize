@@ -1145,7 +1145,7 @@
             ClientSize = new Size(1262, 634);
             Controls.Add(tableLayoutPanel10);
             Font = new Font("Calibri", 12F, FontStyle.Regular, GraphicsUnit.Point);
-            FormBorderStyle = FormBorderStyle.FixedSingle;
+            FormBorderStyle = FormBorderStyle.Sizable;
             HelpButton = true;
             MainMenuStrip = menuStrip1;
             Margin = new Padding(11, 13, 11, 13);

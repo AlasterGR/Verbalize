@@ -71,6 +71,7 @@ The window has two spaces for messages: the bar above the text box, and the "Sys
 | Language list | P2 | Starts at Afrikaans | Done: starts at the language used last time, else the Windows regional format's language (same region first, then any region) |
 | Rate/Pitch | P2, P6 | A list and a slider for the same setting | One control each, with "Reset" |
 | Panel colours | P6 | Green, blue and peach panels with no meaning | One calm palette and one accent for the main action |
+| Title bar | P5, P6 | Two title bars (the Windows one and the app's own); fixed size; "?" did nothing; "-", "+", "X" drawn as letters | Done: Windows caption removed, the app's row moves, resizes, snaps and maximises the window; Windows symbols and names; "?" shows help in the message bar |
 | Unfinished menu items | P1, P8 | Look usable but do nothing | Disabled with "Coming later" (decided) |
 
 ## Steps
@@ -80,7 +81,7 @@ The window has two spaces for messages: the bar above the text box, and the "Sys
 3. ~~Undo for Clear and for Load over existing text (P3).~~ Done. Known debt (grade C): Undo after Load brings back the text and file name, but not voice settings the loaded SSML file changed.
 4. ~~Plain labels throughout, one word per action (P6, P7).~~ Done. Hints in `ControlHints` match the new names.
 5. ~~Language list starts at the user's language; remember the last voice and settings (P2, P5).~~ Done. Language, voice, style, rate, pitch and volume are kept in `%APPDATA%\Verbalize\preferences.json` when the window closes. "Refresh voices" now keeps the language shown instead of jumping to the first.
-6. Finish the custom title bar (P5, P6).
+6. ~~Finish the custom title bar (P5, P6).~~ Done. The window can now be resized; Restore keeps the size the user chose instead of a fixed one. Known limit: on Windows 10 the top edge has no visible line.
 7. Progressive disclosure: put Rate, Pitch and Volume under a collapsible "Fine-tune" section, one control each (P1, P2).
 8. One calm palette, a clear main action, consistent spacing (P6).
 9. Fill in the unfinished features one by one (P8).
