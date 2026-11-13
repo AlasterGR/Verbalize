@@ -68,7 +68,7 @@ The window has two spaces for messages: the bar above the text box, and the "Sys
 | "Download Voices list" | P7 | Breaks mid-word ("Downloa d") | Done: renamed to "Get voices" (button and Options menu) |
 | Locale code ("af-ZA") | P7 | Code shown to users | Done: hidden; the code is the language list's tooltip |
 | "Export Sound", "Export Text", "Export audio from a local file", "Soundfile type :", "Textfile type :" | P6, P7 | "Export" and "Save" mixed; file-system wording | Done: one verb, "Save sound", "Save text", "Turn a file into sound…", "Save sound as", "Save text as"; the Export menu is "Save as" |
-| Language list | P2 | Starts at Afrikaans | Done: starts at the language used last time, else the Windows display language (same region first, then any region) |
+| Language list | P2 | Starts at Afrikaans | Done: starts at the language used last time, else the Windows regional format's language (same region first, then any region) |
 | Rate/Pitch | P2, P6 | A list and a slider for the same setting | One control each, with "Reset" |
 | Panel colours | P6 | Green, blue and peach panels with no meaning | One calm palette and one accent for the main action |
 | Unfinished menu items | P1, P8 | Look usable but do nothing | Disabled with "Coming later" (decided) |

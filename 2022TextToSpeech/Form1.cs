@@ -706,8 +706,8 @@
                     comboBox_Languages.SelectedIndex = 0;
                 }
 
-                //  Move to the noted language, or else the user's own, so they do not start at the top of the list.
-                string? startLanguage = StartLanguage.Choose(VoiceCatalog.GetLanguages(VoicesXML), languageToKeep, CultureInfo.CurrentUICulture.Name);
+                //  Move to the noted language, or else the language of the user's Windows regional format, so they do not start at the top of the list.
+                string? startLanguage = StartLanguage.Choose(VoiceCatalog.GetLanguages(VoicesXML), languageToKeep, CultureInfo.CurrentCulture.Name);
                 if (startLanguage != null) { comboBox_Languages.SelectedItem = startLanguage; }
             }
             //  Otherwise load the built-in voice list and try again.
