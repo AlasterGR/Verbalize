@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Drawing2D;
+    using System.Globalization;
     using System.IO;
     using System.Net.Http; // for the supported languages of the voice    
     using System.Threading.Tasks;
@@ -29,6 +30,8 @@
         public static int volume = 80;
         /// <summary>  The Voice's style. Defaults to "calm" </summary>
         public static string style = "calm";
+        /// <summary> The voice and settings the user had when they last closed the app. </summary>
+        private static UserPreferences savedPreferences = UserPreferences.None;
         //  Integrate the rest of the speech elements, such as pitch contour, pitch range
         #endregion
         /// <summary>  The Voice Language's selected locale.</summary>
@@ -89,6 +92,17 @@
             Handler_Networking.Initialize();
             Handler_Data.Initialize();
             Handler_File.Initialize();
+
+            //  Remember the voice and settings when the window closes.
+            FormClosing += Form1_FormClosing;
+        }
+
+        /// <summary> When the window closes, remembers the language, voice, style, rate, pitch and volume for next time. </summary>
+        private void Form1_FormClosing(object? sender, FormClosingEventArgs e)
+        {
+            //  Write the current choices to the preferences file, carrying on quietly if it cannot be written.
+            UserPreferences current = new(comboBox_Languages?.SelectedItem?.ToString(), comboBox_Voices?.SelectedItem?.ToString(), style, rate, pitch, volume);
+            UserPreferencesStore.Save(Handler_Data.PreferencesFilePath, current);
         }
         /// <summary> When the window first opens, sets up its controls and fills the language, voice and style lists. </summary>
         private void Form1_Load(object sender, EventArgs e)
@@ -97,8 +111,12 @@
             Assign_AbstractEntities_InitialValues();
             this.Icon = icon_AppLogo; // ActiveForm has not yet been instanced with focus (https://stackoverflow.com/questions/23826059/why-this-works-but-form-activeform-throws-nullrefernceexception).
 
-            //  Fill the lists from the downloaded voice list, or the built-in one if there is none.
+            //  Fill the lists from the downloaded voice list, or the built-in one if there is none, starting at the language the user had last time or their own.
+            savedPreferences = UserPreferencesStore.Load(Handler_Data.PreferencesFilePath);
             LoadVoiceListAndRefresh();
+
+            //  Bring back the voice, style, rate, pitch and volume the user had last time.
+            RestoreVoiceSettings(savedPreferences);
 
             //  Explain how to set up the Azure key if it is missing or its settings file is damaged.
             ShowSpeechSetupMessageIfNeeded();
@@ -677,6 +695,9 @@
             //  Use the loaded voice list if there is one.
             if (VoicesXML.DocumentElement != null)
             {
+                //  Note the language shown now, or else the one the user had last time, so the list can come back to it.
+                string? languageToKeep = comboBox_Languages.SelectedItem?.ToString() ?? savedPreferences.LanguageName;
+
                 //  Replace the Languages list with each language once, selecting the first.
                 comboBox_Languages.Items.Clear();
                 foreach (string? localeName in VoiceCatalog.GetLocaleNames(VoicesXML))
@@ -684,6 +705,10 @@
                     comboBox_Languages.Items.Add(localeName!);
                     comboBox_Languages.SelectedIndex = 0;
                 }
+
+                //  Move to the noted language, or else the user's own, so they do not start at the top of the list.
+                string? startLanguage = StartLanguage.Choose(VoiceCatalog.GetLanguages(VoicesXML), languageToKeep, CultureInfo.CurrentUICulture.Name);
+                if (startLanguage != null) { comboBox_Languages.SelectedItem = startLanguage; }
             }
             //  Otherwise load the built-in voice list and try again.
             else { VoicesXML.LoadXml(VoicesBasic); VoicesLoad(); }
@@ -945,6 +970,13 @@
             comboBox_Voices.SelectedItem = DisplayName;
             comboBox_VoiceStyles.SelectedItem = styleSSML;
 
+            //  Show the rate, pitch and volume in their controls.
+            ShowRatePitchAndVolume();
+        }
+
+        /// <summary> Shows the current rate, pitch and volume in their lists, sliders and labels, turning anything unreadable into "default". </summary>
+        private static void ShowRatePitchAndVolume()
+        {
             //  Show the pitch as a named level, as a slider position, or as "default" if it is neither.
             if (comboBox_Pitch.Items.Contains(pitch))
             {
@@ -985,6 +1017,25 @@
 
             //  Move the volume slider to the volume.
             vScrollBar_volume.Value = volume;
+        }
+
+        /// <summary> Brings back the voice, style, rate, pitch and volume the user had last time, skipping any that the lists no longer offer. </summary>
+        /// <param name="preferences">The remembered settings.</param>
+        private static void RestoreVoiceSettings(UserPreferences preferences)
+        {
+            //  Select the remembered voice if the chosen language still has it.
+            if (preferences.VoiceName != null && comboBox_Voices.Items.Contains(preferences.VoiceName)) { comboBox_Voices.SelectedItem = preferences.VoiceName; }
+
+            //  Select the remembered style if the voice offers it.
+            if (preferences.Style != null && comboBox_VoiceStyles.FindStringExact(preferences.Style) != -1) { comboBox_VoiceStyles.SelectedItem = preferences.Style; }
+
+            //  Take the remembered rate, pitch and volume, keeping the volume within the slider's range.
+            if (preferences.Rate != null) { rate = preferences.Rate; }
+            if (preferences.Pitch != null) { pitch = preferences.Pitch; }
+            if (preferences.Volume is int rememberedVolume) { volume = Math.Clamp(rememberedVolume, vScrollBar_volume.Minimum, vScrollBar_volume.Maximum); }
+
+            //  Show them in their controls.
+            ShowRatePitchAndVolume();
         }
         /// <summary> Check if we have loaded a file and have the file name and update button accordingly visible.</summary>
         private void Label_FileName_TextChanged(object sender, EventArgs e)

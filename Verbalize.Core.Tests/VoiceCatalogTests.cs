@@ -37,6 +37,17 @@ namespace Verbalize.Core.Tests
             Assert.Equal(new[] { "English (United States)", "Greek (Greece)" }, localeNames);
         }
 
+        /// <summary> Each language appears once with its code, in the same order as the language names. </summary>
+        [Fact]
+        public void GetLanguages_ListsEachLanguageOnceWithItsCode()
+        {
+            //  Look up the languages in the sample list.
+            IReadOnlyList<VoiceLanguage> languages = VoiceCatalog.GetLanguages(LoadSample());
+
+            //  Check each language has its code, in list order.
+            Assert.Equal(new[] { new VoiceLanguage("en-US", "English (United States)"), new VoiceLanguage("el-GR", "Greek (Greece)") }, languages);
+        }
+
         /// <summary> An empty, never-loaded voice list gives no languages rather than an error. </summary>
         [Fact]
         public void GetLocaleNames_ReturnsNothingForAnEmptyDocument()

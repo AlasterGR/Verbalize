@@ -43,6 +43,25 @@ namespace Verbalize.Core
             return localeNames;
         }
 
+        /// <summary> Lists each language once with its code, in the same order as <see cref="GetLocaleNames"/>. </summary>
+        /// <param name="voices">The voice list.</param>
+        /// <returns>The languages, for example "el-GR" with "Greek (Greece)", or an empty list if the voice list is empty.</returns>
+        public static IReadOnlyList<VoiceLanguage> GetLanguages(XmlDocument voices)
+        {
+            //  Go through every voice, keeping each language code and its name the first time the code appears.
+            List<VoiceLanguage> languages = new();
+            HashSet<string> seenLocales = new();
+            foreach (XmlNode node in SelectVoices(voices))
+            {
+                string locale = node.SelectSingleNode("Locale")?.InnerText ?? string.Empty;
+                if (seenLocales.Add(locale))
+                {
+                    languages.Add(new VoiceLanguage(locale, node.SelectSingleNode("LocaleName")?.InnerText ?? string.Empty));
+                }
+            }
+            return languages;
+        }
+
         /// <summary> Lists the voices that speak a given language. </summary>
         /// <param name="voices">The voice list.</param>
         /// <param name="localeName">The language name, for example "English (United States)".</param>

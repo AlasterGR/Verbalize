@@ -31,6 +31,9 @@ namespace _Verbalize
         /// <summary> Where the user's settings file, which can hold the Azure key and region, is kept. </summary>
         public static string SettingsFilePath => SpeechCredentialsResolver.DefaultSettingsFilePath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
 
+        /// <summary> Where the voice and settings the user had last time are remembered. </summary>
+        public static string PreferencesFilePath => UserPreferencesStore.DefaultFilePath(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+
         /// <summary> Finds the Azure key and region from the environment variables or the user's settings file, outside the app's code. </summary>
         /// <returns>The key and region, and any problem found with the settings file.</returns>
         private static SpeechCredentials LoadSpeechCredentials()
