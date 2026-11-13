@@ -63,6 +63,12 @@
         public static Button button_NarrateMainTextBox, button_SaveTextToFile, button_MuteSpokenNarration, button_PopulateVoicesAndStylesComboBoxes, button_LoadText, button_ClearTextBoxAndLoadedFile, button_HideGuiMarkup, button_CreateAudioFromTextFile, button_CreateNarrationSoundFile, button_UpdateTextFile, button_ShowHelp, button_MinimizeWindow, button_MaximizeWindow, button_QuitApplication, button_RetrieveAndLoadVoices;
         public static Image image_AttrColumnButton_Expand, image_AttrColumnButton_Recede;
         public static Icon icon_AppLogo;
+        /// <summary> The strip above the text box that shows the app's messages. </summary>
+        public static MessageBar message_Bar;
+        /// <summary> True while the computer is connected to the internet, as last checked. </summary>
+        private static bool isOnline = true;
+        /// <summary> Checks the internet connection every few seconds, so buttons that need it follow the connection. </summary>
+        private readonly System.Windows.Forms.Timer connectionCheckTimer = new() { Interval = 3000 };
 
         // set up dependency injection. break it apart from initialization
         /// <summary>  The public class of the app's main Form, that is window. </summary>
@@ -91,28 +97,83 @@
             LoadVoiceListAndRefresh();
 
             //  Explain how to set up the Azure key if it is missing or its settings file is damaged.
-            WarnIfSpeechKeyMissing();
+            ShowSpeechSetupMessageIfNeeded();
+
+            //  Watch the internet connection, and offer only the buttons that can work right now.
+            StartWatchingConnection();
+            UpdateActionAvailability();
+        }
+
+        /// <summary> Shows a message in the message bar above the text box, replacing any message already there. </summary>
+        /// <param name="message">The message to show.</param>
+        public static void ShowUserMessage(UserMessage message)
+        {
+            //  Hand the message to the bar.
+            message_Bar.ShowMessage(message);
         }
 
         /// <summary> Tells the user how to set up their Azure key when none is set or the settings file cannot be read. </summary>
-        private static void WarnIfSpeechKeyMissing()
+        private static void ShowSpeechSetupMessageIfNeeded()
         {
-            //  Say nothing when a key is set and the settings file is fine.
-            SpeechCredentials credentials = Handler_Data.GetSpeechCredentials();
-            if (credentials.HasKey && credentials.Problem == null) { return; }
+            //  Show the setup message only if there is something to fix.
+            UserMessage? setupMessage = UserMessages.SpeechSetup(Handler_Data.GetSpeechCredentials(), Handler_Data.SettingsFilePath);
+            if (setupMessage != null) { ShowUserMessage(setupMessage); }
+        }
 
-            //  Otherwise explain what will not work and the two ways to set the key.
-            string message = credentials.HasKey ? string.Empty
-                : "No Azure Speech key is set, so speaking, exporting sound and downloading voices will not work yet." + Environment.NewLine + Environment.NewLine
-                + "Set the " + SpeechCredentialsResolver.KeyVariable + " environment variable (and optionally " + SpeechCredentialsResolver.RegionVariable + "), or create the file" + Environment.NewLine
-                + Handler_Data.SettingsFilePath + Environment.NewLine
-                + "containing:" + Environment.NewLine
-                + "{ \"" + SpeechCredentialsResolver.KeySetting + "\": \"your key\", \"" + SpeechCredentialsResolver.RegionSetting + "\": \"" + credentials.Region + "\" }";
-            if (credentials.Problem != null)
+        /// <summary> Checks the internet connection now and then every few seconds, telling the user while they are offline. </summary>
+        private void StartWatchingConnection()
+        {
+            //  Check the connection now, and say so if there is none.
+            isOnline = Handler_Connectivity.IsConnectedToInternet();
+            if (!isOnline) { ShowUserMessage(UserMessages.Offline()); }
+
+            //  Keep checking every few seconds.
+            connectionCheckTimer.Tick += ConnectionCheckTimer_Tick;
+            connectionCheckTimer.Start();
+        }
+
+        /// <summary> Every few seconds, notices when the computer goes offline or comes back, updating the message and the buttons. </summary>
+        private void ConnectionCheckTimer_Tick(object? sender, EventArgs e)
+        {
+            //  Do nothing unless the connection has changed.
+            bool online = Handler_Connectivity.IsConnectedToInternet();
+            if (online == isOnline) { return; }
+            isOnline = online;
+
+            //  When back online, remove the offline message and bring back the key setup message if it still applies.
+            if (online)
             {
-                message += (message.Length > 0 ? Environment.NewLine + Environment.NewLine : string.Empty) + credentials.Problem;
+                message_Bar.ClearTopic(UserMessages.OfflineTopic);
+                if (!message_Bar.Visible) { ShowSpeechSetupMessageIfNeeded(); }
             }
-            MessageBox.Show(message, applicationBrandName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //  When offline, tell the user what is paused.
+            else { ShowUserMessage(UserMessages.Offline()); }
+
+            //  Turn the buttons that need the internet on or off.
+            UpdateActionAvailability();
+        }
+
+        /// <summary> When the text changes, offers Speak and Export only if there is text to use. </summary>
+        private void TextBox_Main_TextChanged(object? sender, EventArgs e)
+        {
+            //  Turn the buttons that need text on or off.
+            UpdateActionAvailability();
+        }
+
+        /// <summary> Turns each button and menu item on or off, depending on whether there is text, an internet connection and an Azure key. </summary>
+        private void UpdateActionAvailability()
+        {
+            //  Work out what the app can do right now.
+            AppConditions conditions = new(ActionAvailability.HasSpeakableText(textBox_Main_Single.Text), isOnline, Handler_Data.GetSpeechCredentials().HasKey);
+            bool canSpeakText = ActionAvailability.CanSpeakText(conditions);
+            bool canReachAzure = ActionAvailability.CanReachAzure(conditions);
+
+            //  Speaking and exporting the text box need text as well as Azure.
+            button_NarrateMainTextBox.Enabled = button_CreateNarrationSoundFile.Enabled = soundToolStripMenuItem.Enabled = canSpeakText;
+
+            //  Exporting a file and downloading voices need only Azure.
+            button_CreateAudioFromTextFile.Enabled = batchAudioToolStripMenuItem.Enabled = canReachAzure;
+            button_RetrieveAndLoadVoices.Enabled = downloadVoicesListToolStripMenuItem.Enabled = canReachAzure;
         }
 
         public void Assign_AbstractEntities()
@@ -125,6 +186,7 @@
             label_pitch = label2;
             label_system_messages = label15;
             label_user_messages = label17;
+            message_Bar = messageBar1;
 
             comboBox_Languages = comboBox1;
             comboBox_Voices = comboBox2;
@@ -386,11 +448,12 @@
                 string listVoicesLocationURL = "https://" + serverLocation + ".tts.speech.microsoft.com/cognitiveservices/voices/list";
                 HttpResponseMessage response = await client.GetAsync(listVoicesLocationURL);
 
-                //  Save the list if Azure sent it.
+                //  Save the list if Azure sent it, and confirm it to the user.
                 if (response.IsSuccessStatusCode)
                 {
                     string responseData = await response.Content.ReadAsStringAsync();
                     Handler_Data.Convert_JSONtoXML_AndSaveToDisk(responseData);
+                    ShowUserMessage(UserMessages.VoiceListDownloaded());
                     return true;
                 }
 
@@ -410,9 +473,8 @@
         /// <param name="reason">Why the download failed.</param>
         private static void ShowVoiceListDownloadError(string reason)
         {
-            //  Show the reason in an error message.
-            MessageBox.Show("The voice list could not be downloaded, so the app will keep using the voices it already has." + Environment.NewLine + Environment.NewLine + reason,
-                applicationBrandName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //  Show the reason in the message bar.
+            ShowUserMessage(UserMessages.VoiceListDownloadFailed(reason));
         }
 
         /// <summary> Loads the downloaded voice list, or the built-in one if there is none, and refills the language, voice and style lists from it. </summary>

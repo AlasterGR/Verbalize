@@ -237,8 +237,7 @@ namespace _Verbalize
             if (failure == null) { return; }
 
             //  Otherwise tell the user why the text could not be spoken.
-            MessageBox.Show("The text could not be spoken." + Environment.NewLine + Environment.NewLine + failure,
-                Form1.applicationBrandName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Form1.ShowUserMessage(UserMessages.SpeakFailed(failure));
         }
     }
 }

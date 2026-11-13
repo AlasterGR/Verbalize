@@ -33,6 +33,7 @@
             bttn3_LoadText = new Button();
             label1 = new Label();
             textBox1 = new TextBox();
+            messageBar1 = new MessageBar();
             vScrollBar1 = new VScrollBar();
             vScrollBar2 = new VScrollBar();
             label2 = new Label();
@@ -174,10 +175,22 @@
             textBox1.Margin = new Padding(0);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
+            textBox1.PlaceholderText = "Type or load the text to speak.";
             textBox1.ScrollBars = ScrollBars.Both;
             textBox1.Size = new Size(517, 473);
             textBox1.TabIndex = 8;
-            // 
+            textBox1.TextChanged += TextBox_Main_TextChanged;
+            //
+            // messageBar1
+            //
+            messageBar1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            messageBar1.Location = new Point(5, 55);
+            messageBar1.Margin = new Padding(0, 0, 0, 6);
+            messageBar1.Name = "messageBar1";
+            messageBar1.Size = new Size(517, 34);
+            messageBar1.TabIndex = 7;
+            messageBar1.Visible = false;
+            //
             // vScrollBar1
             // 
             vScrollBar1.Dock = DockStyle.Left;
@@ -745,14 +758,16 @@
             tableLayoutPanel4.ColumnCount = 1;
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel4.Controls.Add(label1, 0, 0);
-            tableLayoutPanel4.Controls.Add(textBox1, 0, 1);
+            tableLayoutPanel4.Controls.Add(messageBar1, 0, 1);
+            tableLayoutPanel4.Controls.Add(textBox1, 0, 2);
             tableLayoutPanel4.Dock = DockStyle.Fill;
             tableLayoutPanel4.Location = new Point(106, 4);
             tableLayoutPanel4.Margin = new Padding(5, 4, 5, 4);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.Padding = new Padding(5, 4, 5, 4);
-            tableLayoutPanel4.RowCount = 2;
+            tableLayoutPanel4.RowCount = 3;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 51F));
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel4.Size = new Size(527, 532);
             tableLayoutPanel4.TabIndex = 48;
@@ -1225,6 +1240,7 @@
         private Button bttn3_LoadText;
         private Label label1;
         private TextBox textBox1;
+        private MessageBar messageBar1;
         private VScrollBar vScrollBar1;
         private VScrollBar vScrollBar2;
         private Label label2;

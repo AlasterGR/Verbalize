@@ -94,6 +94,9 @@ namespace _Verbalize
         /// <summary> Lets the user pick an SSML or plain text file, then saves its speech as a sound file next to it. </summary>
         public static void CreateAudioFileFromTextFile()
         {
+            //  Ask the user to choose a sound format first if none is chosen, since nothing would be saved.
+            if (!IsSoundFormatChosen()) { return; }
+
             //  Ask the user to pick an SSML or text file, and stop if they cancel.
             OpenFileDialog openFileDialog1 = new()
             {
@@ -105,16 +108,17 @@ namespace _Verbalize
                 //  Turn the file into speech in the background, telling the user if it fails.
                 string pathFileSelected = openFileDialog1.FileName;
                 string formatOutputSound = Form1.GetOutputFormatFromComboBox(Form1.comboBox_SoundTypes);
-                _ = RunAndReportFailureAsync(() => Handler_AudioSynthesis.SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false));
+                string outputFile = Path.ChangeExtension(pathFileSelected, "." + formatOutputSound);
+                _ = RunAndReportAsync(() => Handler_AudioSynthesis.SynthesizeAudioAsync(pathFileSelected, formatOutputSound, false), outputFile);
             }
         }
 
         /// <summary> Lets the user choose where to save, then saves the main text box's speech as a sound file. </summary>
         public static void CreateAudioFileFromTextBox()
         {
-            //  Go ahead only if a sound format is chosen.
+            //  Go ahead only if a sound format is chosen, otherwise ask the user to choose one.
             string formatOutputSound = Form1.GetOutputFormatFromComboBox(Form1.comboBox_SoundTypes);
-            if (formatOutputSound != null && formatOutputSound != "None")
+            if (IsSoundFormatChosen())
             {
                 //  Ask the user where to save the sound, and stop if they cancel.
                 SaveFileDialog saveFileDialog1 = new() { Filter = "Sound|*." + formatOutputSound, Title = "Save the spoken text as a sound file in your disk." };
@@ -124,25 +128,41 @@ namespace _Verbalize
                     string text = Form1.textBox_Main_Single.Text;
                     XmlDocument SSMLDocument = Handler_Data.CreateSSML(text);
                     string pathFileSelected = saveFileDialog1.FileName;
-                    _ = RunAndReportFailureAsync(() => Handler_AudioSynthesis.SynthesizeAudioAsyncFromText(SSMLDocument, pathFileSelected, formatOutputSound, false));
+                    string outputFile = Path.ChangeExtension(pathFileSelected, "." + formatOutputSound);
+                    _ = RunAndReportAsync(() => Handler_AudioSynthesis.SynthesizeAudioAsyncFromText(SSMLDocument, pathFileSelected, formatOutputSound, false), outputFile);
                 }
             }
         }
 
-        /// <summary> Runs a sound-file task and, if it fails, tells the user why instead of failing silently. </summary>
-        /// <param name="createSoundFile">The task that creates the sound file.</param>
-        /// <returns>A task that finishes once the sound file is created or the user has been told it failed.</returns>
-        private static async Task RunAndReportFailureAsync(Func<Task> createSoundFile)
+        /// <summary> Returns true if a sound format (mp3 or wav) is chosen, and otherwise asks the user to choose one. </summary>
+        /// <returns>True if a sound format is chosen.</returns>
+        private static bool IsSoundFormatChosen()
         {
-            //  Run the task, and show a message with the reason if anything goes wrong.
+            //  A format is chosen unless the list says "None" or nothing.
+            string formatOutputSound = Form1.GetOutputFormatFromComboBox(Form1.comboBox_SoundTypes);
+            bool isChosen = formatOutputSound != "None";
+
+            //  Ask the user to choose one if not.
+            if (!isChosen) { Form1.ShowUserMessage(UserMessages.ChooseSoundFormat()); }
+            return isChosen;
+        }
+
+        /// <summary> Runs a sound-file task, then tells the user where the file was saved or why it could not be created. </summary>
+        /// <param name="createSoundFile">The task that creates the sound file.</param>
+        /// <param name="outputFile">Where the sound file will be saved.</param>
+        /// <returns>A task that finishes once the user has been told how it went.</returns>
+        private static async Task RunAndReportAsync(Func<Task> createSoundFile, string outputFile)
+        {
+            //  Run the task, and say where the file was saved.
             try
             {
                 await createSoundFile();
+                Form1.ShowUserMessage(UserMessages.SoundFileSaved(outputFile));
             }
+            //  Show the reason in the message bar if anything goes wrong.
             catch (Exception exception)
             {
-                MessageBox.Show("The sound file could not be created." + Environment.NewLine + Environment.NewLine + exception.Message,
-                    Form1.applicationBrandName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Form1.ShowUserMessage(UserMessages.SoundFileFailed(exception.Message));
             }
         }
 
