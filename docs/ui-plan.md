@@ -1,21 +1,6 @@
 # UI plan
 
-A plan for reworking Verbalize's window, guided by Joe Natoli's principles (Give Good UX). Work through it in order, one small step per commit, and test with the real app after each step.
-
-## Principles
-
-Joe Natoli's own pages state these principles; the plan applies them:
-
-- **Think first.** Audit what exists (content, labels, navigation, layout) before designing anything new.
-- **Every element either helps the user reach their goal or gets in the way.** Reducing clutter is a series of small changes that clear the path to action.
-- **Progressive disclosure.** Information the user doesn't need yet is noise: keep it, hide it for later, or delete it.
-- **Icons only where they are recognisable.** Choose between an icon, an icon with a label, or a label alone.
-- **Timeless fundamentals over trends.** Hierarchy, alignment, contrast and consistency come from print design.
-- **Practical over dogmatic.** Keep the methods simple and aim for the biggest effect.
-
-His pages don't cover error messages or disabled buttons. For those, the plan follows common usability guidance (for example the U.S. Web Design System's research on disabled states): say *why* something can't be done, and never rely on colour alone.
-
-Sources: [givegoodux.com](https://givegoodux.com/), [books](https://givegoodux.com/books/), [start here](https://givegoodux.com/start-here/), [USWDS disabled-states research](https://github.com/uswds/uswds/wiki/Disabled-States-Research-Findings-2023).
+A plan for reworking Verbalize's window around Joe Natoli's UX principles. It uses the same nine principles as BlackwoodManor (`BlackwoodManor.Wasm/orchestration/NATOLI_PRINCIPLES.md`), adapted to a Windows desktop app. Work through the steps in order, one small step per commit, and check the real app after each one.
 
 ## The user's goal
 
@@ -23,56 +8,74 @@ Sources: [givegoodux.com](https://givegoodux.com/), [books](https://givegoodux.c
 
 Every element on screen is judged against that sentence.
 
+## The nine principles, and how to check them here
+
+Each principle has a check that passes or fails. A UI change is not done while it fails a principle it touches.
+
+| | Principle | Check in Verbalize |
+|---|---|---|
+| P1 | **Progressive disclosure:** show only what is needed now. | In each situation (no text, offline, no key, speaking), every control that cannot work is either hidden or disabled *with a visible reason*. |
+| P2 | **Reduce the cost of use.** | Speaking the text takes one click. The main window at rest can be scanned in about 3 seconds. |
+| P3 | **Forgiveness:** prevent, then warn, then undo. | Every action that discards something (Clear, Load over unsaved text, overwriting a file) can be undone, or is confirmed first. |
+| P4 | **Feedback and trust:** tell the truth about what happened. | Every action shows that it started and how it ended. Cutting the internet mid-action gives a clear message, never silence. |
+| P5 | **Context of use.** | The window works from small laptop screens to 4K, at 100–200% scaling. Closing mid-task doesn't lose the text. |
+| P6 | **Consistency:** one term means one thing. | One word per action ("Save", not a mix of "Export" and "Save"). Buttons, fonts and spacing follow one style. |
+| P7 | **Content is the interface.** | Labels make sense without knowing the code ("Populate the combo boxes" fails). No unexplained codes such as "af-ZA". |
+| P8 | **Authorised affordances.** | Every control maps to something the app can really do right now (see `ActionAvailability`). |
+| P9 | **One source of truth.** | The form holds no rules or message wording. Those live in `Verbalize.Core` (`ActionAvailability`, `UserMessages`), where they are unit tested. |
+
+Grades, as in BlackwoodManor: **A** exemplary, **B** compliant, **C** acceptable debt (listed below), **D** defective, which blocks the step.
+
+Natoli's own pages: [givegoodux.com](https://givegoodux.com/), [books](https://givegoodux.com/books/).
+
 ## Done
 
-- Messages appear in a quiet bar above the text box instead of pop-up windows with a sound. Errors and warnings stay until dismissed; confirmations close by themselves.
-- Speak and Export are disabled while there is no text, while offline, or without a key. The bar or the empty text box's hint says why.
+- Messages appear in a quiet bar instead of pop-up windows with a sound (P4).
+- Speak and Save are disabled while there is no text, while offline, or without a key, and the reason is shown (P1, P8).
+- Message wording and action rules live in `Verbalize.Core` (P9).
 
-## Step 1: Audit (think first)
+## Decided
 
-List every element on the window and in the menus. For each one, note what it is for, whether it works, and whether to keep it, hide it for later, or delete it. Elements spotted so far:
+- **Keep the app's own title bar**, like Visual Studio's, instead of the Windows one. Finish it so it behaves like a real title bar: drag to move, double-click to maximise, Windows snap layouts, resizable edges. "?" opens help.
+- **Fill in the unfinished buttons and menu items gradually** (Update this file, Colour Scheme and others). Until each works, it stays visibly disabled with "Coming later" as its hover text (P1, P8).
+- **Polish all developer wording** (P7).
+- **Merge Mute and Speak** into one button that reads "Speak" and turns into "Stop" while speaking (P2, P6).
+- **Start the language list at the user's language:** the last one used, or Windows' own language the first time (P2).
 
-| Element | Problem | Suggestion |
-|---|---|---|
-| "?", "-", "+", "X" buttons | Duplicate the Windows title bar; "?" does nothing | Delete |
-| "Update this file", File → Update / Delete | Do nothing | Hide until built |
-| View → Menu bar / App GUI / Colour Scheme, Options → Preset Language | Do nothing | Hide until built |
-| "Populate the combo boxes" | Developer wording; the app already fills the lists itself | Delete |
-| "System messages" / "User messages" strip at the bottom | Replaced by the message bar | Delete |
-| "Mute" | Actually stops the speech | Merge into Speak (see step 4) |
-| "Download Voices list" | Word breaks mid-word ("Downloa d"); rarely needed | Move to the Options menu |
-| Locale code ("af-ZA") next to Language | Code that means little to users | Delete, or show as a tooltip |
-| Language list starts at Afrikaans | Not the user's language | Default to the last used, or the Windows language |
+## To decide: where messages and hints go
 
-## Step 2: Remove what gets in the way
+The window has two spaces for messages: the bar above the text box (new), and the "System messages / User messages" strip at the bottom (older). Proposal:
 
-Delete or hide everything the audit marks. Each removal is small, safe and immediately visible.
+- **Bottom strip as a status bar**, like Visual Studio's:
+  - *Left, system:* the app's lasting state, such as Online/Offline, Speech key OK, "Speaking…", "Saving…", and the voice list's date.
+  - *Right, to the user:* the outcome of their last action, such as "Saved speech.mp3" or "Voice list downloaded".
+- **Bar above the text box only for what needs attention**, such as errors and warnings like "offline" or "no key". It appears only then, so it is noticed, since people look where they act (P4). A failure shown only in a bottom corner is easily missed.
+- **Hover hints as normal tooltips next to the pointer**, not in the space above the text box. Hints there would appear and disappear as the mouse moves and push the text box up and down. The left of the status bar can also show the hovered control's hint, which can explain disabled buttons, since Windows shows no tooltips on disabled controls.
 
-## Step 3: Plain labels
+## Audit findings so far
 
-Replace developer wording with what the user is doing: "Soundfile type" becomes "Save sound as", "Textfile type" becomes "Save text as", "Export audio from a local file" becomes "Turn a file into sound…", and so on. Use one verb per action throughout (for example "Save" rather than a mix of "Export" and "Save").
+| Element | Principle | Finding | Plan |
+|---|---|---|---|
+| Clear | P3 | Wipes the text with no undo or warning | Make it undoable (Ctrl+Z), or offer "Undo" in the status bar |
+| Load text | P3 | Replaces unsaved text without warning | Warn, or offer undo |
+| Mute + Speak | P2, P6 | Two buttons for one job; "Mute" actually stops | Merge (decided) |
+| "Populate the combo boxes" | P7 | Developer wording; the lists already fill themselves | Remove, or rename to "Refresh voices" |
+| "Download Voices list" | P7 | Breaks mid-word ("Downloa d") | Shorter label, or move to Options |
+| Locale code ("af-ZA") | P7 | Code shown to users | Remove, or show as a tooltip |
+| Language list | P2 | Starts at Afrikaans | Start at the user's language (decided) |
+| Rate/Pitch | P2, P6 | A list and a slider for the same setting | One control each, with "Reset" |
+| Panel colours | P6 | Green, blue and peach panels with no meaning | One calm palette and one accent for the main action |
+| Unfinished menu items | P1, P8 | Look usable but do nothing | Disabled with "Coming later" (decided) |
 
-## Step 4: Clear hierarchy
+## Steps
 
-- Make **Speak** the most prominent button, next to the text box. While speaking, it turns into **Stop**, so there is one button instead of two.
-- Group the saving actions together, after Speak.
-- Use one accent colour for the primary action. Calm the green, blue and peach panels into one consistent palette.
-
-## Step 5: Progressive disclosure
-
-- Keep Language, Voice and Style always visible, since those are what users change most.
-- Move Rate, Pitch and Volume into a "Fine-tune" section that is closed by default. Give each setting one control instead of a list plus a slider, with a "Reset" link.
-
-## Step 6: Feedback and defaults
-
-- Show progress while speaking or saving (for example "Speaking…" in the bar, or a busy state on the button).
-- Remember the last language, voice and settings between sessions.
-
-## Step 7: Keyboard and accessibility
-
-- Add shortcuts: Ctrl+Enter to speak, Esc to stop, Ctrl+S to save.
-- Set a logical tab order. Check contrast, and test with Narrator.
-
-## Step 8: Check with a real task
-
-Ask someone who hasn't seen the app to turn a paragraph into an mp3, and watch where they hesitate. Fix the biggest hesitation first, then repeat.
+1. Message placement, once decided above (P4).
+2. Merge Mute and Speak into Speak/Stop. Add Ctrl+Enter to speak and Esc to stop (P2).
+3. Undo for Clear and for Load over unsaved text (P3).
+4. Plain labels throughout, one word per action (P6, P7).
+5. Language list starts at the user's language; remember the last voice and settings (P2, P5).
+6. Finish the custom title bar (P5, P6).
+7. Progressive disclosure: put Rate, Pitch and Volume under a collapsible "Fine-tune" section, one control each (P1, P2).
+8. One calm palette, a clear main action, consistent spacing (P6).
+9. Fill in the unfinished features one by one (P8).
+10. Check with a real task: someone new turns a paragraph into an mp3 while you watch where they hesitate. Grade each principle (P1–P9) and fix the lowest grade first.
