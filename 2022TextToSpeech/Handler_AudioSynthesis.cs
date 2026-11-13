@@ -211,6 +211,7 @@ namespace _Verbalize
             using SpeechSynthesizer synthesizer = new(config);
             SpokenSpeech speech = new(synthesizer);
             currentSpeech = speech;
+            Form1.SetActivity(AppActivity.Speaking);
             string? failure;
             try
             {
@@ -225,6 +226,9 @@ namespace _Verbalize
 
             //  Forget the speech if it ended by itself.
             if (currentSpeech == speech) { currentSpeech = null; }
+
+            //  Show Ready again, unless newer speech has already started.
+            if (currentSpeech == null) { Form1.EndActivity(AppActivity.Speaking); }
 
             //  If it was stopped, wait for the stop to finish before closing the speech maker, and say nothing.
             if (speech.StopRequest != null)

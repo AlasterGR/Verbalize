@@ -153,7 +153,8 @@ namespace _Verbalize
         /// <returns>A task that finishes once the user has been told how it went.</returns>
         private static async Task RunAndReportAsync(Func<Task> createSoundFile, string outputFile)
         {
-            //  Run the task, and say where the file was saved.
+            //  Show the saving in the status bar, run the task, and say where the file was saved.
+            Form1.SetActivity(AppActivity.SavingSound);
             try
             {
                 await createSoundFile();
@@ -163,6 +164,11 @@ namespace _Verbalize
             catch (Exception exception)
             {
                 Form1.ShowUserMessage(UserMessages.SoundFileFailed(exception.Message));
+            }
+            //  Clear the saving from the status bar however it ended.
+            finally
+            {
+                Form1.EndActivity(AppActivity.SavingSound);
             }
         }
 

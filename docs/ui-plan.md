@@ -33,6 +33,11 @@ Natoli's own pages: [givegoodux.com](https://givegoodux.com/), [books](https://g
 - Messages appear in a quiet bar instead of pop-up windows with a sound (P4).
 - Speak and Save are disabled while there is no text, while offline, or without a key, and the reason is shown (P1, P8).
 - Message wording and action rules live in `Verbalize.Core` (P9).
+- Messages go where they belong (P4):
+  - The bar above the text box appears only for warnings and errors.
+  - The status bar's left side shows the app's state ("Speaking…", Online/Offline, key).
+  - The status bar's right side shows the outcome of the last action ("Saved …").
+  - The main buttons have tooltips.
 
 ## Decided
 
@@ -42,9 +47,9 @@ Natoli's own pages: [givegoodux.com](https://givegoodux.com/), [books](https://g
 - **Merge Mute and Speak** into one button that reads "Speak" and turns into "Stop" while speaking (P2, P6).
 - **Start the language list at the user's language:** the last one used, or Windows' own language the first time (P2).
 
-## To decide: where messages and hints go
+## Decided and built: where messages and hints go
 
-The window has two spaces for messages: the bar above the text box (new), and the "System messages / User messages" strip at the bottom (older). Proposal:
+The window has two spaces for messages: the bar above the text box, and the "System messages / User messages" strip at the bottom. The split:
 
 - **Bottom strip as a status bar**, like Visual Studio's:
   - *Left, system:* the app's lasting state, such as Online/Offline, Speech key OK, "Speaking…", "Saving…", and the voice list's date.
@@ -69,7 +74,7 @@ The window has two spaces for messages: the bar above the text box (new), and th
 
 ## Steps
 
-1. Message placement, once decided above (P4).
+1. ~~Message placement (P4).~~ Done. Still to do: show the hovered control's hint on the left of the status bar, including for disabled buttons.
 2. Merge Mute and Speak into Speak/Stop. Add Ctrl+Enter to speak and Esc to stop (P2).
 3. Undo for Clear and for Load over unsaved text (P3).
 4. Plain labels throughout, one word per action (P6, P7).

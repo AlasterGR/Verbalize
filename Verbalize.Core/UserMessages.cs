@@ -69,12 +69,12 @@ namespace Verbalize.Core
             return new UserMessage(MessageSeverity.Success, "Saved the sound file " + filePath + ".");
         }
 
-        /// <summary> Asks the user to choose a sound format before exporting. </summary>
-        /// <returns>The information message.</returns>
+        /// <summary> Asks the user to choose a sound format before exporting. It is a warning because the action they asked for did not happen. </summary>
+        /// <returns>The warning message.</returns>
         public static UserMessage ChooseSoundFormat()
         {
             //  Say what to do, since nothing would be saved without a format.
-            return new UserMessage(MessageSeverity.Information, "Choose a sound format (mp3 or wav) first, then export again.");
+            return new UserMessage(MessageSeverity.Warning, "Choose a sound format (mp3 or wav) first, then export again.");
         }
 
         /// <summary> Says the voice list could not be downloaded, and why. </summary>

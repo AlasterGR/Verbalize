@@ -69,6 +69,10 @@
         private static bool isOnline = true;
         /// <summary> Checks the internet connection every few seconds, so buttons that need it follow the connection. </summary>
         private readonly System.Windows.Forms.Timer connectionCheckTimer = new() { Interval = 3000 };
+        /// <summary> Shows hints next to the pointer when it rests on a button or on a cut-short status. </summary>
+        private static readonly ToolTip statusHints = new() { InitialDelay = 500, AutoPopDelay = 10000, ReshowDelay = 100 };
+        /// <summary> What the app is busy doing, shown in the status bar. </summary>
+        private static AppActivity currentActivity = AppActivity.None;
 
         // set up dependency injection. break it apart from initialization
         /// <summary>  The public class of the app's main Form, that is window. </summary>
@@ -102,14 +106,82 @@
             //  Watch the internet connection, and offer only the buttons that can work right now.
             StartWatchingConnection();
             UpdateActionAvailability();
+
+            //  Give the buttons their hints.
+            AddButtonHints();
         }
 
-        /// <summary> Shows a message in the message bar above the text box, replacing any message already there. </summary>
+        /// <summary> Shows a message where it belongs: warnings and errors in the bar above the text box, outcomes such as "Saved…" on the right of the status bar. </summary>
         /// <param name="message">The message to show.</param>
         public static void ShowUserMessage(UserMessage message)
         {
-            //  Hand the message to the bar.
-            message_Bar.ShowMessage(message);
+            //  Put messages that need attention in the bar above the text box.
+            if (message.NeedsAttention)
+            {
+                message_Bar.ShowMessage(message);
+                return;
+            }
+
+            //  Put outcomes on the right of the status bar, with the full text on hover in case it is cut short, and let screen readers announce it.
+            Inform_WithUserMessage(message.Text);
+            statusHints.SetToolTip(label_user_messages, message.Text);
+            AnnounceToScreenReaders(label_user_messages, message.Text);
+        }
+
+        /// <summary> Records what the app is busy doing and shows it on the left of the status bar. </summary>
+        /// <param name="activity">The new activity, or None when it has finished.</param>
+        public static void SetActivity(AppActivity activity)
+        {
+            //  Remember the activity and refresh the status.
+            currentActivity = activity;
+            RefreshSystemStatus();
+        }
+
+        /// <summary> Marks an activity as finished, unless another one has started since. </summary>
+        /// <param name="activity">The activity that has finished.</param>
+        public static void EndActivity(AppActivity activity)
+        {
+            //  Go back to Ready only if this activity is still the current one.
+            if (currentActivity == activity) { SetActivity(AppActivity.None); }
+        }
+
+        /// <summary> Shows the app's state on the left of the status bar: what it is doing, the connection and the key. </summary>
+        private static void RefreshSystemStatus()
+        {
+            //  Describe the state and show it.
+            Inform_WithSystemMessage(SystemStatus.Describe(isOnline, Handler_Data.GetSpeechCredentials().HasKey, currentActivity));
+        }
+
+        /// <summary> Asks screen readers to read out a short text about a control. </summary>
+        /// <param name="control">The control the text belongs to.</param>
+        /// <param name="text">What to read out.</param>
+        private static void AnnounceToScreenReaders(Control control, string text)
+        {
+            //  Announce the text, ignoring systems that do not support announcements.
+            try
+            {
+                control.AccessibilityObject.RaiseAutomationNotification(System.Windows.Forms.Automation.AutomationNotificationKind.Other,
+                    System.Windows.Forms.Automation.AutomationNotificationProcessing.MostRecent, text);
+            }
+            catch (Exception) { }
+        }
+
+        /// <summary> Gives the main buttons a short hint that appears next to the pointer. </summary>
+        private void AddButtonHints()
+        {
+            //  Describe what each main button does, in plain words.
+            statusHints.SetToolTip(button_LoadText, ControlHints.LoadText);
+            statusHints.SetToolTip(button_ClearTextBoxAndLoadedFile, ControlHints.Clear);
+            statusHints.SetToolTip(button_RetrieveAndLoadVoices, ControlHints.DownloadVoices);
+            statusHints.SetToolTip(button_PopulateVoicesAndStylesComboBoxes, ControlHints.RefreshVoiceLists);
+            statusHints.SetToolTip(button_NarrateMainTextBox, ControlHints.Speak);
+            statusHints.SetToolTip(button_MuteSpokenNarration, ControlHints.Stop);
+            statusHints.SetToolTip(button_CreateNarrationSoundFile, ControlHints.SaveSound);
+            statusHints.SetToolTip(button_SaveTextToFile, ControlHints.SaveText);
+            statusHints.SetToolTip(button_CreateAudioFromTextFile, ControlHints.SaveSoundFromFile);
+            statusHints.SetToolTip(button_HideGuiMarkup, ControlHints.ToggleSettingsPanel);
+            statusHints.SetToolTip(button_UpdateTextFile, ControlHints.ComingLater);
+            statusHints.SetToolTip(button_ShowHelp, ControlHints.ComingLater);
         }
 
         /// <summary> Tells the user how to set up their Azure key when none is set or the settings file cannot be read. </summary>
@@ -174,6 +246,9 @@
             //  Exporting a file and downloading voices need only Azure.
             button_CreateAudioFromTextFile.Enabled = batchAudioToolStripMenuItem.Enabled = canReachAzure;
             button_RetrieveAndLoadVoices.Enabled = downloadVoicesListToolStripMenuItem.Enabled = canReachAzure;
+
+            //  Show the connection and key in the status bar too.
+            RefreshSystemStatus();
         }
 
         public void Assign_AbstractEntities()
@@ -222,8 +297,9 @@
         {
             label_FileName.Visible = label_FileName_in_menustrip.Visible = false;
             label_FileName.Text = string.Empty;
-            label_system_messages.Text = "System messages";
-            label_user_messages.Text = "User messages";
+            //  Start the status bar with the app's state on the left and no outcome on the right yet.
+            RefreshSystemStatus();
+            label_user_messages.Text = string.Empty;
 
             image_AttrColumnButton_Expand = (Image)Resources.ResourceManager.GetObject("Triangle_Left");
             image_AttrColumnButton_Recede = (Image)Resources.ResourceManager.GetObject("Triangle_Right");
@@ -438,6 +514,8 @@
         /// <returns>True if the list was downloaded and saved; false if it failed, in which case the user has been told why.</returns>
         public static async Task<bool> Retrieve_Voices_AndSaveToDisk()
         {
+            //  Show the download in the status bar while it runs.
+            SetActivity(AppActivity.DownloadingVoices);
             try
             {
                 //  Ask Azure for the list of voices in the app's region.
@@ -466,6 +544,11 @@
             {
                 ShowVoiceListDownloadError(exception.Message);
                 return false;
+            }
+            //  Clear the download from the status bar however it ended.
+            finally
+            {
+                EndActivity(AppActivity.DownloadingVoices);
             }
         }
 

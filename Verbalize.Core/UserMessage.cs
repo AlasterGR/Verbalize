@@ -21,5 +21,8 @@ namespace Verbalize.Core
     {
         /// <summary> True if the message should disappear by itself after a while: one-off information or success. Warnings, errors and lasting situations stay until dealt with. </summary>
         public bool ClosesByItself => Topic == null && Severity is MessageSeverity.Information or MessageSeverity.Success;
+
+        /// <summary> True if the message needs the user's attention, so it goes in the bar above the text box. Other messages report an outcome and go in the status bar at the bottom. </summary>
+        public bool NeedsAttention => Severity is MessageSeverity.Warning or MessageSeverity.Error;
     }
 }

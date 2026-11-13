@@ -109,16 +109,32 @@ namespace Verbalize.Core.Tests
             Assert.Contains(@"C:\out\speech.mp3", saved.Text);
         }
 
-        /// <summary> The hint to choose a sound format is information that closes by itself. </summary>
+        /// <summary> The request to choose a sound format is a warning, since the export did not happen, so it needs attention. </summary>
         [Fact]
-        public void ChooseSoundFormat_IsInformation()
+        public void ChooseSoundFormat_IsAWarning()
         {
-            //  Build the hint.
+            //  Build the request.
             UserMessage message = UserMessages.ChooseSoundFormat();
 
-            //  Check it is information that closes by itself.
-            Assert.Equal(MessageSeverity.Information, message.Severity);
-            Assert.True(message.ClosesByItself);
+            //  Check it is a warning that goes in the attention bar and stays.
+            Assert.Equal(MessageSeverity.Warning, message.Severity);
+            Assert.True(message.NeedsAttention);
+            Assert.False(message.ClosesByItself);
+        }
+
+        /// <summary> Warnings and errors go in the attention bar; information and success go in the status bar. </summary>
+        [Theory]
+        [InlineData(MessageSeverity.Information, false)]
+        [InlineData(MessageSeverity.Success, false)]
+        [InlineData(MessageSeverity.Warning, true)]
+        [InlineData(MessageSeverity.Error, true)]
+        public void NeedsAttention_OnlyForWarningsAndErrors(MessageSeverity severity, bool expected)
+        {
+            //  Build a message of the given kind.
+            UserMessage message = new(severity, "Text.");
+
+            //  Check where it goes.
+            Assert.Equal(expected, message.NeedsAttention);
         }
 
         /// <summary> Information tied to a topic stays, because its situation is still going on. </summary>

@@ -876,13 +876,14 @@
             // 
             // label17
             // 
-            label17.AutoSize = true;
-            label17.Dock = DockStyle.Right;
-            label17.Location = new Point(1131, 0);
+            label17.AutoEllipsis = true;
+            label17.Dock = DockStyle.Fill;
+            label17.Location = new Point(125, 0);
             label17.Name = "label17";
-            label17.Size = new Size(109, 19);
+            label17.Size = new Size(1115, 25);
             label17.TabIndex = 1;
             label17.Text = "User Messages";
+            label17.TextAlign = ContentAlignment.MiddleRight;
             // 
             // label15
             // 
@@ -890,6 +891,7 @@
             label15.Dock = DockStyle.Left;
             label15.Location = new Point(0, 0);
             label15.Name = "label15";
+            label15.Padding = new Padding(0, 3, 24, 0);
             label15.Size = new Size(125, 19);
             label15.TabIndex = 0;
             label15.Text = "System Messages";
