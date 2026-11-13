@@ -227,8 +227,62 @@
         /// <summary> When the text changes, offers Speak and Export only if there is text to use. </summary>
         private void TextBox_Main_TextChanged(object? sender, EventArgs e)
         {
+            //  Withdraw any offer to undo a Clear or Load, since the text has moved on.
+            message_Bar.ClearTopic(UserMessages.UndoTopic);
+
             //  Turn the buttons that need text on or off.
             UpdateActionAvailability();
+        }
+
+        /// <summary> Everything a Clear or a Load replaces, kept so Undo can put it back. </summary>
+        /// <param name="Text">The text box's text.</param>
+        /// <param name="LoadedFilePath">The loaded file's path, as the file handler knows it.</param>
+        /// <param name="FormLoadedFilePath">The loaded file's path, as the window knows it.</param>
+        /// <param name="FileLabel">The file name shown above the text box.</param>
+        /// <param name="FileLabelVisible">True if that file name was shown.</param>
+        /// <param name="MenuFileLabel">The file name shown in the menu bar.</param>
+        /// <param name="MenuFileLabelVisible">True if that file name was shown.</param>
+        /// <param name="WindowTitle">The window's title.</param>
+        private sealed record TextSnapshot(string Text, string LoadedFilePath, string FormLoadedFilePath, string FileLabel, bool FileLabelVisible, string MenuFileLabel, bool MenuFileLabelVisible, string WindowTitle);
+
+        /// <summary> Records the text and the loaded file's details, before they are replaced. </summary>
+        /// <returns>The snapshot.</returns>
+        private static TextSnapshot TakeTextSnapshot()
+        {
+            //  Copy everything a Clear or a Load changes.
+            return new TextSnapshot(textBox_Main_Single.Text, Handler_File.LoadedFilePath, locationLoadedFile,
+                label_FileName.Text, label_FileName.Visible, label_FileName_in_menustrip.Text, label_FileName_in_menustrip.Visible,
+                textBox_Main_Single.FindForm()?.Text ?? applicationBrandName);
+        }
+
+        /// <summary> Puts back the text and the loaded file's details from a snapshot. </summary>
+        /// <param name="snapshot">What to put back.</param>
+        private static void RestoreTextSnapshot(TextSnapshot snapshot)
+        {
+            //  Restore the file details first, then the text, so the window matches the text again.
+            Handler_File.LoadedFilePath = snapshot.LoadedFilePath;
+            locationLoadedFile = snapshot.FormLoadedFilePath;
+            label_FileName.Text = snapshot.FileLabel;
+            label_FileName.Visible = snapshot.FileLabelVisible;
+            label_FileName_in_menustrip.Text = snapshot.MenuFileLabel;
+            label_FileName_in_menustrip.Visible = snapshot.MenuFileLabelVisible;
+            if (textBox_Main_Single.FindForm() is Form window) { window.Text = snapshot.WindowTitle; }
+            textBox_Main_Single.Text = snapshot.Text;
+
+            //  Confirm it in the status bar.
+            ShowUserMessage(new UserMessage(MessageSeverity.Success, "Brought back the previous text."));
+        }
+
+        /// <summary> Shows a message above the text box with an Undo button that puts back what was replaced, if anything was. </summary>
+        /// <param name="message">What happened.</param>
+        /// <param name="snapshot">What was there before.</param>
+        private static void OfferUndo(UserMessage message, TextSnapshot snapshot)
+        {
+            //  Offer Undo only when text was actually replaced.
+            if (!UserMessages.IsUndoWorthOffering(snapshot.Text)) { return; }
+
+            //  Show the message with its Undo button above the text box, where the user is looking.
+            message_Bar.ShowMessage(message, "&Undo", () => RestoreTextSnapshot(snapshot));
         }
 
         /// <summary> Turns each button and menu item on or off, depending on whether there is text, an internet connection and an Azure key. </summary>
@@ -432,9 +486,15 @@
             //  Download the voice list and refill the lists.
             await RetrieveAndLoadVoicesAsync();
         }
+        /// <summary> Lets the user load a file into the text box, offering Undo if it replaced text. </summary>
         public static void LoadText()
         {
-            Handler_File.Load_Text(label_FileName, Form1.ActiveForm, applicationBrandName, label_FileName_in_menustrip, textBox_Main_Single);
+            //  Keep what is there now, then load the file.
+            TextSnapshot before = TakeTextSnapshot();
+            bool loaded = Handler_File.Load_Text(label_FileName, Form1.ActiveForm, applicationBrandName, label_FileName_in_menustrip, textBox_Main_Single);
+
+            //  Offer to bring back the previous text if a file replaced it.
+            if (loaded) { OfferUndo(UserMessages.TextReplacedByFile(Path.GetFileName(Handler_File.LoadedFilePath)), before); }
         }
         #endregion
 
@@ -486,10 +546,17 @@
         /// <summary> This is the method that clears the main TextBox and subsequently the label which presents the file name to the GUI. </summary>
         public static void ClearTextBoxAndLoadedFile()
         {
+            //  Keep what is there now, so it can be brought back.
+            TextSnapshot before = TakeTextSnapshot();
+
+            //  Empty the text box and the file name.
             locationLoadedFile = string.Empty;
             textBox_Main_Single.Clear();
             label_FileName.Text = string.Empty;
             label_FileName.Visible = false; // remove this when implement the label's automatic behaviour through events
+
+            //  Offer to bring the text back.
+            OfferUndo(UserMessages.TextCleared(), before);
         }
         /// <summary> Stops the speech playing aloud, if any. </summary>
         /// <returns>A task that finishes once the speech has stopped.</returns>

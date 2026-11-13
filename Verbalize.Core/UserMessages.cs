@@ -7,6 +7,34 @@ namespace Verbalize.Core
         public const string OfflineTopic = "offline";
         /// <summary> The topic of the message shown while the Azure key is missing or its settings file is damaged. </summary>
         public const string SpeechSetupTopic = "speech-setup";
+        /// <summary> The topic of the message that offers to undo a Clear or a Load, so it can be removed once the user edits the text. </summary>
+        public const string UndoTopic = "undo";
+
+        /// <summary> Says the text was cleared, alongside an Undo button. </summary>
+        /// <returns>The information message.</returns>
+        public static UserMessage TextCleared()
+        {
+            //  Confirm the clear and point to the way back.
+            return new UserMessage(MessageSeverity.Information, "Cleared the text. Undo brings it back.", UndoTopic);
+        }
+
+        /// <summary> Says the text was replaced by a loaded file, alongside an Undo button. Undo brings back the text, not voice settings the file may have changed. </summary>
+        /// <param name="fileName">The name of the loaded file.</param>
+        /// <returns>The information message.</returns>
+        public static UserMessage TextReplacedByFile(string fileName)
+        {
+            //  Name the file and point to the way back.
+            return new UserMessage(MessageSeverity.Information, "Replaced the text with " + fileName + ". Undo brings back the previous text.", UndoTopic);
+        }
+
+        /// <summary> Returns true if undoing is worth offering, which is only when the text being replaced held something. </summary>
+        /// <param name="previousText">The text before the change.</param>
+        /// <returns>True if Undo should be offered.</returns>
+        public static bool IsUndoWorthOffering(string? previousText)
+        {
+            //  Nothing is lost when the text was empty or blank.
+            return ActionAvailability.HasSpeakableText(previousText);
+        }
 
         /// <summary> Says the computer is offline and which actions are paused until it is back online. </summary>
         /// <returns>The offline message.</returns>

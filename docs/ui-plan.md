@@ -76,7 +76,7 @@ The window has two spaces for messages: the bar above the text box, and the "Sys
 
 1. ~~Message placement (P4).~~ Done. Still to do: show the hovered control's hint on the left of the status bar, including for disabled buttons.
 2. ~~Merge Mute and Speak into Speak/Stop, with Ctrl+Enter to speak and Esc to stop (P2).~~ Done.
-3. Undo for Clear and for Load over unsaved text (P3).
+3. ~~Undo for Clear and for Load over existing text (P3).~~ Done. Known debt (grade C): Undo after Load brings back the text and file name, but not voice settings the loaded SSML file changed.
 4. Plain labels throughout, one word per action (P6, P7).
 5. Language list starts at the user's language; remember the last voice and settings (P2, P5).
 6. Finish the custom title bar (P5, P6).

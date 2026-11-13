@@ -137,6 +137,39 @@ namespace Verbalize.Core.Tests
             Assert.Equal(expected, message.NeedsAttention);
         }
 
+        /// <summary> The undo offers are information tied to the undo topic, so they stay until the user edits the text or dismisses them. </summary>
+        [Fact]
+        public void UndoOffers_StayUntilDealtWith()
+        {
+            //  Build both undo offers.
+            UserMessage cleared = UserMessages.TextCleared();
+            UserMessage replaced = UserMessages.TextReplacedByFile("notes.txt");
+
+            //  Check both are lasting information about undo, and the file is named.
+            Assert.All(new[] { cleared, replaced }, message =>
+            {
+                Assert.Equal(MessageSeverity.Information, message.Severity);
+                Assert.Equal(UserMessages.UndoTopic, message.Topic);
+                Assert.False(message.ClosesByItself);
+            });
+            Assert.Contains("notes.txt", replaced.Text);
+        }
+
+        /// <summary> Undo is offered only when the replaced text held something. </summary>
+        [Theory]
+        [InlineData(null, false)]
+        [InlineData("", false)]
+        [InlineData("  \r\n", false)]
+        [InlineData("Some words", true)]
+        public void IsUndoWorthOffering_OnlyWhenTextWasThere(string? previousText, bool expected)
+        {
+            //  Check the previous text.
+            bool worthOffering = UserMessages.IsUndoWorthOffering(previousText);
+
+            //  Check the answer.
+            Assert.Equal(expected, worthOffering);
+        }
+
         /// <summary> Information tied to a topic stays, because its situation is still going on. </summary>
         [Fact]
         public void ClosesByItself_IsFalseForTopicMessages()

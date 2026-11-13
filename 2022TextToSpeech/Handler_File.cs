@@ -8,6 +8,13 @@ namespace _Verbalize
         /// <summary>  The path of the loaded file.</summary>
         private static string locationLoadedFile = string.Empty;
 
+        /// <summary> The path of the loaded file, or empty when none is loaded; settable so Undo can restore it. </summary>
+        public static string LoadedFilePath
+        {
+            get => locationLoadedFile;
+            set => locationLoadedFile = value;
+        }
+
         /// <summary>  The app's Resources folder from which it will draw some info.</summary>
         readonly public static string folderResources = Path.Combine(Environment.CurrentDirectory, @"Resources\");
         /// <summary>  Change this to the desired file name and extension.</summary>
@@ -57,11 +64,12 @@ namespace _Verbalize
         /// <param name="applicationBrandName">The app's name, shown before the file's name in the window title.</param>
         /// <param name="label_FileName_in_menustrip">The label in the menu bar that also shows the file's name.</param>
         /// <param name="mainSingleTextBox">The main text box that receives the file's text.</param>
-        public static void Load_Text(Label label_FileName, Form activeForm, string applicationBrandName, Label label_FileName_in_menustrip, System.Windows.Forms.TextBox mainSingleTextBox)
+        /// <returns>True if a file was loaded; false if the user cancelled.</returns>
+        public static bool Load_Text(Label label_FileName, Form activeForm, string applicationBrandName, Label label_FileName_in_menustrip, System.Windows.Forms.TextBox mainSingleTextBox)
         {
             //  Ask the user to pick a file, and stop if they cancel.
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (openFileDialog1.ShowDialog() != DialogResult.OK) { return false; }
             {
                 //  Show the chosen file's name in the label and in the window title.
                 locationLoadedFile = openFileDialog1.FileName;
@@ -89,6 +97,9 @@ namespace _Verbalize
                 //  Put the text in the main text box.
                 mainSingleTextBox.Text = fileContents;
             }
+
+            //  Report that a file was loaded.
+            return true;
         }
 
         /// <summary> Lets the user pick an SSML or plain text file, then saves its speech as a sound file next to it. </summary>

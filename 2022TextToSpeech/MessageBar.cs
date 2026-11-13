@@ -16,6 +16,10 @@ namespace _Verbalize
         private readonly Label messageLabel;
         /// <summary> Lets the user dismiss the message. </summary>
         private readonly Button closeButton;
+        /// <summary> Offers an action that goes with the message, such as Undo; hidden when there is none. </summary>
+        private readonly Button actionButton;
+        /// <summary> What the action button does, or null when it is hidden. </summary>
+        private Action? pendingAction;
         /// <summary> Closes information and success messages after a while. </summary>
         private readonly System.Windows.Forms.Timer autoCloseTimer;
         /// <summary> The message on show, or null when the bar is hidden. </summary>
@@ -31,12 +35,22 @@ namespace _Verbalize
             closeButton = new Button { Dock = DockStyle.Right, Width = 34, Text = "✕", FlatStyle = FlatStyle.Flat, Cursor = Cursors.Hand, AccessibleName = "Dismiss message", Font = new Font("Segoe UI Symbol", 10F, FontStyle.Regular, GraphicsUnit.Point) };
             closeButton.FlatAppearance.BorderSize = 0;
             messageLabel = new Label { Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleLeft, AutoSize = false, UseMnemonic = false };
+            actionButton = new Button { Dock = DockStyle.Right, AutoSize = true, FlatStyle = FlatStyle.Flat, Cursor = Cursors.Hand, Visible = false, Font = new Font("Calibri", 12F, FontStyle.Bold, GraphicsUnit.Point) };
             Controls.Add(messageLabel);
             Controls.Add(symbolLabel);
+            Controls.Add(actionButton);
             Controls.Add(closeButton);
 
             //  Close the message when the user clicks the close button.
             closeButton.Click += (_, _) => Clear();
+
+            //  Run the message's action, then close the message, when the user clicks the action button.
+            actionButton.Click += (_, _) =>
+            {
+                Action? action = pendingAction;
+                Clear();
+                action?.Invoke();
+            };
 
             //  Prepare the timer that closes information and success messages.
             autoCloseTimer = new System.Windows.Forms.Timer { Interval = (int)AutoCloseDelay.TotalMilliseconds };
@@ -48,15 +62,23 @@ namespace _Verbalize
             Visible = false;
         }
 
-        /// <summary> Shows a message, replacing any message already on show. </summary>
+        /// <summary> Shows a message, replacing any message already on show, with an optional action button such as Undo. </summary>
         /// <param name="message">The message to show.</param>
-        public void ShowMessage(UserMessage message)
+        /// <param name="actionText">The action button's label, or null for no button.</param>
+        /// <param name="action">What the action button does, or null for no button.</param>
+        public void ShowMessage(UserMessage message, string? actionText = null, Action? action = null)
         {
+            //  Show the action button only when there is an action to offer.
+            pendingAction = action;
+            actionButton.Text = actionText ?? string.Empty;
+            actionButton.Visible = action != null && actionText != null;
+
             //  Remember the message and give the bar the look of its kind.
             currentMessage = message;
             (Color background, Color text, string symbol, string kind) = LookOf(message.Severity);
             BackColor = background;
-            messageLabel.ForeColor = symbolLabel.ForeColor = closeButton.ForeColor = text;
+            messageLabel.ForeColor = symbolLabel.ForeColor = closeButton.ForeColor = actionButton.ForeColor = text;
+            actionButton.FlatAppearance.BorderColor = text;
             closeButton.FlatAppearance.MouseOverBackColor = ControlPaint.Dark(background, 0.05F);
             symbolLabel.Text = symbol;
             messageLabel.Text = message.Text;
@@ -77,9 +99,10 @@ namespace _Verbalize
         /// <summary> Hides the bar and forgets its message. </summary>
         public void Clear()
         {
-            //  Stop the timer and hide the bar.
+            //  Stop the timer, forget the message and its action, and hide the bar.
             autoCloseTimer.Stop();
             currentMessage = null;
+            pendingAction = null;
             Visible = false;
         }
 
@@ -110,6 +133,7 @@ namespace _Verbalize
                 autoCloseTimer.Dispose();
                 symbolLabel.Font.Dispose();
                 closeButton.Font.Dispose();
+                actionButton.Font.Dispose();
             }
             base.Dispose(disposing);
         }
